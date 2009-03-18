@@ -12,9 +12,9 @@ class dbinfo_t
 	public function init ()
 	{
 		$this->host = "calvados.ucs.louisiana.edu";
-		$this->user = "cs4601m";
-		$this->pass = "foursixty";
-		$this->dbname = "cs4601_m";
+		$this->user = "cs4601i";
+		$this->pass = "ZV6R4L";
+		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 	}
 
