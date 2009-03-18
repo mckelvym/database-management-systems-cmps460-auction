@@ -1,0 +1,6 @@
+cvs update
+cvs -n update #See changed files
+cvs diff # See actual changes
+cvs ci <filename>
+cvs ci -m "This test" <filename>
+
