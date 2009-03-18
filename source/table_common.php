@@ -12,33 +12,33 @@ class table_common_t
 
 	var $main_class;
 
-	public function init ($main_class_)
+	function init ($main_class_)
 	{
 		$this->main_class = $main_class_;
 		return $this->main_class;
 	}
 
-	public function set_main_class ($main_class_)
+	function set_main_class ($main_class_)
 	{
 		return $this->init ($main_class_);
 	}
 
-	public function get_main_class ()
+	function get_main_class ()
 	{
 		return $this->main_class;
 	}
 
-	public function table_begin ()
+	function table_begin ()
 	{
 		return "<table class=\"$this->main_class\">\n";
 	}
 
-	public function table_end ()
+	function table_end ()
 	{
 		return "</table>\n";
 	}
 
-	public function table_head_begin ($custom_class = "")
+	function table_head_begin ($custom_class = "")
 	{
 		if (empty ($custom_class))
 			return "<thead class=$this->main_class>\n";
@@ -46,12 +46,12 @@ class table_common_t
 			return "<thead class=$custom_class>\n";
 	}
 
-	public function table_head_end ()
+	function table_head_end ()
 	{
 		return "</thead>\n";
 	}
 
-	public function table_body_begin ($custom_class = "")
+	function table_body_begin ($custom_class = "")
 	{
 		if (empty ($custom_class))
 			return "<tbody class=$this->main_class>\n";
@@ -59,7 +59,7 @@ class table_common_t
 			return "<tbody class=$custom_class>\n";
 	}
 
-	public function table_body_end ()
+	function table_body_end ()
 	{
 		return "</tbody>\n";
 	}

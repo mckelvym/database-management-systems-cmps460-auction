@@ -9,7 +9,7 @@ class dbinfo_t
 	var $dblink;
 	var $admin;
 
-	public function init ()
+	function init ()
 	{
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
@@ -18,7 +18,7 @@ class dbinfo_t
 		$this->admin = 0;
 	}
 
-	public function connect ()
+	function connect ()
 	{
 		$success = 1;
 		$dblink = mysql_connect ($this->host,
@@ -33,27 +33,27 @@ class dbinfo_t
 		return $success;
 	}
 
-	public function close ()
+	function close ()
 	{
 		mysql_close ($this->dblink);
 	}
 
-	public function query ($q)
+	function query ($q)
 	{
 		return mysql_query ($q);
 	}
 
-	public function get_link ()
+	function get_link ()
 	{
 		return $this->dblink;
 	}
 
-	public function set_admin ()
+	function set_admin ()
 	{
 		$this->admin = 1;
 	}
 
-	public function is_admin ()
+	function is_admin ()
 	{
 		return $this->admin;
 	}
