@@ -3,7 +3,6 @@ drop table if exists was_outbid;
 drop table if exists bids_on;
 drop table if exists item_listing;
 drop table if exists user_activity;
-drop table if exists user_profile;
 drop table if exists user;
 
 --- create tables ---
@@ -22,15 +21,9 @@ create table user(
        card_type	varchar(20),
        card_number	varchar(16),
        card_expire	varchar(5),
-       primary key (username)
-);
-
-create table user_profile(
-       username		varchar(50),
        picture		varchar(100),
        description	varchar(250),
-       primary key (username),
-       foreign key (username) references user (username)
+       primary key (username)
 );
 
 create table user_activity(

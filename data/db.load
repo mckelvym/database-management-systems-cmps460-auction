@@ -3,11 +3,6 @@ ignore
 into table user
 fields terminated by ',';
 
-load data local infile 'user_profile.data'
-ignore
-into table user_profile
-fields terminated by ',';
-
 load data local infile 'user_activity.data'
 ignore
 into table user_activity

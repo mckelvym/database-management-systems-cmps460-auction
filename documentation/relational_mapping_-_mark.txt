@@ -12,11 +12,7 @@ User(
 	email, 
 	card_type, 
 	card_number, 
-	card_expire
-);
-
-UserProfile(
-	username[pk,fk], 
+	card_expire,
 	picture, 
 	description
 );
