@@ -1,0 +1,109 @@
+--- drop tables ---
+drop table if exists was_outbid;
+drop table if exists bids_on;
+drop table if exists item_listing;
+drop table if exists user_activity;
+drop table if exists user_profile;
+drop table if exists user;
+
+--- create tables ---
+create table user(
+       username		varchar(50),
+       password		varchar(50),
+       is_admin		boolean,
+       realname		varchar(100),
+       birth_date	char(10),
+       shipping_street	varchar(100),
+       shipping_city	varchar(50),
+       shipping_state	varchar(20),
+       shipping_zip	varchar(10),
+       phone		varchar(12),
+       email		varchar(50),
+       card_type	varchar(20),
+       card_number	varchar(16),
+       card_expire	varchar(5),
+       primary key (username)
+);
+
+create table user_profile(
+       username		varchar(50),
+       picture		varchar(100),
+       description	varchar(250),
+       primary key (username),
+       foreign key (username) references user (username)
+);
+
+create table user_activity(
+       username		varchar(50),
+       day		int(5),
+       hour		int(2),
+       minute		int(2),
+       activity		varchar(250),
+       primary key (username, day, hour, minute),
+       foreign key (username) references user (username)
+);
+
+create table item_listing(
+       title		varchar(50),
+       seller		varchar(50),
+       category		varchar(30),
+       end_day		int(5),
+       end_hour		int(2),
+       end_minute	int(2),
+       description	varchar(250),
+       shipping_cost	float(7,2),
+       shipping_method	varchar(100),
+       starting_price	float(7,2),
+       picture		varchar(100),
+       feedbackforseller_description	varchar(250),
+       feedbackforseller_rating		int(2),
+       feedbackforbuyer_description	varchar(250),
+       feedbackforbuyer_rating		int(2),
+       primary key (title, seller, category, end_day, end_hour, end_minute),
+       foreign key (seller) references user (username)
+);
+
+create table bids_on(
+       username		varchar(50),
+       item_title	varchar(50),
+       item_seller	varchar(50),
+       item_category	varchar(30),
+       item_end_day	int(5),
+       item_end_hour	int(2),
+       item_end_minute	int(2),
+       bid_day		int(5),
+       bid_hour		int(2),
+       bid_minute	int(2),
+       bid_amount	float(7,2),
+       primary key (username, item_title, item_seller, item_category, 
+       	       	   item_end_day, item_end_hour, item_end_minute, 
+		   bid_day, bid_hour, bid_minute),
+       foreign key (username) references user (username),
+       foreign key (item_title) references item_listing (title),
+       foreign key (item_seller) references item_listing (seller),
+       foreign key (item_category) references item_listing (category),
+       foreign key (item_end_day) references item_listing (end_day),
+       foreign key (item_end_hour) references item_listing (end_hour),
+       foreign key (item_end_minute) references item_listing (end_minute)
+);
+
+create table was_outbid(
+       username		varchar(50),
+       item_title	varchar(50),
+       item_seller	varchar(50),
+       item_category	varchar(30),
+       item_end_day	int(5),
+       item_end_hour	int(2),
+       item_end_minute	int(2),
+       display_notification	boolean,
+       primary key (username, item_title, item_seller, item_category, 
+       	       	   item_end_day, item_end_hour, item_end_minute),
+       foreign key (username) references user (username),
+       foreign key (item_title) references item_listing (title),
+       foreign key (item_seller) references item_listing (seller),
+       foreign key (item_category) references item_listing (category),
+       foreign key (item_end_day) references item_listing (end_day),
+       foreign key (item_end_hour) references item_listing (end_hour),
+       foreign key (item_end_minute) references item_listing (end_minute)
+);
+
