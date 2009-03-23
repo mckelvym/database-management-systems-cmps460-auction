@@ -1,0 +1,74 @@
+User(	
+	username[pk], 
+	password, 
+	is_admin, 
+	realname, 
+	birth_date, 
+	shipping_street, 
+	shipping_city, 
+	shipping_state, 
+	shipping_zip, 
+	phone, 
+	email, 
+	card_type, 
+	card_number, 
+	card_expire
+);
+
+UserProfile(
+	username[pk,fk], 
+	picture, 
+	description
+);
+
+UserActivity(
+	username[pk,fk], 
+	day[pk], 
+	hour[pk], 
+	minute[pk], 
+	activity
+);
+
+ItemListing(
+	title[pk],
+	seller[pk,fk],
+	category[pk],
+	end_day[pk],
+	end_hour[pk],
+	end_minute[pk],
+	description,
+	shipping_cost,
+	shipping_method,
+	starting_price,
+	picture
+	feedbackforseller_description
+	feedbackforseller_rating
+	feedbackforbuyer_description
+	feedbackforbuyer_rating
+);
+
+WasOutbid(
+	username[pk,fk],
+	item_title[pk,fk], 
+	item_seller[pk,fk],
+	item_category[pk,fk],
+	item_end_day[pk,fk],
+	item_end_hour[pk,fk],
+	item_end_minute[pk,fk],
+	display_notification
+);
+
+BidsOn(
+	username[pk,fk],
+	item_title[pk,fk], 
+	item_seller[pk,fk],
+	item_category[pk,fk],
+	item_end_day[pk,fk],
+	item_end_hour[pk,fk],
+	item_end_minute[pk,fk],
+	bid_day[pk],
+	bid_hour[pk],
+	bid_minute[pk],
+	bid_amount
+);
+
