@@ -21,8 +21,9 @@ body {
 #navbar {
 	position: relative;
 	margin: 0px;
-	padding: 3px;
-	text-align: center;
+	padding-top: 2em;
+	padding-left: 1em;
+	text-align: left;
 }
 
 #navbar ul {
