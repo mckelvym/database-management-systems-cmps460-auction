@@ -43,17 +43,6 @@ ItemListing(
 	feedbackforbuyer_rating
 );
 
-WasOutbid(
-	username[pk,fk],
-	item_title[pk,fk], 
-	item_seller[pk,fk],
-	item_category[pk,fk],
-	item_end_day[pk,fk],
-	item_end_hour[pk,fk],
-	item_end_minute[pk,fk],
-	display_notification
-);
-
 BidsOn(
 	username[pk,fk],
 	item_title[pk,fk], 
@@ -66,5 +55,6 @@ BidsOn(
 	bid_hour[pk],
 	bid_minute[pk],
 	bid_amount
+	display_notification
 );
 
