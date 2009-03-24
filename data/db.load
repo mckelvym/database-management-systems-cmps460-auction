@@ -13,11 +13,6 @@ ignore
 into table item_listing
 fields terminated by ',';
 
-load data local infile 'was_outbid.data'
-ignore
-into table was_outbid
-fields terminated by ',';
-
 load data local infile 'bids_on.data'
 ignore
 into table bids_on
