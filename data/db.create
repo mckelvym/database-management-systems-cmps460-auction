@@ -47,10 +47,10 @@ create table item_listing(
        shipping_method	varchar(100),
        starting_price	float(7,2),
        picture		varchar(100),
-       feedbackforseller_description	varchar(250),
-       feedbackforseller_rating		int(2),
-       feedbackforbuyer_description	varchar(250),
-       feedbackforbuyer_rating		int(2),
+       buyer		varchar(50),
+       buyerfeedbackforseller_description	varchar(250),
+       buyerfeedbackforseller_rating		int(2),
+       sellerfeedbackforbuyer_description	varchar(250),
        primary key (title, seller, category, end_day, end_hour, end_minute),
        foreign key (seller) references user (username)
 );

@@ -36,11 +36,11 @@ ItemListing(
 	shipping_cost,
 	shipping_method,
 	starting_price,
-	picture
-	feedbackforseller_description
-	feedbackforseller_rating
-	feedbackforbuyer_description
-	feedbackforbuyer_rating
+	picture,
+	buyer,
+	buyerfeedbackforseller_description,
+	buyerfeedbackforseller_rating,
+	sellerfeedbackforbuyer_description
 );
 
 BidsOn(
@@ -54,7 +54,7 @@ BidsOn(
 	bid_day[pk],
 	bid_hour[pk],
 	bid_minute[pk],
-	bid_amount
+	bid_amount,
 	display_notification
 );
 
