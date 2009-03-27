@@ -46,6 +46,7 @@ create table item_listing(
        shipping_cost	float(7,2),
        shipping_method	varchar(100),
        starting_price	float(7,2),
+       current_price	float(7,2),
        picture		varchar(100),
        buyer		varchar(50),
        buyerfeedbackforseller_description	varchar(250),
