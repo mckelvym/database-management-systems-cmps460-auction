@@ -36,6 +36,7 @@ ItemListing(
 	shipping_cost,
 	shipping_method,
 	starting_price,
+	current_price,
 	picture,
 	buyer,
 	buyerfeedbackforseller_description,
