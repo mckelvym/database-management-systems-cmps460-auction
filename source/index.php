@@ -2,26 +2,22 @@
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
-$dbinfo->init ();
-
 echo_header ($dbinfo);
 
-if (!$dbinfo->connect ())
+if ($dbinfo->logged_in ())
 {
-	echo "Couldn't connect to database.";
-	echo_footer ();
-	return;
+	cout ("Welcome to the home page. There will be much more fun to come!");
+	cout ("You'll get to see things like notifications and activities and feedback - oh my!");
 }
-$dbinfo->update_time ();
+else
+{
+	$loginlink = href ("login.php", "Login");
+	$reglink= href ("registration.php", "Register");
+	echo <<<HEREDOC
+Welcome to CMPS460 Group I's eBay-ish website "iBay"! You will need to $loginlink or $reglink to proceed further.
+HEREDOC;
+}
 
-echo "Current Time? ".$dbinfo->day ()." ".$dbinfo->hour ()." ".$dbinfo->minute ()."<br/>";
-echo "Logged in? ".(($dbinfo->logged_in ())? "True" : "False")."<br/>";
-echo "User? ".$dbinfo->user ()."<br/>";
-echo "Admin? ".(($dbinfo->is_admin ())? "True" : "False")."<br/>";
-
-echo current_script ();
-
-echo_footer ();
-$dbinfo->close ();
+echo_footer ($dbinfo);
 
 ?>
