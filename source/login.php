@@ -2,30 +2,24 @@
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
-$dbinfo->init ();
+echo_header ($dbinfo);
 
 if ($dbinfo->logged_in ())
 	redirect ("index.php");
-
-echo_header ($dbinfo);
-
-if (!$dbinfo->connect ())
-{
-	echo "Couldn't connect to database.";
-	echo_footer ();
-	return;
-}
 
 // display login form
 $info = post ("username");
 if (!isset ($info))
 {
-	echo get ("message");
+	$msg = get ("message");
+	if (!empty ($msg))
+		cout ($msg);
+	cout ("Take a test spin in an admin account! jim_admin foursixty");
 	$table = new table_common_t ();
 	$table->init ("tbl_std");
 	echo $table->table_begin ();
 	echo $table->table_head_begin ();
-	echo $table->tr ($table->td_span ("Login", "", 2));
+	echo $table->tr ($table->td_span ("Login with your iBay ID", "", 2));
 	echo $table->tr_end ();
 	echo $table->table_body_begin ();
 	echo form_begin ("login.php", "post");
@@ -55,6 +49,6 @@ else
 	}
 }
 
-echo_footer ();
-$dbinfo->close ();
+echo_footer ($dbinfo);
+
 ?>
