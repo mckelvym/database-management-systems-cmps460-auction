@@ -254,6 +254,9 @@ class dbinfo_t
 	// Must be admin, save activity for another user - user must exist
 	function save_activity_for ($username, $activity_description)
 	{
+		if (!$this->is_admin ())
+			return false;
+
 		$this->update_time ();
 		$user = $username;
 		$day = $this->day ();
