@@ -18,6 +18,9 @@ class dbinfo_t
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
 		$this->pass = "foursixty";
+/* 		$this->host = "localhost"; */
+/* 		$this->user = "root"; */
+/* 		$this->pass = "foursixty"; */
 		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 		$this->debug = true;
@@ -64,6 +67,17 @@ class dbinfo_t
 		return $this->dblink;
 	}
 
+	// Update user information in session variables (realname, is an admin)
+	function update_user_info ()
+	{
+		$username = $this->username ();
+		$result = $this->query ("select realname, is_admin from user where username = '$username'");
+		$row = mysql_fetch_assoc ($result);
+		$_SESSION['Admin'] = $row['is_admin'];
+		$_SESSION['Realname'] = $row['realname'];
+		mysql_free_result ($result);
+	}
+
 	// Attempt to login a user
 	// Will return true if successful and false if not.
 	// Additionally, will setup session vars for username
@@ -86,16 +100,19 @@ class dbinfo_t
 			$_SESSION['Admin'] = $row['is_admin'];
 			$_SESSION['Realname'] = $row['realname'];
 			mysql_free_result ($result);
+			$this->save_activity ("Logged In");
 			return true;
 		}
 	}
 
 	function logout ()
 	{
+		$this->save_activity ("Logged Out");
 		unset ($_SESSION['Username']);
 		unset ($_SESSION['Realname']);
 		unset ($_SESSION['Admin']);
 		session_destroy ();
+		header ("Location: index.php");
   	}
 
 
@@ -112,13 +129,13 @@ class dbinfo_t
 	}
 
 	// Get logged in username
-	function user ()
+	function username ()
 	{
 		return $_SESSION['Username'];
 	}
 
 	// Get logged in in name of user
-	function name ()
+	function realname ()
 	{
 		return $_SESSION['Realname'];
 	}
@@ -126,12 +143,81 @@ class dbinfo_t
 	// Update the time from the database into the session vars
 	function update_time ()
 	{
-		$result = $this->query ("select day,hour,minute from user_activity where activity = 'current_time' order by day desc, hour desc, minute desc limit 1");
+		$result = $this->query ("select day,hour,minute from user_activity order by day desc, hour desc, minute desc limit 1");
 		$row = mysql_fetch_assoc ($result);
-		$_SESSION['Day'] = $row['day'];
-		$_SESSION['Hour'] = $row['hour'];
-		$_SESSION['Minute'] = $row['minute'];
+		$day = $row['day'];
+		$hour = $row['hour'];
+		$minute = $row['minute'] + 1;
+
+		if ($minute > 59)
+		{
+			$minute -= 60;
+			$hour++;
+		}
+
+		if ($hour > 23)
+		{
+			$hour -= 24;
+			$day++;
+		}
+
+		if ($minute < 10)
+		{
+			$minute = "0".$minute;
+		}
+
+		if ($hour < 10)
+		{
+			$hour = "0".$hour;
+		}
+
+		if ($day < 10)
+		{
+			$day = "0000".$day;
+		}
+		else if ($day < 100)
+		{
+			$day = "000".$day;
+		}
+		else if ($day < 1000)
+		{
+			$day = "00".$day;
+		}
+		else if ($day < 10000)
+		{
+			$day = "0".$day;
+		}
+
+		$_SESSION['Day'] = $day;
+		$_SESSION['Hour'] = $hour;
+		$_SESSION['Minute'] = $minute;
 		mysql_free_result ($result);
+	}
+
+	// Will increment the site time by amount
+	function increment_site_time ($amount)
+	{
+		if ($amount < 1)
+			return false;
+		$amount -= 1;
+		$this->update_time ();
+		$user = $this->username ();
+		$day = $this->day ();
+		$hour = $this->hour ();
+		$minute = $this->minute () + $amount;
+		if ($minute > 59)
+		{
+			$minute -= 60;
+			$hour++;
+		}
+		if ($hour > 23)
+		{
+			$hour -= 24;
+			$day++;
+		}
+		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, 'Current Time')");
+		$this->update_time ();
+		return true;
 	}
 
 	// Get the current day, this is called after update_time();
@@ -150,6 +236,44 @@ class dbinfo_t
 	function minute ()
 	{
 		return $_SESSION['Minute'];
+	}
+
+	// Save an activity for the current user
+	function save_activity ($activity_description)
+	{
+		$this->update_time ();
+		$user = $this->username ();
+		$day = $this->day ();
+		$hour = $this->hour ();
+		$minute = $this->minute ();
+		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, '$activity_description')");
+		$this->update_closed_item_listings ();
+		return true;
+	}
+
+	// Must be admin, save activity for another user - user must exist
+	function save_activity_for ($username, $activity_description)
+	{
+		$this->update_time ();
+		$user = $username;
+		$day = $this->day ();
+		$hour = $this->hour ();
+		$minute = $this->minute ();
+
+		// determine if $username is a valid user
+		$result = $this->query ("select count(*) as count from user where username = '$username'");
+		if (mysql_num_rows ($result) == 0)
+			return false;
+		mysql_free_result ($result);
+
+		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, '$activity_description')");
+		$this->update_closed_item_listings ();
+	}
+
+	// Updates all item listing buyer information for closed auctions
+	function update_closed_item_listings ()
+	{
+		// coming soon
 	}
 }
 
