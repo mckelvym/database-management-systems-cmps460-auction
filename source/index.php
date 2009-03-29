@@ -19,5 +19,4 @@ HEREDOC;
 }
 
 echo_footer ($dbinfo);
-
 ?>
