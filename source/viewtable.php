@@ -22,7 +22,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
         print "$table Data</font><br>";
 
         // Select the database
-        @mysql_select_db($database) or die("Unable to select database");
+//        @mysql_select_db($database) or die("Unable to select database");
         $query="select * from $table";
 
         // Run the query
