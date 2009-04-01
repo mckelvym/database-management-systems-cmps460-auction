@@ -49,5 +49,15 @@ function input ($name, $value, $size, $id, $type)
 		return "<input name=\"$name\" size=\"$size\" id=\"$id\" type=\"$type\" value=\"$value\">\n";
 }
 
+function select ($name, $default_value, $options)
+{
+	return "<select name=\"$name\" value=\"$default_value\">\n$options \n</select>";
+}
+
+function option ($value, $display)
+{
+	return "<option value=\"$value\">$display</option>\n";
+}
+
 
 ?>
