@@ -155,7 +155,15 @@ function href ($url, $text)
 // Make the user go to a different page
 function redirect ($url)
 {
-	header ("Location: $url");
+//	header ("Location: $url");
+	echo <<<HEREDOC
+<script type="text/javascript">
+<!--
+window.location = "$url"
+//-->
+</script>
+HEREDOC;
+
 }
 
 // Get from the GET variable
