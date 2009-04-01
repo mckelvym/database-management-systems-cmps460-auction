@@ -32,7 +32,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
                 echo "Is_Admin:    $is_admin<br>";
                 echo "Name:        $name<br>";
                 echo "D.O.B.:      $dob<br>";
-                echo "Streeet:     $street<br>";
+                echo "Street:     $street<br>";
                 echo "City:        $city<br>";
                 echo "State:       $state<br>";
                 echo "Zip:         $zip<br>";
