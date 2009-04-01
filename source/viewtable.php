@@ -1,46 +1,49 @@
 <?php
 include_once ("common.php");
 
-//$host="calvados.ucs.louisiana.edu";
-//$user="yourCLID";
-//$password="yourPassword";
-//$database="4601_";
-
-
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
 
 $table = get ("name");
 if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 {
-	cout ("Soon, you'll see information from the database table '$table'.");
-	
 	if ($table == "user")
 	{
-//        $connect = mysql_connect($host,$user,$password);
         print '<font size="5" color="blue">';
-        print "$table Data</font><br>";
+        print "User Data</font><br><br>";
 
         // Select the database
-//        @mysql_select_db($database) or die("Unable to select database");
         $query="select * from $table";
 
         // Run the query
         $results_id = mysql_query($query);
         if($results_id)
         {
-           print '<table border=1>';
-           print '<th>ID<th>PIN<th>NAME<th>TYPE<th>BALANCE<th>';
-           // Get each row of the result
-           while ($row = mysql_fetch_row($results_id))
+           // Get each row of the result, assign a variable to each
+           // attribute in the row, and echo the data with labels
+           while (list($username, $passwd, $is_admin, $name, $dob, $street,
+                       $city, $state, $zip, $phone, $email, $cc, $ccn, $ccx,
+                       $picture, $descr)
+                 = mysql_fetch_row($results_id))
            {
-              print '<tr>';
-              // Get each attribute in the row
-              foreach($row as $attribute)
-              {
-                 print "<td>$attribute</td> ";
-              }
-              print '</tr>';
+                echo "<pre>";
+                echo "Username:    $username<br>";
+                echo "Password:    $passwd<br>";
+                echo "Is_Admin:    $is_admin<br>";
+                echo "Name:        $name<br>";
+                echo "D.O.B.:      $dob<br>";
+                echo "Streeet:     $street<br>";
+                echo "City:        $city<br>";
+                echo "State:       $state<br>";
+                echo "Zip:         $zip<br>";
+                echo "Phone:       $phone<br>";
+                echo "Email:       $email<br>";
+                echo "Credit Card: $cc<br>";
+                echo "CC Number:   $ccn<br>";
+                echo "CC Exp.Date: $ccx<br>";
+                echo "Picture:     $picture<br>";
+                echo "Description: $descr<br><br>";
+                echo "</pre>";
            }
         }
         else
@@ -50,27 +53,142 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
                   <br>ERROR = ";
            die (mysql_error());
         }
-//        mysql_close($connect);
 	}
-	
 	
 	else if ($table == "user_activity")
 	{
-		cout ("Nothing yet");
+        print '<font size="5" color="blue">';
+        print "Activity Data</font><br><br>";
+
+        // Select the database
+        $query="select * from $table";
+
+        // Run the query
+        $results_id = mysql_query($query);
+        if($results_id)
+        {
+           // Get each row of the result, assign a variable to each
+           // attribute in the row, and echo the data with labels
+           while (list($username, $day, $hour, $minute, $activity)
+                 = mysql_fetch_row($results_id))
+           {
+                echo "<pre>";
+                echo "Username:  $username<br>";
+                echo "Day:       $day<br>";
+                echo "Hour:      $hour<br>";
+                echo "Minute:    $minute<br>";
+                echo "Activity:  $activity<br><br>";
+                echo "</pre>";
+           }
+        }
+        else
+        {
+           // Display the query and the MySQL error message
+           print "<br><br>QUERY FAILED !!! <br><br>QUERY = $query <br>
+                  <br>ERROR = ";
+           die (mysql_error());
+        }
 	}
+	
 	else if ($table == "item_listing")
 	{
-		cout ("Nothing yet");
+        print '<font size="5" color="blue">';
+        print "Item Listing Data</font><br><br>";
+
+        // Select the database
+        $query="select * from $table";
+
+        // Run the query
+        $results_id = mysql_query($query);
+        if($results_id)
+        {
+           // Get each row of the result, assign a variable to each
+           // attribute in the row, and echo the data with labels
+           while (list($title, $seller, $category, $end_day, $end_hour,
+                       $end_min, $descr, $ship_cost, $ship_meth, $str_price,
+                       $curr_price, $pict, $buyer, $buy_fdbk_descr,
+                       $buy_fdbk_rate, $sell_fdbk_descr)
+                 = mysql_fetch_row($results_id))
+           {
+                echo "<pre>";
+                echo "Title:           $title<br>";
+                echo "Seller:          $seller<br>";
+                echo "Category:        $category<br>";
+                echo "End Day:         $end_day<br>";
+                echo "End Hour:        $end_hour<br>";
+                echo "End Minute:      $end_min<br>";
+                echo "Description:     $descr<br>";
+                echo "Shipping Cost:   $ship_cost<br>";
+                echo "Shipping Method: $ship_meth<br>";
+                echo "Starting Price:  $str_price<br>";
+                echo "Current Price:   $curr_price<br>";
+                echo "Picture:         $pict<br>";
+                echo "Buyer:           $buyer<br>";
+                echo "Buyer Feedback Description:  $buy_fdbk_descr<br>";
+                echo "Buyer Feedback Rating:       $buy_fdbk_rate<br>";
+                echo "Seller Feedback Description: $sell_fdbk_descr<br><br>";
+                echo "</pre>";
+           }
+        }
+        else
+        {
+           // Display the query and the MySQL error message
+           print "<br><br>QUERY FAILED !!! <br><br>QUERY = $query <br>
+                  <br>ERROR = ";
+           die (mysql_error());
+        }
 	}
+	
 	else if ($table == "bids_on")
 	{
-		cout ("Nothing yet");
+        print '<font size="5" color="blue">';
+        print "Bid Data</font><br><br>";
+
+        // Select the database
+        $query="select * from $table";
+
+        // Run the query
+        $results_id = mysql_query($query);
+        if($results_id)
+        {
+           // Get each row of the result, assign a variable to each
+           // attribute in the row, and echo the data with labels
+           while (list($username, $title, $seller, $category, $end_day,
+                       $end_hour, $end_min, $bid_day, $bid_hour, $bid_min,
+                       $bid_amt, $disp_notif)
+                 = mysql_fetch_row($results_id))
+           {
+                echo "<pre>";
+                echo "Username:             $username<br>";
+                echo "Title:                $title<br>";
+                echo "Seller:               $seller<br>";
+                echo "Category:             $category<br>";
+                echo "End Day:              $end_day<br>";
+                echo "End Hour:             $end_hour<br>";
+                echo "End Minute:           $end_min<br>";
+                echo "Bid Day:              $bid_day<br>";
+                echo "Bid Hour:             $bid_hour<br>";
+                echo "Bid Minute:           $bid_min<br>";
+                echo "Bid Amount:           $bid_amt<br>";
+                echo "Display Notification: $disp_notif<br><br>";
+                echo "</pre>";
+           }
+        }
+        else
+        {
+           // Display the query and the MySQL error message
+           print "<br><br>QUERY FAILED !!! <br><br>QUERY = $query <br>
+                  <br>ERROR = ";
+           die (mysql_error());
+        }
 	}
 }
+
 else if ($dbinfo->logged_in ())
 {
 	redirect ("index.php");
 }
+
 else
 {
 	redirect ("index.php");
