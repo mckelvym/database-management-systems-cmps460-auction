@@ -18,9 +18,6 @@ class dbinfo_t
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
 		$this->pass = "foursixty";
-/* 		$this->host = "localhost"; */
-/* 		$this->user = "root"; */
-/* 		$this->pass = "foursixty"; */
 		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 		$this->debug = true;
@@ -276,7 +273,38 @@ class dbinfo_t
 	// Updates all item listing buyer information for closed auctions
 	function update_closed_item_listings ()
 	{
-		// coming soon
+		$day = $this->day ();
+		$hr = $this->hour ();
+		$min = $this->minute ();
+		$result1 = $this->query ("select title, seller, category, end_day, end_hour, end_minute from item_listing where end_day <= $day AND end_hour <= $hr AND end_minute <= $min AND buyer = ''");
+		if (mysql_num_rows ($result1) > 0)
+		{
+			while ($row = mysql_fetch_assoc ($result1))
+			{
+				$title = $row['title'];
+				$seller = $row['seller'];
+				$category = $row['category'];
+				$endday = $row['end_day'];
+				$endhr = $row['end_hour'];
+				$endmin = $row['end_minute'];
+				$result2 = $this->query ("select username, bid_amount from bids_on where item_title = '$title' AND item_seller = '$seller' AND item_category = '$category' AND item_end_day = $endday AND item_end_hour = $endhr AND item_end_minute = $endmin order by bid_amount desc limit 1");
+				// no buyer
+				if (mysql_num_rows ($result2) == 0)
+				{
+					$this->query ("update item_listing set buyer = 'None', current_price = starting_price where title = '$title' AND seller = '$seller' AND category = '$category' AND end_day = $endday AND end_hour = $endhr AND end_minute = $endmin");
+				}
+				// buyer
+				else
+				{
+					$row2 = mysql_fetch_assoc ($result2);
+					$buyer = $row2['username'];
+					$price = $row2['bid_amount'];
+					$this->query ("update item_listing set buyer = '$buyer', current_price = $price where title = '$title' AND seller = '$seller' AND category = '$category' AND end_day = $endday AND end_hour = $endhr AND end_minute = $endmin");
+				}
+				mysql_free_result ($result2);
+			}
+			mysql_free_result ($result1);
+		}
 	}
 }
 
