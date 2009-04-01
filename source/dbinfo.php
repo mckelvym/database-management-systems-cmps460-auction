@@ -23,6 +23,11 @@ class dbinfo_t
 		$this->debug = true;
 	}
 
+	function debug ()
+	{
+		return $this->debug;
+	}
+
 	// Make a connection to the database
 	// returns true if successful or false if not
 	function connect ()
