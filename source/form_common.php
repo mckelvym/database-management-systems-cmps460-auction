@@ -18,9 +18,9 @@ function text_input ($name, $value)
 	return input ($name, $value, 20, "", "text");
 }
 
-function text_input_s ($name, $value, $size)
+function text_input_s ($name, $value, $size, $maxsize)
 {
-	return input ($name, $value, $size, "", "text");
+	return input ($name, $value, $size, "", "text", $maxsize);
 }
 
 // Typical password input for a form
@@ -41,12 +41,14 @@ function submit_input ($value)
 }
 
 // Input for a form that has more freedom
-function input ($name, $value, $size, $id, $type)
+function input ($name, $value, $size, $id, $type, $maxsize = "")
 {
+	if (!empty ($maxsize))
+		$maxsize = "maxlength=\"$maxsize\"";
 	if (empty ($size))
-		return "<input name=\"$name\" id=\"$id\" type=\"$type\" value=\"$value\">\n";
+		return "<input name=\"$name\" $maxsize id=\"$id\" type=\"$type\" value=\"$value\">\n";
 	else
-		return "<input name=\"$name\" size=\"$size\" id=\"$id\" type=\"$type\" value=\"$value\">\n";
+		return "<input name=\"$name\" $maxsize size=\"$size\" id=\"$id\" type=\"$type\" value=\"$value\">\n";
 }
 
 function select ($name, $default_value, $options)
