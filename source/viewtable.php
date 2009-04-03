@@ -5,15 +5,37 @@ $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
 
 $table = get ("name");
+$order = get("order");
+$desc = get("desc");
+
 if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 {
 	if ($table == "user")
 	{
 		print '<font size="5" color="blue">';
-		print "User Data</font><br><br>";
-
+		print "User Data</font><br><br></font>";
+		
+		
+		echo "<a href=viewtable.php?name=user&order=username>
+		        Sort by Username</a> | 
+		      <a href=viewtable.php?name=user&order=card_expire>
+		        Sort by CC Exp Date</a><br>";
+		        
 		// Select the database
-		$query="select * from $table";
+		        
+		if ($order == "username")
+		{
+		    $query="select * from $table order by username";
+		    
+		}
+		
+		else if ($order == "card_expire")
+		{
+		    $query="select * from $table order by card_expire";
+		    
+		}
+		
+		else $query="select * from $table";
 
 		// Run the query
 		$results_id = mysql_query($query);
@@ -61,7 +83,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		print "Activity Data</font><br><br>";
 
 		// Select the database
-		$query="select * from $table";
+		$query="select * from $table order by day desc, hour desc, minute desc";
 
 		// Run the query
 		$results_id = mysql_query($query);
