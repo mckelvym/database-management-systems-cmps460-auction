@@ -16,6 +16,11 @@ function ul_wrap ($list_elems)
 	return ul_begin ().$list_elems.ul_end ();
 }
 
+function ul ($list_elems)
+{
+	return ul_wrap ($list_elems);
+}
+
 // Ordered Lists
 function ol_begin ()
 {
@@ -32,6 +37,11 @@ function ol_wrap ($list_elems)
 	return ol_begin ().$list_elems.ol_end ();
 }
 
+function ol ($list_elems)
+{
+	return ol_wrap ($list_elems);
+}
+
 // List elements
 function li_begin ()
 {
@@ -46,5 +56,10 @@ function li_end ()
 function li_wrap ($list_elem)
 {
 	return li_begin ().$list_elem.li_end ();
+}
+
+function li ($list_elem)
+{
+	return li_wrap ($list_elem);
 }
 ?>
