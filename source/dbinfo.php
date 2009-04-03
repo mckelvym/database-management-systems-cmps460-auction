@@ -311,15 +311,33 @@ class dbinfo_t
 			mysql_free_result ($result1);
 		}
 	}
-	//<Begin - Changes made by Sayooj Valsan > # User Profile	
+
+	function user_exists ($username)
+	{
+		$result = $this->query ("select count(*) as count from user where username = '$username'");
+		if (mysql_num_rows ($result) == 0)
+		{
+			mysql_free_result ($result);
+			return false;
+		}
+		else
+		{
+			mysql_free_result ($result);
+			return true;
+		}
+	}
+
+	//<Begin - Changes made by Sayooj Valsan > # User Profile
 	// Gets the user description
 	function get_userdesc($username)
-	{	
+	{
 		$result = $this->query ("select description from user where username =  '$username'");
-		$row = mysql_fetch_assoc ($result);		
-		return $row['description'];		
+		$row = mysql_fetch_assoc ($result);
+		return $row['description'];
 	}
 	//<End - Changes made by Sayooj Valsan > # User Profile
+
+
 }
 
 ?>
