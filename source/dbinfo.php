@@ -311,6 +311,15 @@ class dbinfo_t
 			mysql_free_result ($result1);
 		}
 	}
+	//<Begin - Changes made by Sayooj Valsan > # User Profile	
+	// Gets the user description
+	function get_userdesc($username)
+	{	
+		$result = $this->query ("select description from user where username =  '$username'");
+		$row = mysql_fetch_assoc ($result);		
+		return $row['description'];		
+	}
+	//<End - Changes made by Sayooj Valsan > # User Profile
 }
 
 ?>
