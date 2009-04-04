@@ -3,11 +3,12 @@ include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
+
 $mode = get ("mode");
 $current_script = current_script ();
 
 if ($mode == "edit")
-	$username = get ("user");
+	$get_username = get ("user");
 
 function new_registration_form ($username = "")
 {
@@ -151,6 +152,67 @@ function new_registration_form ($username = "")
 	echo $table->table_end ();
 }
 
+function verify_data ()
+{
+	global $dbinfo, $errors, $post_username, $passwd1, $passwd2,
+		$is_admin, $post_realname, $post_birth_date, $post_street,
+		$post_city, $post_state, $post_zip, $post_phone, $post_email,
+		$post_card_type, $post_card_number, $post_card_expire,
+		$post_picture, $post_description;
+	$errors = "";
+	$post_username = post ("username");
+	$passwd1 = post ("password");
+	$passwd2 = post ("password2");
+	$is_admin = 0;
+	$post_realname = post ("realname");
+	$post_birth_date = post ("birth_date");
+	$post_street = post ("shipping_street");
+	$post_city = post ("shipping_city");
+	$post_state = post ("shipping_state");
+	$post_zip = post ("shipping_zip");
+	$post_phone = post ("phone");
+	$post_email = post ("email");
+	$post_card_type = post ("card_type");
+	$post_card_number = post ("card_number");
+	$post_card_expire = post ("card_expire");
+	$post_picture = post ("picture");
+	$post_description = "N/A";
+
+	if (empty ($post_username))
+		$errors = $errors.li ("Username can't be empty");
+	if ($dbinfo->user_exists ($post_username))
+		$errors = $errors.li ("Username already exists");
+	if (empty ($passwd1))
+		$errors = $errors.li ("Password can't be empty");
+	if ($passwd1 != $passwd2)
+		$errors = $errors.li ("Passwords don't match");
+	if (empty ($post_realname))
+		$errors = $errors.li ("Name can't be empty");
+	if (empty ($post_birth_date))
+		$errors = $errors.li ("Birth date can't be empty");
+	else if (strlen ($post_birth_date) < 6)
+		$errors = $errors.li ("Birth date too short");
+	if (empty ($post_street))
+		$errors = $errors.li ("Street can't be empty");
+	if (empty ($post_city))
+		$errors = $errors.li ("City can't be empty");
+	if (!filter_var ($post_zip, FILTER_VALIDATE_INT))
+		$errors = $errors.li ("Invalid zip code");
+	else if (strlen ($post_zip) < 5)
+		$errors = $errors.li ("Zip code too short");
+	if (empty ($post_phone))
+		$errors = $errors.li ("Phone number can't be empty");
+	else if (strlen ($post_phone) < 10)
+		$errors = $errors.li ("Phone number too short");
+	if (!filter_var ($post_email, FILTER_VALIDATE_EMAIL))
+		$errors = $errors.li ("Invalid e-mail");
+	if ($post_card_number + 0 <= 0)
+		$errors = $errors.li ("Invalid credit card number");
+	else if (strlen ($post_card_number) < 12)
+		$errors = $errors.li ("Credit card number too short");
+	return $errors;
+}
+
 
 if ($dbinfo->logged_in ())
 {
@@ -162,63 +224,13 @@ if ($dbinfo->logged_in ())
 	{
 		echo "Soon, you'll see your registration info.";
 	}
-	new_registration_form ($username);
+	new_registration_form ($get_username);
 }
 else
 {
 	if ($mode == "savenew")
 	{
-		$errors = "";
-		$username = post ("username");
-		$passwd1 = post ("password");
-		$passwd2 = post ("password2");
-		$is_admin = 0;
-		$name = post ("realname");
-		$birth = post ("birth_date");
-		$street = post ("shipping_street");
-		$city = post ("shipping_city");
-		$state = post ("shipping_state");
-		$zip = post ("shipping_zip");
-		$phone = post ("phone");
-		$email = post ("email");
-		$cc_type = post ("card_type");
-		$cc_num = post ("card_number");
-		$cc_exp = post ("card_expire");
-		$pic = post ("picture");
-		$desc = "N/A";
-
-		if (empty ($username))
-			$errors = $errors.li ("Username can't be empty");
-		if (!$dbinfo->user_exists ($username))
-			$errors = $errors.li ("Username already exists");
-		if (empty ($passwd1))
-			$errors = $errors.li ("Password can't be empty");
-		if ($passwd1 != $passwd2)
-			$errors = $errors.li ("Passwords don't match");
-		if (empty ($name))
-			$errors = $errors.li ("Name can't be empty");
-		if (empty ($birth))
-			$errors = $errors.li ("Birth date can't be empty");
-		else if (strlen ($birth) < 6)
-			$errors = $errors.li ("Birth date too short");
-		if (empty ($street))
-			$errors = $errors.li ("Street can't be empty");
-		if (empty ($city))
-			$errors = $errors.li ("City can't be empty");
-		if (!filter_var ($zip, FILTER_VALIDATE_INT))
-			$errors = $errors.li ("Invalid zip code");
-		else if (strlen ($zip) < 5)
-			$errors = $errors.li ("Zip code too short");
-		if (empty ($phone))
-			$errors = $errors.li ("Phone number can't be empty");
-		else if (strlen ($phone) < 10)
-			$errors = $errors.li ("Phone number too short");
-		if (!filter_var ($email, FILTER_VALIDATE_EMAIL))
-			$errors = $errors.li ("Invalid e-mail");
-		if ($cc_num + 0 <= 0)
-			$errors = $errors.li ("Invalid credit card number");
-		else if (strlen ($cc_num) < 12)
-			$errors = $errors.li ("Credit card number too short");
+		verify_data ();
 		if (!empty ($errors))
 		{
 			echo "Errors were detected. Please correct before continuing:<br/>";
@@ -226,8 +238,8 @@ else
 		}
 		else
 		{
-			$dbinfo->query ("insert into user values ('$username', '$passwd1', $is_admin, '$name', '$birth', '$street', '$city', '$state', $zip, '$phone', '$email', '$cc_type', $cc_num, '$cc_exp', '$pic', '$desc')");
-			if (!$dbinfo->user_exists ($username))
+			$dbinfo->query ("insert into user values ('$post_username', '$passwd1', $is_admin, '$post_realname', '$post_birth_date', '$post_street', '$post_city', '$post_state', $post_zip, '$post_phone', '$post_email', '$post_card_type', $post_card_number, '$post_card_expire', '$post_picture', '$post_description')");
+			if (!$dbinfo->user_exists ($post_username))
 			{
 				cout ("Registration failed. ");
 				cout (href ($current_script, "Try again."));

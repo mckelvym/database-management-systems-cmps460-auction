@@ -18,6 +18,9 @@ class dbinfo_t
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
 		$this->pass = "foursixty";
+/* 		$this->host = "localhost"; */
+/* 		$this->user = "root"; */
+/* 		$this->pass = ""; */
 		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 		$this->debug = true;
@@ -314,7 +317,7 @@ class dbinfo_t
 
 	function user_exists ($username)
 	{
-		$result = $this->query ("select count(*) as count from user where username = '$username'");
+		$result = $this->query ("select username from user where username = '$username'");
 		if (mysql_num_rows ($result) == 0)
 		{
 			mysql_free_result ($result);
