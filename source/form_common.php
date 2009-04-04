@@ -29,9 +29,9 @@ function password_input ($name, $value)
 	return input ($name, $value, 20, "", "password");
 }
 
-function password_input_s ($name, $value, $size)
+function password_input_s ($name, $value, $size, $maxsize)
 {
-	return input ($name, $value, $size, "", "password");
+	return input ($name, $value, $size, "", "password", $maxsize);
 }
 
 // Typical password input for a form

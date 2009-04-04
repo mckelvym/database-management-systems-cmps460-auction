@@ -25,11 +25,11 @@ function new_registration_form ($username = "")
 	else
 		echo form_begin ("$current_script?mode=savenew", "post");
 	echo $table->tr ($table->td ("Desired Username").
-			 $table->td (text_input ("username", "")));
+			 $table->td (text_input_s ("username", "", 20, 50)));
 	echo $table->tr ($table->td ("Desired Password").
-			 $table->td (password_input ("password", "")));
+			 $table->td (password_input_s ("password", "", 20, 50)));
 	echo $table->tr ($table->td ("Repeat Password").
-			 $table->td (password_input ("password2", "")));
+			 $table->td (password_input_s ("password2", "", 20, 50)));
 	if ($dbinfo->is_admin ())
 	{
 		$options = "";
@@ -39,13 +39,13 @@ function new_registration_form ($username = "")
 				 $table->td (select ("is_admin", "1", $options)));
 	}
 	echo $table->tr ($table->td ("Real Name").
-			 $table->td (text_input ("realname", "")));
+			 $table->td (text_input_s ("realname", "", 20, 100)));
 	echo $table->tr ($table->td ("Birth Date").
-			 $table->td (text_input ("birth_date", "")));
+			 $table->td (text_input_s ("birth_date", "", 10, 10)));
 	echo $table->tr ($table->td ("Shipping Street").
-			 $table->td (text_input ("shipping_street", "")));
+			 $table->td (text_input_s ("shipping_street", "", 20, 100)));
 	echo $table->tr ($table->td ("Shipping City").
-			 $table->td (text_input ("shipping_city", "")));
+			 $table->td (text_input_s ("shipping_city", "", 20, 50)));
 	$options = "";
 	$options = $options.option ("Alabama", "Alabama");
 	$options = $options.option ("Alaska", "Alaska");
@@ -106,11 +106,11 @@ function new_registration_form ($username = "")
 	echo $table->tr ($table->td ("Shipping State").
 			 $table->td (select ("shipping_state", "", $options)));
 	echo $table->tr ($table->td ("Shipping Zip Code").
-			 $table->td (text_input_s ("shipping_zip", "", 7, 12)));
+			 $table->td (text_input_s ("shipping_zip", "", 5, 10)));
 	echo $table->tr ($table->td ("Phone Number").
 			 $table->td (text_input_s ("phone", "", 12, 12)));
 	echo $table->tr ($table->td ("Email Address").
-			 $table->td (text_input ("email", "")));
+			 $table->td (text_input_s ("email", "", 20, 50)));
 	$options = "";
 	$options = $options.option ("American Express", "American Express");
 	$options = $options.option ("Discover", "Discover");
@@ -226,8 +226,7 @@ else
 		}
 		else
 		{
-			echo "'$username', '$passwd1', $is_admin, '$name', '$birth', '$street', '$city', '$state', $zip, '$phone', '$email', '$cc_type', $cc_number, '$cc_expire', '$pic', '$desc'";
-			$dbinfo->query ("insert into user values('$username', '$passwd1', $is_admin, '$name', '$birth', '$street', '$city', '$state', $zip, '$phone', '$email', '$cc_type', $cc_number, '$cc_expire', '$pic', '$desc'");
+			$dbinfo->query ("insert into user values ('$username', '$passwd1', $is_admin, '$name', '$birth', '$street', '$city', '$state', $zip, '$phone', '$email', '$cc_type', $cc_num, '$cc_exp', '$pic', '$desc')");
 			if (!$dbinfo->user_exists ($username))
 			{
 				cout ("Registration failed. ");
@@ -243,7 +242,6 @@ else
 	else
 		new_registration_form ();
 }
-echo "MODE = '$mode'";
 
 echo_footer ($dbinfo);
 
