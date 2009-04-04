@@ -20,6 +20,7 @@ function new_registration_form ($username = "")
 	echo $table->table_head_begin ();
 	echo $table->tr ($table->td_span ("Register for an iBay account", "", 2));
 	echo $table->tr_end ();
+	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
 	if ($dbinfo->is_admin ())
 		echo form_begin ("$current_script?mode=save", "post");
