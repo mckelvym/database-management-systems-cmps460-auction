@@ -3,8 +3,9 @@ include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
-if(!isset($_SESSION['Username']))
-  redirect ("index.php");
+
+if (!$dbinfo->logged_in ())
+	redirect ("index.php");
 ?>
 <table border="1" width="99%" cellpadding="10">
 <tr>
