@@ -16,23 +16,28 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		print "User Data</font><br><br></font>";
 		
 		
-		echo "<a href=viewtable.php?name=user&order=username>
-		        Sort by Username</a> | 
-		      <a href=viewtable.php?name=user&order=card_expire>
-		        Sort by CC Exp Date</a><br>";
+		echo "<a href=viewtable.php?name=user&order=username&desc=0>
+		        Sort by Username Ascending</a> | 
+		      <a href=viewtable.php?name=user&order=username&desc=1>
+		        Sort by Username Descending</a><br>";
 		        
 		// Select the database
 		        
 		if ($order == "username")
 		{
-		    $query="select * from $table order by username";
-		    
-		}
-		
-		else if ($order == "card_expire")
-		{
-		    $query="select * from $table order by card_expire";
-		    
+            if ($desc == "0")
+            {
+                $query="select * from $table order by username";
+            }
+            
+            else if ($desc == "1")
+            {
+                $query="select * from $table order by username desc";
+            }
+            else if ($desc != "0"|"1")
+            {
+                $query="select * from $table order by username";
+            }
 		}
 		
 		else $query="select * from $table";
@@ -54,7 +59,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 				echo "Is_Admin:    $is_admin<br>";
 				echo "Name:        $name<br>";
 				echo "D.O.B.:      $dob<br>";
-				echo "Street:     $street<br>";
+				echo "Street:      $street<br>";
 				echo "City:        $city<br>";
 				echo "State:       $state<br>";
 				echo "Zip:         $zip<br>";
@@ -116,9 +121,32 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 	{
 		print '<font size="5" color="blue">';
 		print "Item Listing Data</font><br><br>";
-
+		
+		echo "<a href=viewtable.php?name=item_listing&order=seller&desc=0>
+		        Sort by Seller Ascending</a> | 
+		      <a href=viewtable.php?name=item_listing&order=seller&desc=1>
+		        Sort by Seller Descending</a><br>";
+		        
 		// Select the database
-		$query="select * from $table";
+		        
+		if ($order == "seller")
+		{
+            if ($desc == "0")
+            {
+                $query="select * from $table order by seller";
+            }
+            
+            else if ($desc == "1")
+            {
+                $query="select * from $table order by seller desc";
+            }
+            else if ($desc != "0"|"1")
+            {
+                $query="select * from $table order by seller";
+            }
+		}
+		
+		else $query="select * from $table";
 
 		// Run the query
 		$results_id = mysql_query($query);
@@ -165,9 +193,32 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 	{
 		print '<font size="5" color="blue">';
 		print "Bid Data</font><br><br>";
-
+		
+		echo "<a href=viewtable.php?name=bids_on&order=username&desc=0>
+		        Sort by Username Ascending</a> | 
+		      <a href=viewtable.php?name=bids_on&order=username&desc=1>
+		        Sort by Username Descending</a><br>";
+		        
 		// Select the database
-		$query="select * from $table";
+		        
+		if ($order == "username")
+		{
+            if ($desc == "0")
+            {
+                $query="select * from $table order by username";
+            }
+            
+            else if ($desc == "1")
+            {
+                $query="select * from $table order by username desc";
+            }
+            else if ($desc != "0"|"1")
+            {
+                $query="select * from $table order by username";
+            }
+		}
+		
+		else $query="select * from $table";
 
 		// Run the query
 		$results_id = mysql_query($query);
