@@ -181,6 +181,20 @@ function post ($key)
 	return $val;
 }
 
+// Script to make setting session variables easier.
+function session_set ($key, $val)
+{
+	$key = "tmp_$key";
+	$_SESSION[$key] = $val;
+}
+
+// Script to make getting session variables easier.
+function session_get ($key)
+{
+	$key = "tmp_$key";
+	return $_SESSION[$key];
+}
+
 // Heading level 1
 function h1 ($text)
 {
