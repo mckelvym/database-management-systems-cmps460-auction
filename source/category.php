@@ -25,7 +25,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=art&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ('Art');
+		$category = "Art";
     }
 
 	else if ($view == "books")
@@ -42,7 +42,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=books&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ("Books");
+		$category = "Books";
     }
     
 	else if ($view == "clothes")
@@ -59,7 +59,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=clothes&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ("Clothes");
+		$category = "Clothes";
     }
     
 	else if ($view == "collectibles")
@@ -76,7 +76,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=collectibles&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ("Collectibles");
+		$category = "Collectibles";
     }
     
 	else if ($view == "electronics")
@@ -93,7 +93,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=electronics&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ("Electronics");
+		$category = "Electronics";
     }
     
 	else if ($view == "entertainment")
@@ -110,7 +110,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=entertainment&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 
-		$category = ("Entertainment");
+		$category = "Entertainment";
     }
     
 	else if ($view == "jewelry")
@@ -127,7 +127,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=jewelry&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ("Jewelry");
+		$category = "Jewelry";
     }
     
 	else if ($view == "sporting_goods")
@@ -144,7 +144,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=sporting_goods&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ("Sporting Goods");
+		$category = "Sporting Goods";
     }
     
 	else if ($view == "toys")
@@ -161,7 +161,7 @@ if ($dbinfo->logged_in ())
 		      <a href=category.php?view=toys&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		        
-		$category = ("Toys");
+		$category = "Toys";
     }
     
 	else
