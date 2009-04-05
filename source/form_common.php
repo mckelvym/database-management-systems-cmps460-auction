@@ -51,14 +51,17 @@ function input ($name, $value, $size, $id, $type, $maxsize = "")
 		return "<input name=\"$name\" $maxsize size=\"$size\" id=\"$id\" type=\"$type\" value=\"$value\">\n";
 }
 
-function select ($name, $default_value, $options)
+function select ($name, $options)
 {
 	return "<select name=\"$name\" value=\"$default_value\">\n$options \n</select>";
 }
 
-function option ($value, $display)
+function option ($value, $display, $is_selected = false)
 {
-	return "<option value=\"$value\">$display</option>\n";
+	if ($is_selected)
+		return "<option selected=\"yes\" value=\"$value\">$display</option>\n";
+	else
+		return "<option value=\"$value\">$display</option>\n";
 }
 
 

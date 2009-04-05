@@ -38,7 +38,7 @@ function new_registration_form ($username = "")
 		$options = $options.option ("0", "No");
 		$options = $options.option ("1", "Yes");
 		echo $table->tr ($table->td ("Admin").
-				 $table->td (select ("is_admin", "1", $options)));
+				 $table->td (select ("is_admin", $options)));
 	}
 	echo $table->tr ($table->td ("Real Name").
 			 $table->td (text_input_s ("realname", "", 20, 100)));
@@ -69,7 +69,7 @@ function new_registration_form ($username = "")
 	$options = $options.option ("Iowa", "Iowa");
 	$options = $options.option ("Kansas", "Kansas");
 	$options = $options.option ("Kentucky", "Kentucky");
-	$options = $options.option ("Louisiana", "Louisiana");
+	$options = $options.option ("Louisiana", "Louisiana", true);
 	$options = $options.option ("Maine", "Maine");
 	$options = $options.option ("Maryland", "Maryland");
 	$options = $options.option ("Massachusetts", "Massachusetts");
@@ -106,7 +106,7 @@ function new_registration_form ($username = "")
 	$options = $options.option ("Wisconsin", "Wisconsin");
 	$options = $options.option ("Wyoming", "Wyoming");
 	echo $table->tr ($table->td ("Shipping State").
-			 $table->td (select ("shipping_state", "", $options)));
+			 $table->td (select ("shipping_state", $options)));
 	echo $table->tr ($table->td ("Shipping Zip Code").
 			 $table->td (text_input_s ("shipping_zip", "", 5, 10)));
 	echo $table->tr ($table->td ("Phone Number").
@@ -117,9 +117,9 @@ function new_registration_form ($username = "")
 	$options = $options.option ("American Express", "American Express");
 	$options = $options.option ("Discover", "Discover");
 	$options = $options.option ("Mastercard", "Mastercard");
-	$options = $options.option ("Visa", "Visa");
+	$options = $options.option ("Visa", "Visa", true);
 	echo $table->tr ($table->td ("Credit Card Type").
-			 $table->td (select ("card_type", "", $options)));
+			 $table->td (select ("card_type", $options)));
 	echo $table->tr ($table->td ("Credit Card Number").
 			 $table->td (text_input_s ("card_number", "", 16, 16)));
 	$options = "";
@@ -137,13 +137,13 @@ function new_registration_form ($username = "")
 		}
 	}
 	echo $table->tr ($table->td ("Credit Card Expiration").
-			 $table->td (select ("card_expire", "", $options)));
+			 $table->td (select ("card_expire", $options)));
 	$options = "";
 	$options = $options.option ("default.jpg", "Default");
 	$options = $options.option ("smile.jpg", "Smile");
 	$options = $options.option ("frown.jpg", "Frown");
 	echo $table->tr ($table->td ("Profile Picture").
-			 $table->td (select ("picture", "", $options)));
+			 $table->td (select ("picture", $options)));
 	if ($dbinfo->is_admin ())
 		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2));
 	else
