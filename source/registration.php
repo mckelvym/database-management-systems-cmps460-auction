@@ -17,7 +17,7 @@ function registration_form ($user = "")
 {
 	global $dbinfo;
 	global $current_script;
-	
+
 	if (!empty ($user) && $dbinfo->user_exists ($user))
 	{
 		$result = $dbinfo->query ("select * from user where username = '$user'");
@@ -243,7 +243,7 @@ function verify_data ()
 		$errors = $errors.li ("Street can't be empty");
 	if (empty ($post_city))
 		$errors = $errors.li ("City can't be empty");
-	if (!filter_var ($post_zip, FILTER_VALIDATE_INT))
+	if ($post_zip + 0 <= 0)
 		$errors = $errors.li ("Invalid zip code");
 	else if (strlen ($post_zip) < 5)
 		$errors = $errors.li ("Zip code too short");
@@ -251,7 +251,7 @@ function verify_data ()
 		$errors = $errors.li ("Phone number can't be empty");
 	else if (strlen ($post_phone) < 10)
 		$errors = $errors.li ("Phone number too short");
-	if (!filter_var ($post_email, FILTER_VALIDATE_EMAIL))
+	if (strlen ($post_email) < 5)
 		$errors = $errors.li ("Invalid e-mail");
 	if ($post_card_number + 0 <= 0)
 		$errors = $errors.li ("Invalid credit card number");
