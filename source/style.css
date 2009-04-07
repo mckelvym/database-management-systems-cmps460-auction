@@ -38,6 +38,14 @@ body {
     border: 1px dotted navy;
 }
 
+#scriptstatus {
+    position: relative;
+    margin: 0px;
+    text-align: right;
+    font-size: 0.8em;
+    font-weigth: bold;
+}
+
 #navbar {
     float: left;
     position: relative;
