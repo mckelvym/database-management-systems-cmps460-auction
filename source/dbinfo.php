@@ -52,7 +52,8 @@ class dbinfo_t
 	// usually call this at the end of a script
 	function close ()
 	{
-		mysql_close ($this->dblink);
+		if ($this->dblink)
+			mysql_close ($this->dblink);
 	}
 
 	// Make a query to the database and return the result
