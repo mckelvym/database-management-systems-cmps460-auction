@@ -23,7 +23,7 @@ body {
     padding-top: 1em;
     text-align: center;
     font-size: 2em;
-    font-weigth: bold;
+    font-weight: bold;
     border: 1px dotted navy;
 }
 
@@ -34,7 +34,6 @@ body {
     padding-right: 150px;
     text-align: right;
     font-size: 0.8em;
-    font-weigth: bold;
     border: 1px dotted navy;
 }
 
@@ -43,7 +42,6 @@ body {
     margin: 0px;
     text-align: right;
     font-size: 0.8em;
-    font-weigth: bold;
 }
 
 #navbar {
@@ -66,7 +64,6 @@ body {
 }
 
 #navbar li {
-    #display: inline;	
 }
 
 #navbar li a {
@@ -74,7 +71,6 @@ body {
     color: #5A58F8;
     font-family: Verdana;
     font-variant: small-caps;
-    #font-weight: bold;
     text-decoration: none;
 }
 
