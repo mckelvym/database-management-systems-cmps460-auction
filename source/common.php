@@ -170,14 +170,20 @@ HEREDOC;
 // Get from the GET variable
 function get ($key)
 {
-	$val = $_GET[$key];
+	if (isset ($_GET[$key]))
+		$val = $_GET[$key];
+	else
+		$val = "";
 	return $val;
 }
 
 // Get from the POST variable
 function post ($key)
 {
-	$val = $_POST[$key];
+	if (isset ($_POST[$key]))
+		$val = $_POST[$key];
+	else
+		$val = "";
 	return $val;
 }
 
