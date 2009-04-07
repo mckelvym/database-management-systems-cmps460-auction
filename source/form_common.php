@@ -23,6 +23,11 @@ function text_input_s ($name, $value, $size, $maxsize)
 	return input ($name, $value, $size, "", "text", $maxsize);
 }
 
+function text_input_sr ($name, $value, $size, $maxsize)
+{
+	return input ($name, $value, $size, "", "text", $maxsize, "readonly");
+}
+
 // Typical password input for a form
 function password_input ($name, $value)
 {
@@ -41,14 +46,14 @@ function submit_input ($value)
 }
 
 // Input for a form that has more freedom
-function input ($name, $value, $size, $id, $type, $maxsize = "")
+function input ($name, $value, $size, $id, $type, $maxsize = "", $other_opts = "")
 {
 	if (!empty ($maxsize))
 		$maxsize = "maxlength=\"$maxsize\"";
 	if (empty ($size))
-		return "<input name=\"$name\" $maxsize id=\"$id\" type=\"$type\" value=\"$value\">\n";
+		return "<input name=\"$name\" $maxsize id=\"$id\" type=\"$type\" value=\"$value\" $other_opts>\n";
 	else
-		return "<input name=\"$name\" $maxsize size=\"$size\" id=\"$id\" type=\"$type\" value=\"$value\">\n";
+		return "<input name=\"$name\" $maxsize size=\"$size\" id=\"$id\" type=\"$type\" value=\"$value\" $other_opts>\n";
 }
 
 function select ($name, $options)
@@ -56,9 +61,9 @@ function select ($name, $options)
 	return "<select name=\"$name\" value=\"$default_value\">\n$options \n</select>";
 }
 
-function option ($value, $display, $is_selected = false)
+function option ($value, $display, $is_selected = "")
 {
-	if ($is_selected)
+	if (!empty ($is_selected) && $value == $is_selected)
 		return "<option selected=\"yes\" value=\"$value\">$display</option>\n";
 	else
 		return "<option value=\"$value\">$display</option>\n";
