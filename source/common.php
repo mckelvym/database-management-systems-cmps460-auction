@@ -10,8 +10,7 @@ function echo_header ($dbinfo)
 	$dbinfo->init ();
 	if (!$dbinfo->connect ())
 		die ("Couldn't connect to database.");
-	$dbinfo->update_time ();
-	$dbinfo->update_closed_item_listings ();
+	$dbinfo->update_all ();
 
 	echo <<<HEREDOC
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
