@@ -184,9 +184,11 @@ function registration_form ($user = "")
 	if (!$dbinfo->logged_in ())
 	{
 		$options = "";
-		$options = $options.option ("default.jpg", "Default", $picture);
-		$options = $options.option ("smile.jpg", "Smile", $picture);
-		$options = $options.option ("frown.jpg", "Frown", $picture);
+		$options = $options.option ("default_profile.jpg", "Default", $picture);
+		for ($i = 1; $i <= 6; $i++)
+		{
+			$options = $options.option ("profile$i.jpg", "Nerdy Picture $i", $picture);
+		}
 		echo $table->tr ($table->td ("Profile Picture").
 				 $table->td (select ("picture", $options)));
 	}
