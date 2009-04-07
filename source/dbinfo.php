@@ -18,9 +18,6 @@ class dbinfo_t
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
 		$this->pass = "foursixty";
-/* 		$this->host = "localhost"; */
-/* 		$this->user = "root"; */
-/* 		$this->pass = ""; */
 		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 		$this->debug = true;
@@ -52,8 +49,7 @@ class dbinfo_t
 	// usually call this at the end of a script
 	function close ()
 	{
-/* 		if ($this->dblink) */
-/* 			mysql_close ($this->dblink); */
+		mysql_close ($this->dblink);
 	}
 
 	// Make a query to the database and return the result
@@ -244,7 +240,6 @@ class dbinfo_t
 		return $_SESSION['Minute'];
 	}
 
-	// Save an activity for the current user
 	function save_activity ($activity_description)
 	{
 		$this->update_time ();
@@ -277,6 +272,19 @@ class dbinfo_t
 
 		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, '$activity_description')");
 		$this->update_closed_item_listings ();
+	}
+
+	// Save a registration activity for the current user
+	function save_registration ($username)
+	{
+		$this->update_time ();
+		$user = $username;
+		$day = $this->day ();
+		$hour = $this->hour ();
+		$minute = $this->minute ();
+		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, 'Registered')");
+		$this->update_closed_item_listings ();
+		return true;
 	}
 
 	// Updates all item listing buyer information for closed auctions
