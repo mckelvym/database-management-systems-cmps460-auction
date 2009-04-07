@@ -13,11 +13,13 @@ $get_msg = get ("msg");
 if (!empty ($get_msg))
 	echo "$msg";
 
+// Main registration form
 function registration_form ($user = "")
 {
 	global $dbinfo;
 	global $current_script;
 
+	// If editing registration, fetch the current information from the database
 	if (!empty ($user) && $dbinfo->user_exists ($user))
 	{
 		$result = $dbinfo->query ("select * from user where username = '$user'");
@@ -46,6 +48,7 @@ function registration_form ($user = "")
 		return;
 	}
 
+	// Start writing table to page
 	$table = new table_common_t ();
 	$table->init ("tbl_std");
 
@@ -61,20 +64,28 @@ function registration_form ($user = "")
 	echo $table->tr_end ();
 	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
+
+	// Different modes depending on if user is logged in or not
 	if ($dbinfo->logged_in ())
 		echo form_begin ("$current_script?mode=save", "post");
 	else
 		echo form_begin ("$current_script?mode=savenew", "post");
+
+	// If editing, then make username field read only
 	if (empty ($user))
 		echo $table->tr ($table->td ("Desired Username").
 				 $table->td (text_input_s ("username", $username, 20, 50)));
 	else
 		echo $table->tr ($table->td ("Username").
 				 $table->td (text_input_sr ("username", $username, 20, 50)));
+
+	// Passwords must match
 	echo $table->tr ($table->td ("Desired Password").
 			 $table->td (password_input_s ("password", $passwd, 20, 50)));
 	echo $table->tr ($table->td ("Repeat Password").
 			 $table->td (password_input_s ("password2", $passwd, 20, 50)));
+
+	// Only allow editing of this if the current user is already an admin
 	if ($dbinfo->is_admin ())
 	{
 		$options = "";
@@ -165,8 +176,9 @@ function registration_form ($user = "")
 			 $table->td (select ("card_type", $options)));
 	echo $table->tr ($table->td ("Credit Card Number").
 			 $table->td (text_input_s ("card_number", $ccn, 16, 16)));
-	$options = "";
 
+	// For credit card expiration dates
+	$options = "";
 	for ($j = 9; $j <= 14; $j++)
 	{
 		if ($j < 10)
@@ -181,6 +193,8 @@ function registration_form ($user = "")
 	}
 	echo $table->tr ($table->td ("Credit Card Expiration").
 			 $table->td (select ("card_expire", $options)));
+
+	// Only allow new registrants to pick a profile picture, otherwise they need to use the profile page.
 	if (!$dbinfo->logged_in ())
 	{
 		$options = "";
@@ -192,6 +206,8 @@ function registration_form ($user = "")
 		echo $table->tr ($table->td ("Profile Picture").
 				 $table->td (select ("picture", $options)));
 	}
+
+	// Save or register depending on if logged in
 	if ($dbinfo->logged_in ())
 		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2, "center"));
 	else
@@ -201,6 +217,7 @@ function registration_form ($user = "")
 	echo $table->table_end ();
 }
 
+// Very simple checking of the form data to meet basic requirements
 function verify_data ()
 {
 	global $dbinfo, $errors, $post_username, $passwd1, $passwd2,
@@ -266,12 +283,23 @@ function verify_data ()
 if ($dbinfo->logged_in ())
 {
 	$user = $dbinfo->username ();
+
+	// Admin user may be editing/viewing another user's page
 	if ($dbinfo->is_admin () && !empty ($get_username))
 	{
 		$user = $get_username;
 	}
 
-	if ($mode == "save")
+	// Admin wants to delete a user
+	if ($mode == "delete" && $dbinfo->is_admin () && !empty ($get_username))
+	{
+		// check to make sure not last user
+		echo "HEY";
+		
+	}
+
+	// A user is saving updated registration information
+	else if ($mode == "save")
 	{
 		verify_data ();
 		if (!empty ($errors))
@@ -281,6 +309,8 @@ if ($dbinfo->logged_in ())
 		}
 		else
 		{
+			// We might be saving information for another user that isn't the current user
+			// $post_username will be the current user if not admin since it isn't editable.
 			$admin_user = $dbinfo->username ();
 			$dbinfo->query ("update user set password = '$passwd1', is_admin = $is_admin,
 realname = '$post_realname', birth_date = '$post_birth_date', shipping_street = '$post_street', shipping_city = '$post_city',
@@ -288,18 +318,21 @@ shipping_state = '$post_state', shipping_zip = $post_zip, phone = '$post_phone',
 card_number = $post_card_number, card_expire = '$post_card_expire' where username = '$post_username'");
 			if ($post_username != $admin_user)
 			{
+				// save activity for both other user and current user
 				$dbinfo->save_activity_for ($post_username, "Admin '$admin_user' updated your registration information.");
 				$dbinfo->save_activity ("You updated the registration information of '$post_username'.");
 			}
 			else
 			{
+				// save current user activity
 				$dbinfo->save_activity ("You updated your registration information.");
 			}
-
+			// display status
 			cout ("Update successful.");
 			echo href ("$current_script?mode=view&username=$post_username", "Click to refresh");
 		}
 	}
+	// browse a list of registered users
 	else if ($mode == "browse" && $dbinfo->is_admin ())
 	{
 		echo_div ("scriptstatus");
@@ -356,7 +389,7 @@ ua.activity = 'Registered' order by username");
 
 	}
 	else
-	{
+	{	// browse a registered user's registration information
 		if ($dbinfo->is_admin ())
 		{
 			echo_div ("scriptstatus");
@@ -371,9 +404,9 @@ ua.activity = 'Registered' order by username");
 		registration_form ($user);
 	}
 }
-else
+else // User is not logged in, display new registration page or save registration
 {
-	if ($mode == "savenew")
+	if ($mode == "savenew") // save registration for user
 	{
 		verify_data ();
 		if (!empty ($errors))
@@ -383,6 +416,7 @@ else
 		}
 		else
 		{
+			// insert user into the database
 			$dbinfo->query ("insert into user values ('$post_username', '$passwd1', $is_admin, '$post_realname', '$post_birth_date', '$post_street', '$post_city', '$post_state', $post_zip, '$post_phone', '$post_email', '$post_card_type', $post_card_number, '$post_card_expire', '$post_picture', '$post_description')");
 			if (!$dbinfo->user_exists ($post_username))
 			{
@@ -397,7 +431,7 @@ else
 			}
 		}
 	}
-	else
+	else // display empty form for user to fill out
 		registration_form ();
 }
 
