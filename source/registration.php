@@ -16,6 +16,8 @@ if (!empty ($get_msg))
 function registration_form ($user = "")
 {
 	global $dbinfo;
+	global $current_script;
+	
 	if (!empty ($user) && $dbinfo->user_exists ($user))
 	{
 		$result = $dbinfo->query ("select * from user where username = '$user'");
@@ -354,7 +356,6 @@ ua.activity = 'Registered' order by username");
 			}
 			end_div ();
 		}
-
 		registration_form ($user);
 	}
 }
@@ -374,7 +375,7 @@ else
 			if (!$dbinfo->user_exists ($post_username))
 			{
 				cout ("Registration failed. ");
-				cout (href ($current_script, "Try again."));
+				cout (href (current_script (), "Try again."));
 			}
 			else
 			{
