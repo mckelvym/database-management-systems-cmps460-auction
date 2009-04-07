@@ -28,7 +28,7 @@ if (!isset ($info))
 			 $table->td (text_input ("username", "")));
 	echo $table->tr ($table->td ("Password").
 			 $table->td (password_input ("password", "")));
-	echo $table->tr ($table->td_span (submit_input ("Login"), "", 2));
+	echo $table->tr ($table->td_span (submit_input ("Login"), "", 2, "center"));
 	echo form_end ();
 	echo $table->table_body_end ();
 	echo $table->table_end ();
