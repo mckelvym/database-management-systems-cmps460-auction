@@ -58,7 +58,7 @@ function input ($name, $value, $size, $id, $type, $maxsize = "", $other_opts = "
 
 function select ($name, $options)
 {
-	return "<select name=\"$name\" value=\"$default_value\">\n$options \n</select>";
+	return "<select name=\"$name\">\n$options \n</select>";
 }
 
 function option ($value, $display, $is_selected = "")
