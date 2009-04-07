@@ -212,7 +212,7 @@ function verify_data ()
 	$post_username = post ("username");
 	$passwd1 = post ("password");
 	$passwd2 = post ("password2");
-	$is_admin = 0;
+	$is_admin = post ("is_admin");
 	$post_realname = post ("realname");
 	$post_birth_date = post ("birth_date");
 	$post_street = post ("shipping_street");
@@ -281,13 +281,23 @@ if ($dbinfo->logged_in ())
 		}
 		else
 		{
-			$dbinfo->query ("update user set username = '$post_username', password = '$passwd1', is_admin = $is_admin,
+			$admin_user = $dbinfo->username ();
+			$dbinfo->query ("update user set password = '$passwd1', is_admin = $is_admin,
 realname = '$post_realname', birth_date = '$post_birth_date', shipping_street = '$post_street', shipping_city = '$post_city',
 shipping_state = '$post_state', shipping_zip = $post_zip, phone = '$post_phone', email = '$post_email', card_type = '$post_card_type',
-card_number = $post_card_number, card_expire = '$post_card_expire' where username = '$user'");
-			$dbinfo->update_user_info ();
+card_number = $post_card_number, card_expire = '$post_card_expire' where username = '$post_username'");
+			if ($post_username != $admin_user)
+			{
+				$dbinfo->save_activity_for ($post_username, "Admin '$admin_user' updated your registration information.");
+				$dbinfo->save_activity ("You updated the registration information of '$post_username'.");
+			}
+			else
+			{
+				$dbinfo->save_activity ("You updated your registration information.");
+			}
+
 			cout ("Update successful.");
-			echo href ("$current_script?mode=view&username=$user", "Click to refresh");
+			echo href ("$current_script?mode=view&username=$post_username", "Click to refresh");
 		}
 	}
 	else if ($mode == "browse" && $dbinfo->is_admin ())
