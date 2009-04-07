@@ -114,6 +114,29 @@ class dbinfo_t
 		}
 	}
 
+	function login_as ($username)
+	{
+		$result = $this->query ("select username, realname, is_admin from user where username = '$username'");
+		if (mysql_num_rows ($result) == 0)
+		{
+			unset ($_SESSION['Username']);
+			unset ($_SESSION['Realname']);
+			unset ($_SESSION['Admin']);
+			mysql_free_result ($result);
+			return false;
+		}
+		else
+		{
+			$row = mysql_fetch_assoc ($result);
+			$_SESSION['Username'] = $row['username'];
+			$_SESSION['Admin'] = $row['is_admin'];
+			$_SESSION['Realname'] = $row['realname'];
+			mysql_free_result ($result);
+			$this->save_activity ("Logged In");
+			return true;
+		}
+	}
+
 	function logout ($is_delete = false)
 	{
 		if (!$is_delete)
