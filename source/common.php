@@ -207,4 +207,50 @@ function cout ($str)
 	echo "$str"."<br/>\n";
 }
 
+function format_time ($day, $hour, $minute, $prefix_zeros_to_day = false)
+{
+	if ($minute > 59)
+	{
+		$minute -= 60;
+		$hour++;
+	}
+
+	if ($hour > 23)
+	{
+		$hour -= 24;
+		$day++;
+	}
+
+	if ($minute < 10)
+	{
+		$minute = "0".$minute;
+	}
+
+	if ($hour < 10)
+	{
+		$hour = "0".$hour;
+	}
+
+	if ($prefix_zeros_to_day)
+	{
+		if ($day < 10)
+		{
+			$day = "0000".$day;
+		}
+		else if ($day < 100)
+		{
+			$day = "000".$day;
+		}
+		else if ($day < 1000)
+		{
+			$day = "00".$day;
+		}
+		else if ($day < 10000)
+		{
+			$day = "0".$day;
+		}
+	}
+
+	return "Day: $day, Time: $hour:$minute";
+}
 ?>
