@@ -285,7 +285,7 @@ shipping_state = '$post_state', shipping_zip = $post_zip, phone = '$post_phone',
 card_number = $post_card_number, card_expire = '$post_card_expire' where username = '$user'");
 			$dbinfo->update_user_info ();
 			cout ("Update successful.");
-			echo href ("$script_name?mode=view&username=$user", "Click to refresh");
+			echo href ("$current_script?mode=view&username=$user", "Click to refresh");
 		}
 	}
 	else if ($mode == "browse" && $dbinfo->is_admin ())
