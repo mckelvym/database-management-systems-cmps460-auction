@@ -114,14 +114,16 @@ class dbinfo_t
 		}
 	}
 
-	function logout ()
+	function logout ($is_delete = false)
 	{
-		$this->save_activity ("Logged Out");
+		if (!$is_delete)
+			$this->save_activity ("Logged Out");
 		unset ($_SESSION['Username']);
 		unset ($_SESSION['Realname']);
 		unset ($_SESSION['Admin']);
 		session_destroy ();
-		header ("Location: index.php");
+		if (!$is_delete)
+			header ("Location: index.php");
   	}
 
 
