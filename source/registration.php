@@ -76,7 +76,7 @@ function registration_form ($user = "")
 		echo $table->tr ($table->td ("Desired Username").
 				 $table->td (text_input_s ("username", $username, 20, 50)));
 	else
-		echo $table->tr ($table->td ("Username").
+		echo $table->tr ($table->td ("Username<br/>".href ("$current_script?mode=delete&username=$username", "Delete Account")).
 				 $table->td (text_input_sr ("username", $username, 20, 50)));
 
 	// Passwords must match
@@ -209,9 +209,13 @@ function registration_form ($user = "")
 
 	// Save or register depending on if logged in
 	if ($dbinfo->logged_in ())
+	{
 		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2, "center"));
+	}
 	else
+	{
 		echo $table->tr ($table->td_span (submit_input ("Register"), "", 2, "center"));
+	}
 	echo form_end ();
 	echo $table->table_body_end ();
 	echo $table->table_end ();
@@ -252,6 +256,12 @@ function verify_data ()
 		$errors = $errors.li ("Password can't be empty");
 	if ($passwd1 != $passwd2)
 		$errors = $errors.li ("Passwords don't match");
+	if ($dbinfo->is_admin () && $is_admin == 0 && $dbinfo->username () == $post_username)
+	{
+		$result = $dbinfo->query ("select username from user where username != '$post_username' AND is_admin = true");
+		if (mysql_num_rows ($result) == 0)
+			$errors = $errors.li ("The number of users left that are admins can't be zero.");
+	}
 	if (empty ($post_realname))
 		$errors = $errors.li ("Name can't be empty");
 	if (empty ($post_birth_date))
@@ -290,12 +300,71 @@ if ($dbinfo->logged_in ())
 		$user = $get_username;
 	}
 
-	// Admin wants to delete a user
-	if ($mode == "delete" && $dbinfo->is_admin () && !empty ($get_username))
+	if ($mode == "login_as" && !empty ($get_username))
 	{
-		// check to make sure not last user
-		echo "HEY";
-		
+		$dbinfo->save_activity ("Logged in as '$user'.");
+		$dbinfo->login_as ($user);
+		echo href ("$current_script?", "Click to refresh.");
+	}
+	// Admin wants to delete a user
+	else if ($mode == "delete" && $dbinfo->is_admin () && !empty ($get_username) && $get_username != $dbinfo->username ())
+	{
+		$errors = "";
+		// check to make sure not last user and that there is at least one admin
+		$result = $dbinfo->query ("select username from user where username != '$user' AND is_admin = true");
+		if (mysql_num_rows ($result) == 0)
+			$errors = $errors.li ("The number of users left that are admins can't be zero.");
+		mysql_free_result ($result);
+		// check to make sure not participating in as buyer or seller in any auctions
+		$result = $dbinfo->query ("select count(*) from item_listing where seller = '$user' OR buyer = '$user'");
+		list ($count) = mysql_fetch_row ($result);
+		if ($count != 0)
+			$errors = $errors.li ("The user must have not partipated in any auctions as seller or buyer.");
+		mysql_free_result ($result);
+		if (empty ($errors))
+		{
+			$dbinfo->save_activity ("Deleted user '$user'.");
+			$dbinfo->query ("delete from user_activity where username = '$user'");
+			$dbinfo->query ("delete from bids_on where username = '$user'");
+			$dbinfo->query ("delete from user where username = '$user'");
+			echo "Deleted user. ".href ("$current_script?mode=browse", "Click to browse all users.");
+		}
+		else
+		{
+			echo "Errors were detected:<br/>";
+			echo ul ($errors);
+			echo href ("$current_script?mode=browse", "Click to browse all users.");
+		}
+	}
+	// User wants to delete their account
+	else if ($mode == "delete")
+	{
+		$errors = "";
+		// check to make sure not last user and that there is at least one admin
+		$result = $dbinfo->query ("select username from user where username != '$user' AND is_admin = true");
+		if (mysql_num_rows ($result) == 0)
+			$errors = $errors.li ("The number of users left that are admins can't be zero.");
+		mysql_free_result ($result);
+		// check to make sure not participating in as buyer or seller in any auctions
+		$result = $dbinfo->query ("select count(*) from item_listing where seller = '$user' OR buyer = '$user'");
+		list ($count) = mysql_fetch_row ($result);
+		if ($count != 0)
+			$errors = $errors.li ("You should not have partipated in any auctions as seller or buyer to be deleted.");
+		mysql_free_result ($result);
+		if (empty ($errors))
+		{
+			$dbinfo->query ("delete from user_activity where username = '$user'");
+			$dbinfo->query ("delete from bids_on where username = '$user'");
+			$dbinfo->query ("delete from user where username = '$user'");
+			$dbinfo->logout (true);
+			echo "Deleted account. ".href ("index.php", "Click to go to the home page.");
+		}
+		else
+		{
+			echo "Errors were detected:<br/>";
+			echo ul ($errors);
+			echo href ("$current_script?mode=view", "Go to your account.");
+		}
 	}
 
 	// A user is saving updated registration information
@@ -306,6 +375,7 @@ if ($dbinfo->logged_in ())
 		{
 			echo "Errors were detected. Please correct before continuing:<br/>";
 			echo ul ($errors);
+			echo href ("$current_script", "Go to your account.");
 		}
 		else
 		{
@@ -369,7 +439,11 @@ ua.activity = 'Registered' order by username");
 						 $table->td (format_time ($day, $hour, $min)).
 						 $table->td (href ("$current_script?mode=view&username=$username", "Account").
 							     " | ".
-							     href ("profile.php?mode=view&username=$username", "Profile")));
+							     href ("profile.php?mode=view&username=$username", "Profile").
+							     " | ".
+							     href ("$current_script?mode=delete&username=$username", "Delete").
+							     "<br/>".
+							     href ("$current_script?mode=login_as&username=$username", "Login As")));
 			}
 			echo $table->table_body_end ();
 			echo $table->table_end ();
@@ -413,6 +487,7 @@ else // User is not logged in, display new registration page or save registratio
 		{
 			echo "Errors were detected. Please correct before continuing:<br/>";
 			echo ul ($errors);
+			echo href ("$current_script", "Go to registration.");
 		}
 		else
 		{
