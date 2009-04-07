@@ -188,7 +188,7 @@ function registration_form ($user = "")
 		echo $table->tr ($table->td ("Profile Picture").
 				 $table->td (select ("picture", $options)));
 	}
-	if ($dbinfo->is_admin ())
+	if ($dbinfo->logged_in ())
 		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2, "center"));
 	else
 		echo $table->tr ($table->td_span (submit_input ("Register"), "", 2, "center"));
@@ -282,9 +282,8 @@ realname = '$post_realname', birth_date = '$post_birth_date', shipping_street = 
 shipping_state = '$post_state', shipping_zip = $post_zip, phone = '$post_phone', email = '$post_email', card_type = '$post_card_type',
 card_number = $post_card_number, card_expire = '$post_card_expire' where username = '$user'");
 			$dbinfo->update_user_info ();
-			$msg = "Update successful.";
-			mysql_free_result ($result);
-			redirect ("$script_name?mode=view&username=$user&msg=$msg");
+			cout ("Update successful.");
+			echo href ("$script_name?mode=view&username=$user", "Click to refresh");
 		}
 	}
 	else if ($mode == "browse" && $dbinfo->is_admin ())
