@@ -9,7 +9,8 @@ if ($dbinfo->logged_in ())
 
 // display login form
 $info = post ("username");
-if (!isset ($info))
+$mode = get ("login");
+if (empty ($mode))
 {
 	$msg = get ("message");
 	if (!empty ($msg))
@@ -23,7 +24,7 @@ if (!isset ($info))
 	echo $table->tr_end ();
 	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
-	echo form_begin ("login.php", "post");
+	echo form_begin ("login.php?login=y", "post");
 	echo $table->tr ($table->td ("Username").
 			 $table->td (text_input ("username", "")));
 	echo $table->tr ($table->td ("Password").
