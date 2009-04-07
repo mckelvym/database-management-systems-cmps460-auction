@@ -7,121 +7,162 @@ echo_header ($dbinfo);
 $mode = get ("mode");
 $current_script = current_script ();
 
-if ($mode == "edit")
-	$get_username = get ("user");
+$get_username = get ("username");
+$get_msg = get ("msg");
 
-function new_registration_form ($username = "")
+if (!empty ($get_msg))
+	echo "$msg";
+
+function registration_form ($user = "")
 {
 	global $dbinfo;
+	if (!empty ($user) && $dbinfo->user_exists ($user))
+	{
+		$result = $dbinfo->query ("select * from user where username = '$user'");
+		if ($result)
+		{
+			list($username, $passwd, $is_admin, $name, $dob, $street,
+			     $city, $state, $zip, $phone, $email, $cc, $ccn, $ccx,
+			     $picture, $desc) = mysql_fetch_row ($result);
+			mysql_free_result ($result);
+		}
+		else if ($dbinfo->debug ())
+		{
+			mysql_free_result ($result);
+			die (mysql_error ());
+		}
+		else
+		{
+			mysql_free_result ($result);
+			echo "Couldn't get user information.";
+			return;
+		}
+	}
+	else if (!empty ($username))
+	{
+		echo "You've reached this page in error.";
+		return;
+	}
+
 	$table = new table_common_t ();
 	$table->init ("tbl_std");
 
 	echo $table->table_begin ();
 	echo $table->table_head_begin ();
-	echo $table->tr ($table->td_span ("Register for an iBay account", "", 2));
+	if (!$dbinfo->logged_in ())
+		echo $table->tr ($table->td_span ("Register for an iBay account", "", 2));
+	else if ($dbinfo->logged_in () && $user != $dbinfo->username ())
+		echo $table->tr ($table->td_span ("Update (not) your iBay account", "", 2));
+	else
+		echo $table->tr ($table->td_span ("Update your iBay account", "", 2));
+
 	echo $table->tr_end ();
 	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
-	if ($dbinfo->is_admin ())
+	if ($dbinfo->logged_in ())
 		echo form_begin ("$current_script?mode=save", "post");
 	else
 		echo form_begin ("$current_script?mode=savenew", "post");
-	echo $table->tr ($table->td ("Desired Username").
-			 $table->td (text_input_s ("username", "", 20, 50)));
+	if (empty ($user))
+		echo $table->tr ($table->td ("Desired Username").
+				 $table->td (text_input_s ("username", $username, 20, 50)));
+	else
+		echo $table->tr ($table->td ("Username").
+				 $table->td (text_input_sr ("username", $username, 20, 50)));
 	echo $table->tr ($table->td ("Desired Password").
-			 $table->td (password_input_s ("password", "", 20, 50)));
+			 $table->td (password_input_s ("password", $passwd, 20, 50)));
 	echo $table->tr ($table->td ("Repeat Password").
-			 $table->td (password_input_s ("password2", "", 20, 50)));
+			 $table->td (password_input_s ("password2", $passwd, 20, 50)));
 	if ($dbinfo->is_admin ())
 	{
 		$options = "";
-		$options = $options.option ("0", "No");
-		$options = $options.option ("1", "Yes");
+		$options = $options.option ("0", "No", $is_admin);
+		$options = $options.option ("1", "Yes", $is_admin);
 		echo $table->tr ($table->td ("Admin").
 				 $table->td (select ("is_admin", $options)));
 	}
 	echo $table->tr ($table->td ("Real Name").
-			 $table->td (text_input_s ("realname", "", 20, 100)));
+			 $table->td (text_input_s ("realname", $name, 20, 100)));
 	echo $table->tr ($table->td ("Birth Date").
-			 $table->td (text_input_s ("birth_date", "", 10, 10)));
+			 $table->td (text_input_s ("birth_date", $dob, 10, 10)));
 	echo $table->tr ($table->td ("Shipping Street").
-			 $table->td (text_input_s ("shipping_street", "", 20, 100)));
+			 $table->td (text_input_s ("shipping_street", $street, 20, 100)));
 	echo $table->tr ($table->td ("Shipping City").
-			 $table->td (text_input_s ("shipping_city", "", 20, 50)));
+			 $table->td (text_input_s ("shipping_city", $city, 20, 50)));
 	$options = "";
-	$options = $options.option ("Alabama", "Alabama");
-	$options = $options.option ("Alaska", "Alaska");
-	$options = $options.option ("American Samoa", "American Samoa");
-	$options = $options.option ("Arizona", "Arizona");
-	$options = $options.option ("Arkansas", "Arkansas");
-	$options = $options.option ("California", "California");
-	$options = $options.option ("Colorado", "Colorado");
-	$options = $options.option ("Connecticut", "Connecticut");
-	$options = $options.option ("Delaware", "Delaware");
-	$options = $options.option ("District of Columbia", "District of Columbia");
-	$options = $options.option ("Florida", "Florida");
-	$options = $options.option ("Georgia", "Georgia");
-	$options = $options.option ("Guam", "Guam");
-	$options = $options.option ("Hawaii", "Hawaii");
-	$options = $options.option ("Idaho", "Idaho");
-	$options = $options.option ("Illinois", "Illinois");
-	$options = $options.option ("Indiana", "Indiana");
-	$options = $options.option ("Iowa", "Iowa");
-	$options = $options.option ("Kansas", "Kansas");
-	$options = $options.option ("Kentucky", "Kentucky");
-	$options = $options.option ("Louisiana", "Louisiana", true);
-	$options = $options.option ("Maine", "Maine");
-	$options = $options.option ("Maryland", "Maryland");
-	$options = $options.option ("Massachusetts", "Massachusetts");
-	$options = $options.option ("Michigan", "Michigan");
-	$options = $options.option ("Minnesota", "Minnesota");
-	$options = $options.option ("Mississippi", "Mississippi");
-	$options = $options.option ("Missouri", "Missouri");
-	$options = $options.option ("Montana", "Montana");
-	$options = $options.option ("Nebraska", "Nebraska");
-	$options = $options.option ("Nevada", "Nevada");
-	$options = $options.option ("New Hampshire", "New Hampshire");
-	$options = $options.option ("New Jersey", "New Jersey");
-	$options = $options.option ("New Mexico", "New Mexico");
-	$options = $options.option ("New York", "New York");
-	$options = $options.option ("North Carolina", "North Carolina");
-	$options = $options.option ("North Dakota", "North Dakota");
-	$options = $options.option ("Northern Marianas Islands", "Northern Marianas Islands");
-	$options = $options.option ("Ohio", "Ohio");
-	$options = $options.option ("Oklahoma", "Oklahoma");
-	$options = $options.option ("Oregon", "Oregon");
-	$options = $options.option ("Pennsylvania", "Pennsylvania");
-	$options = $options.option ("Puerto Rico", "Puerto Rico");
-	$options = $options.option ("Rhode Island", "Rhode Island");
-	$options = $options.option ("South Carolina", "South Carolina");
-	$options = $options.option ("South Dakota", "South Dakota");
-	$options = $options.option ("Tennessee", "Tennessee");
-	$options = $options.option ("Texas", "Texas");
-	$options = $options.option ("Utah", "Utah");
-	$options = $options.option ("Vermont", "Vermont");
-	$options = $options.option ("Virginia", "Virginia");
-	$options = $options.option ("Virgin Islands", "Virgin Islands");
-	$options = $options.option ("Washington", "Washington");
-	$options = $options.option ("West Virginia", "West Virginia");
-	$options = $options.option ("Wisconsin", "Wisconsin");
-	$options = $options.option ("Wyoming", "Wyoming");
+	$options = $options.option ("Alabama", "Alabama", $state);
+	$options = $options.option ("Alaska", "Alaska", $state);
+	$options = $options.option ("American Samoa", "American Samoa", $state);
+	$options = $options.option ("Arizona", "Arizona", $state);
+	$options = $options.option ("Arkansas", "Arkansas", $state);
+	$options = $options.option ("California", "California", $state);
+	$options = $options.option ("Colorado", "Colorado", $state);
+	$options = $options.option ("Connecticut", "Connecticut", $state);
+	$options = $options.option ("Delaware", "Delaware", $state);
+	$options = $options.option ("District of Columbia", "District of Columbia", $state);
+	$options = $options.option ("Florida", "Florida", $state);
+	$options = $options.option ("Georgia", "Georgia", $state);
+	$options = $options.option ("Guam", "Guam", $state);
+	$options = $options.option ("Hawaii", "Hawaii", $state);
+	$options = $options.option ("Idaho", "Idaho", $state);
+	$options = $options.option ("Illinois", "Illinois", $state);
+	$options = $options.option ("Indiana", "Indiana", $state);
+	$options = $options.option ("Iowa", "Iowa", $state);
+	$options = $options.option ("Kansas", "Kansas", $state);
+	$options = $options.option ("Kentucky", "Kentucky", $state);
+	$options = $options.option ("Louisiana", "Louisiana", $state);
+	$options = $options.option ("Maine", "Maine", $state);
+	$options = $options.option ("Maryland", "Maryland", $state);
+	$options = $options.option ("Massachusetts", "Massachusetts", $state);
+	$options = $options.option ("Michigan", "Michigan", $state);
+	$options = $options.option ("Minnesota", "Minnesota", $state);
+	$options = $options.option ("Mississippi", "Mississippi", $state);
+	$options = $options.option ("Missouri", "Missouri", $state);
+	$options = $options.option ("Montana", "Montana", $state);
+	$options = $options.option ("Nebraska", "Nebraska", $state);
+	$options = $options.option ("Nevada", "Nevada", $state);
+	$options = $options.option ("New Hampshire", "New Hampshire", $state);
+	$options = $options.option ("New Jersey", "New Jersey", $state);
+	$options = $options.option ("New Mexico", "New Mexico", $state);
+	$options = $options.option ("New York", "New York", $state);
+	$options = $options.option ("North Carolina", "North Carolina", $state);
+	$options = $options.option ("North Dakota", "North Dakota", $state);
+	$options = $options.option ("Northern Marianas Islands", "Northern Marianas Islands", $state);
+	$options = $options.option ("Ohio", "Ohio", $state);
+	$options = $options.option ("Oklahoma", "Oklahoma", $state);
+	$options = $options.option ("Oregon", "Oregon", $state);
+	$options = $options.option ("Pennsylvania", "Pennsylvania", $state);
+	$options = $options.option ("Puerto Rico", "Puerto Rico", $state);
+	$options = $options.option ("Rhode Island", "Rhode Island", $state);
+	$options = $options.option ("South Carolina", "South Carolina", $state);
+	$options = $options.option ("South Dakota", "South Dakota", $state);
+	$options = $options.option ("Tennessee", "Tennessee", $state);
+	$options = $options.option ("Texas", "Texas", $state);
+	$options = $options.option ("Utah", "Utah", $state);
+	$options = $options.option ("Vermont", "Vermont", $state);
+	$options = $options.option ("Virginia", "Virginia", $state);
+	$options = $options.option ("Virgin Islands", "Virgin Islands", $state);
+	$options = $options.option ("Washington", "Washington", $state);
+	$options = $options.option ("West Virginia", "West Virginia", $state);
+	$options = $options.option ("Wisconsin", "Wisconsin", $state);
+	$options = $options.option ("Wyoming", "Wyoming", $state);
 	echo $table->tr ($table->td ("Shipping State").
 			 $table->td (select ("shipping_state", $options)));
 	echo $table->tr ($table->td ("Shipping Zip Code").
-			 $table->td (text_input_s ("shipping_zip", "", 5, 10)));
+			 $table->td (text_input_s ("shipping_zip", $zip, 5, 10)));
 	echo $table->tr ($table->td ("Phone Number").
-			 $table->td (text_input_s ("phone", "", 12, 12)));
+			 $table->td (text_input_s ("phone", $phone, 12, 12)));
 	echo $table->tr ($table->td ("Email Address").
-			 $table->td (text_input_s ("email", "", 20, 50)));
+			 $table->td (text_input_s ("email", $email, 20, 50)));
 	$options = "";
-	$options = $options.option ("American Express", "American Express");
-	$options = $options.option ("Discover", "Discover");
-	$options = $options.option ("Mastercard", "Mastercard");
-	$options = $options.option ("Visa", "Visa", true);
+	$options = $options.option ("American Express", "American Express", $cc);
+	$options = $options.option ("Discover", "Discover", $cc);
+	$options = $options.option ("Mastercard", "Mastercard", $cc);
+	$options = $options.option ("Visa", "Visa", $cc);
 	echo $table->tr ($table->td ("Credit Card Type").
 			 $table->td (select ("card_type", $options)));
 	echo $table->tr ($table->td ("Credit Card Number").
-			 $table->td (text_input_s ("card_number", "", 16, 16)));
+			 $table->td (text_input_s ("card_number", $ccn, 16, 16)));
 	$options = "";
 
 	for ($j = 9; $j <= 14; $j++)
@@ -133,21 +174,24 @@ function new_registration_form ($username = "")
 		{
 			if ($i < 10)
 				$i = "0".$i;
-			$options = $options.option ("$i/$j", "$i/$j");
+			$options = $options.option ("$i/$j", "$i/$j", $ccx);
 		}
 	}
 	echo $table->tr ($table->td ("Credit Card Expiration").
 			 $table->td (select ("card_expire", $options)));
-	$options = "";
-	$options = $options.option ("default.jpg", "Default");
-	$options = $options.option ("smile.jpg", "Smile");
-	$options = $options.option ("frown.jpg", "Frown");
-	echo $table->tr ($table->td ("Profile Picture").
-			 $table->td (select ("picture", $options)));
+	if (!$dbinfo->logged_in ())
+	{
+		$options = "";
+		$options = $options.option ("default.jpg", "Default", $picture);
+		$options = $options.option ("smile.jpg", "Smile", $picture);
+		$options = $options.option ("frown.jpg", "Frown", $picture);
+		echo $table->tr ($table->td ("Profile Picture").
+				 $table->td (select ("picture", $options)));
+	}
 	if ($dbinfo->is_admin ())
-		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2));
+		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2, "center"));
 	else
-		echo $table->tr ($table->td_span (submit_input ("Register"), "", 2));
+		echo $table->tr ($table->td_span (submit_input ("Register"), "", 2, "center"));
 	echo form_end ();
 	echo $table->table_body_end ();
 	echo $table->table_end ();
@@ -181,7 +225,7 @@ function verify_data ()
 
 	if (empty ($post_username))
 		$errors = $errors.li ("Username can't be empty");
-	if ($dbinfo->user_exists ($post_username))
+	if (!$dbinfo->logged_in () && $dbinfo->user_exists ($post_username))
 		$errors = $errors.li ("Username already exists");
 	if (empty ($passwd1))
 		$errors = $errors.li ("Password can't be empty");
@@ -217,15 +261,100 @@ function verify_data ()
 
 if ($dbinfo->logged_in ())
 {
-	if ($dbinfo->is_admin ())
+	$user = $dbinfo->username ();
+	if ($dbinfo->is_admin () && !empty ($get_username))
 	{
-		echo "Soon, you'll see the admin registration panel.";
+		$user = $get_username;
+	}
+
+	if ($mode == "save")
+	{
+		verify_data ();
+		if (!empty ($errors))
+		{
+			echo "Errors were detected. Please correct before continuing:<br/>";
+			echo ul ($errors);
+		}
+		else
+		{
+			$dbinfo->query ("update user set username = '$post_username', password = '$passwd1', is_admin = $is_admin,
+realname = '$post_realname', birth_date = '$post_birth_date', shipping_street = '$post_street', shipping_city = '$post_city',
+shipping_state = '$post_state', shipping_zip = $post_zip, phone = '$post_phone', email = '$post_email', card_type = '$post_card_type',
+card_number = $post_card_number, card_expire = '$post_card_expire' where username = '$user'");
+			$dbinfo->update_user_info ();
+			$msg = "Update successful.";
+			mysql_free_result ($result);
+			redirect ("$script_name?mode=view&username=$user&msg=$msg");
+		}
+	}
+	else if ($mode == "browse")
+	{
+		echo_div ("scriptstatus");
+		echo href ("$current_script?mode=view", "View Your Account");
+		end_div ();
+
+		$curr_user = $dbinfo->username ();
+		$result = $dbinfo->query ("select u.username, is_admin, realname, email, day, hour, minute
+from user u, user_activity ua
+where u.username = ua.username AND
+u.username != '$curr_user' AND
+ua.activity = 'Registered' order by username");
+		if ($result)
+		{
+			$table = new table_common_t ();
+			$table->init ("tbl_std");
+			echo $table->table_begin ();
+			echo $table->table_head_begin ();
+			echo $table->tr ($table->td_span ("Registered users of iBay", "", 6));
+			echo $table->tr ($table->td ("Username").
+					 $table->td ("Realname").
+					 $table->td ("Admin?").
+					 $table->td ("Email Address").
+					 $table->td ("Registration Time").
+					 $table->td ("Manage"));
+			echo $table->table_head_end ();
+			echo $table->table_body_begin ();
+			while (list($username, $is_admin, $name, $email, $day, $hour, $min) = mysql_fetch_row ($result))
+			{
+				echo $table->tr ($table->td ($username).
+						 $table->td ($name).
+						 $table->td (($is_admin)? "Yes" : "No").
+						 $table->td ($email).
+						 $table->td (format_time ($day, $hour, $min)).
+						 $table->td (href ("$current_script?mode=view&username=$username", "Account").
+							     " | ".
+							     href ("profile.php?mode=view&username=$username", "Profile")));
+			}
+			echo $table->table_body_end ();
+			echo $table->table_end ();
+			mysql_free_result ($result);
+		}
+		else if ($dbinfo->debug ())
+		{
+			mysql_free_result ($result);
+			die (mysql_error ());
+		}
+		else
+		{
+			mysql_free_result ($result);
+			echo "Couldn't get user information.";
+			return;
+		}
+
 	}
 	else
 	{
-		echo "Soon, you'll see your registration info.";
+		echo_div ("scriptstatus");
+		echo href ("$current_script?mode=browse", "Browse all");
+		if ($user != $dbinfo->username ())
+		{
+			echo " | ";
+			echo href ("$current_script?mode=view", "View Your Account");
+		}
+		end_div ();
+
+		registration_form ($user);
 	}
-	new_registration_form ($get_username);
 }
 else
 {
@@ -250,10 +379,11 @@ else
 				cout ("Registration successful.");
 				cout ("Would you like to ".href ("login.php", "login")."?");
 			}
+			mysql_free_result ($result);
 		}
 	}
 	else
-		new_registration_form ();
+		registration_form ();
 }
 
 echo_footer ($dbinfo);
