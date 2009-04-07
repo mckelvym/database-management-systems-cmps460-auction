@@ -69,6 +69,13 @@ class dbinfo_t
 		return $this->dblink;
 	}
 
+	function update_all ()
+	{
+		$this->update_time ();
+		$this->update_user_info ();
+		$this->update_closed_item_listings ();
+	}
+
 	// Update user information in session variables (realname, is an admin)
 	function update_user_info ()
 	{
@@ -218,7 +225,6 @@ class dbinfo_t
 			$day++;
 		}
 		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, 'Current Time')");
-		$this->update_time ();
 		return true;
 	}
 
@@ -247,8 +253,9 @@ class dbinfo_t
 		$day = $this->day ();
 		$hour = $this->hour ();
 		$minute = $this->minute ();
+		$activity_description = mysql_real_escape_string ($activity_description);
+
 		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, '$activity_description')");
-		$this->update_closed_item_listings ();
 		return true;
 	}
 
@@ -263,6 +270,7 @@ class dbinfo_t
 		$day = $this->day ();
 		$hour = $this->hour ();
 		$minute = $this->minute ();
+		$activity_description = mysql_real_escape_string ($activity_description);
 
 		// determine if $username is a valid user
 		$result = $this->query ("select count(*) as count from user where username = '$username'");
@@ -271,7 +279,6 @@ class dbinfo_t
 		mysql_free_result ($result);
 
 		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, '$activity_description')");
-		$this->update_closed_item_listings ();
 	}
 
 	// Save a registration activity for the current user
@@ -283,7 +290,6 @@ class dbinfo_t
 		$hour = $this->hour ();
 		$minute = $this->minute ();
 		$this->query ("insert into user_activity values ('$user', $day, $hour, $minute, 'Registered')");
-		$this->update_closed_item_listings ();
 		return true;
 	}
 
