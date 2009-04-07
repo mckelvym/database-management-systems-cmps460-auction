@@ -287,7 +287,7 @@ card_number = $post_card_number, card_expire = '$post_card_expire' where usernam
 			redirect ("$script_name?mode=view&username=$user&msg=$msg");
 		}
 	}
-	else if ($mode == "browse")
+	else if ($mode == "browse" && $dbinfo->is_admin ())
 	{
 		echo_div ("scriptstatus");
 		echo href ("$current_script?mode=view", "View Your Account");
@@ -344,14 +344,17 @@ ua.activity = 'Registered' order by username");
 	}
 	else
 	{
-		echo_div ("scriptstatus");
-		echo href ("$current_script?mode=browse", "Browse all");
-		if ($user != $dbinfo->username ())
+		if ($dbinfo->is_admin ())
 		{
-			echo " | ";
-			echo href ("$current_script?mode=view", "View Your Account");
+			echo_div ("scriptstatus");
+			echo href ("$current_script?mode=browse", "Browse all");
+			if ($user != $dbinfo->username ())
+			{
+				echo " | ";
+				echo href ("$current_script?mode=view", "View Your Account");
+			}
+			end_div ();
 		}
-		end_div ();
 
 		registration_form ($user);
 	}
