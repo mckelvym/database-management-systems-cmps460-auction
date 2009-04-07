@@ -18,7 +18,7 @@ mark,0,0,16,BidOnItem
 mark,0,0,17,BidOnItem
 jim,0,0,18,BidOnItem
 dallas,0,0,19,BidOnItem
-jim_admin,2,0,9,CurrentTime
+jim_admin,2,0,9,Current Time
 trey,2,0,10,BidOnItem
 toby,2,0,11,Registered
 toby,2,0,12,ListedItem
