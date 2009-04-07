@@ -90,21 +90,24 @@ class table_common_t
 		return $this->td_span ($s, $custom_class);
 	}
 
-	function td_span ($s, $custom_class = "", $span = 0)
+	function td_span ($s, $custom_class = "", $span = 0, $align = "")
 	{
+		if (!empty ($align))
+			$align = "align=$align";
+
 		if ($span == 0)
 		{
 			if (empty ($custom_class))
-				return "\t<td class=$this->main_class>\n\t$s\n\t</td>\n";
+				return "\t<td $align class=$this->main_class>\n\t$s\n\t</td>\n";
 			else
-				return "\t<td class=$custom_class>\n\t$s\n\t</td>\n";
+				return "\t<td $align class=$custom_class>\n\t$s\n\t</td>\n";
 		}
 		else
 		{
 			if (empty ($custom_class))
-				return "\t<td class=$this->main_class colspan=$span>\n\t$s\n\t</td>\n";
+				return "\t<td $align class=$this->main_class colspan=$span>\n\t$s\n\t</td>\n";
 			else
-				return "\t<td class=$custom_class colspan=$span>\n\t$s\n\t</td>\n";
+				return "\t<td $align class=$custom_class colspan=$span>\n\t$s\n\t</td>\n";
 		}
 	}
 
