@@ -381,10 +381,10 @@ else
 			}
 			else
 			{
+				$dbinfo->save_registration ($post_username);
 				cout ("Registration successful.");
 				cout ("Would you like to ".href ("login.php", "login")."?");
 			}
-			mysql_free_result ($result);
 		}
 	}
 	else
