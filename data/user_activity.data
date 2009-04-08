@@ -3,7 +3,11 @@ jim,0,0,1,Registered
 mark,0,0,2,Registered
 dallas,0,0,3,Registered
 trey,0,0,4,Registered
+trey,0,0,4,Logged In
+trey,0,0,5,Logged Out
 sayuj,0,0,5,Registered
+sayuj,0,0,5,Logged In
+sayuj,0,0,6,Logged Out
 nully,0,0,6,Registered
 dallas,0,0,7,ListedItem
 dallas,0,0,8,ListedItem
