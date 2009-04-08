@@ -80,7 +80,8 @@ class dbinfo_t
 	function update_user_info ()
 	{
 		$username = $this->username ();
-		$result = $this->query ("select realname, is_admin from user where username = '$username'");
+		$result = $this->query ("select realname, is_admin from user
+where username = '$username'");
 		$row = mysql_fetch_assoc ($result);
 		$_SESSION['Admin'] = $row['is_admin'];
 		$_SESSION['Realname'] = $row['realname'];
@@ -93,7 +94,8 @@ class dbinfo_t
 	// and admin or not
 	function login ($username, $password)
 	{
-		$result = $this->query ("select username, realname, is_admin from user where username = '$username' and password = '$password'");
+		$result = $this->query ("select username, realname, is_admin from user
+where username = '$username' and password = '$password'");
 		if (mysql_num_rows ($result) == 0)
 		{
 			unset ($_SESSION['Username']);
@@ -116,7 +118,8 @@ class dbinfo_t
 
 	function login_as ($username)
 	{
-		$result = $this->query ("select username, realname, is_admin from user where username = '$username'");
+		$result = $this->query ("select username, realname, is_admin from user
+where username = '$username'");
 		if (mysql_num_rows ($result) == 0)
 		{
 			unset ($_SESSION['Username']);
@@ -177,7 +180,8 @@ class dbinfo_t
 	// Update the time from the database into the session vars
 	function update_time ()
 	{
-		$result = $this->query ("select day,hour,minute from user_activity order by day desc, hour desc, minute desc limit 1");
+		$result = $this->query ("select day,hour,minute from user_activity
+order by day desc, hour desc, minute desc limit 1");
 		$row = mysql_fetch_assoc ($result);
 		$day = $row['day'];
 		$hour = $row['hour'];
@@ -324,7 +328,15 @@ class dbinfo_t
 		$day = $this->day ();
 		$hr = $this->hour ();
 		$min = $this->minute ();
-		$result1 = $this->query ("select title, seller, category, end_day, end_hour, end_minute from item_listing where end_day <= $day AND end_hour <= $hr AND end_minute <= $min AND buyer = ''");
+		$result1 = $this->query ("select title, seller, category, end_day, end_hour, end_minute from item_listing
+where 	buyer = ''
+AND	(end_day < $day 
+	OR (end_day = $day
+		AND end_hour < $hr)
+	OR (end_day = $day
+		AND end_hour = $hr
+		AND end_minute < $min)
+	)");
 		if (mysql_num_rows ($result1) > 0)
 		{
 			while ($row = mysql_fetch_assoc ($result1))
@@ -335,11 +347,26 @@ class dbinfo_t
 				$endday = $row['end_day'];
 				$endhr = $row['end_hour'];
 				$endmin = $row['end_minute'];
-				$result2 = $this->query ("select username, bid_amount from bids_on where item_title = '$title' AND item_seller = '$seller' AND item_category = '$category' AND item_end_day = $endday AND item_end_hour = $endhr AND item_end_minute = $endmin order by bid_amount desc limit 1");
+				$result2 = $this->query ("select username, bid_amount from bids_on
+where 	item_title = '$title'
+AND 	item_seller = '$seller'
+AND 	item_category = '$category'
+AND 	item_end_day = $endday
+AND 	item_end_hour = $endhr
+AND 	item_end_minute = $endmin
+order by bid_amount desc limit 1");
 				// no buyer
 				if (mysql_num_rows ($result2) == 0)
 				{
-					$this->query ("update item_listing set buyer = 'None', current_price = starting_price where title = '$title' AND seller = '$seller' AND category = '$category' AND end_day = $endday AND end_hour = $endhr AND end_minute = $endmin");
+					$this->query ("update item_listing set
+buyer = 'None',
+current_price = starting_price
+where 	title = '$title'
+AND 	seller = '$seller'
+AND 	category = '$category'
+AND 	end_day = $endday
+AND 	end_hour = $endhr
+AND 	end_minute = $endmin");
 				}
 				// buyer
 				else
@@ -347,7 +374,15 @@ class dbinfo_t
 					$row2 = mysql_fetch_assoc ($result2);
 					$buyer = $row2['username'];
 					$price = $row2['bid_amount'];
-					$this->query ("update item_listing set buyer = '$buyer', current_price = $price where title = '$title' AND seller = '$seller' AND category = '$category' AND end_day = $endday AND end_hour = $endhr AND end_minute = $endmin");
+					$this->query ("update item_listing set
+buyer = '$buyer',
+current_price = $price
+where 	title = '$title'
+AND 	seller = '$seller'
+AND 	category = '$category'
+AND 	end_day = $endday
+AND 	end_hour = $endhr
+AND	end_minute = $endmin");
 				}
 				mysql_free_result ($result2);
 			}
@@ -370,9 +405,57 @@ class dbinfo_t
 		}
 	}
 
+	function get_realname ($username)
+	{
+		$result = $this->query ("select realname from user where username = '$username'");
+		if (mysql_num_rows ($result) == 0)
+			return "ERROR";
+		else
+		{
+			$row = mysql_fetch_assoc ($result);
+			return $row['realname'];
+		}
+	}
+
+	function get_lastlogout ($username)
+	{
+		$result = $this->query ("select day, hour, minute from user_activity
+where 	username = '$username'
+AND	activity = 'Logged Out'
+order by day desc, hour desc, minute desc
+limit 1");
+		if (mysql_num_rows ($result) == 0)
+			return array (-1, -1, -1);
+		else
+		{
+			list ($day, $hr, $min) = mysql_fetch_row ($result);
+			return array ($day, $hr, $min);
+		}
+	}
+
+	function get_winner ($title, $seller, $category, $end_day, $end_hour, $end_minute)
+	{
+		$result = $this->query ("select buyer, realname, current_price from item_listing, user
+where	title = '$title'
+AND	seller = '$seller'
+AND	category = '$category'
+AND	end_day = $end_day
+AND	end_hour = $end_hour
+AND	end_minute = $end_minute
+AND	(buyer != '' OR buyer != 'None')
+AND	buyer = username");
+		if (mysql_num_rows ($result) == 0)
+			return array (-1, -1, -1);
+		else
+		{
+			list ($username, $realname, $bid_amount) = mysql_fetch_row ($result);
+			return array ($username, $realname, $bid_amount);
+		}
+	}
+
 	//<Begin - Changes made by Sayooj Valsan > # User Profile
 	// Gets the user description
-	function get_userdesc($username)
+	function get_userdesc ($username)
 	{
 		$result = $this->query ("select description from user where username =  '$username'");
 		$row = mysql_fetch_assoc ($result);
