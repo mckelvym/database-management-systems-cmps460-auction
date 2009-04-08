@@ -72,10 +72,18 @@ order by item_end_day desc, item_end_hour desc, item_end_minute desc");
 			$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
 			list ($winner, $winner_realname, $win_price) =
 				$dbinfo->get_winner ($title, $seller, $category, $end_day, $end_hour, $end_min);
-			$winner_realname = href ("profile.php?mode=view&username=$winner", $winner_realname);
-		echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-			  "The auction \"$title\" by $seller_realname that you have partipated in has ended since your last visit. ".
-			  "$winner_realname won the auction with a bid of \$$win_price.", "closed");
+			if ($winner != -1)
+			{
+				$winner_realname = href ("profile.php?mode=view&username=$winner", $winner_realname);
+				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
+					  "The auction \"$title\" by $seller_realname that you have partipated in has ended since your last visit. ".
+					  "$winner_realname won the auction with a bid of \$$win_price.", "closed");
+			}
+			else
+			{
+				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
+					  "The auction \"$title\" by $seller_realname that you have partipated in has ended since your last visit. There was no winner.", "closed");
+			}
 		}
 		mysql_free_result ($result);
 
@@ -103,7 +111,7 @@ order by end_day desc, end_hour desc, end_minute desc");
 			     $seller_fdbk)
 		       = mysql_fetch_row ($result))
 		{
-			if ($buyer == "")
+			if ($buyer == "None")
 			{
 				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
 					  "Your auction \"$title\" has ended since your last visit with no buyer.", "closed");
