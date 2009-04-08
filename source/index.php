@@ -187,7 +187,7 @@ order by bid_amount desc");
 where username = '$username'
 AND activity != 'Current Time'
 order by day desc, hour desc, minute desc");
-	while (list ($d, $m, $h, $a) = mysql_fetch_row ($result))
+	while (list ($d, $h, $m, $a) = mysql_fetch_row ($result))
 	{
 		echo div (span (format_time ($d, $h, $m), "time")."$a", "useractivity");
 	}
