@@ -21,7 +21,6 @@ if (empty ($mode))
 	echo $table->table_begin ();
 	echo $table->table_head_begin ();
 	echo $table->tr ($table->td_span ("Login with your iBay ID", "", 2));
-	echo $table->tr_end ();
 	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
 	echo form_begin ("login.php?login=y", "post");
