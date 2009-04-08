@@ -65,8 +65,8 @@ HEREDOC;
 		else
 			$nav = "User Panel<br/>";
 
-		if (current_script () != "index.php")
-			$nav = $nav.li_wrap (href ("index.php", "Home"));
+/* 		if (current_script () != "index.php") */
+		$nav = $nav.li_wrap (href ("index.php", "Home"));
 		$nav = $nav.li_wrap (href ("registration.php?mode=view", "Account"));
 		$nav = $nav.li_wrap (href ("profile.php", "Profile"));
 		$nav = $nav.li_wrap (href ("profile.php?mode=browse", "All Profiles"));
@@ -144,6 +144,20 @@ function echo_div ($name)
 function end_div ()
 {
 	echo "</div>\n";
+}
+
+function div ($text, $style_name = "")
+{
+	if (!empty ($style_name))
+		$style_name = "id=\"$style_name\"";
+	return "<div $style_name>\n$text\n</div>\n";
+}
+
+function span ($text, $style_name)
+{
+	if (!empty ($style_name))
+		$style_name = "id=\"$style_name\"";
+	return "<span $style_name>\n$text\n</span>\n";
 }
 
 // make a quick link
@@ -257,5 +271,49 @@ function format_time ($day, $hour, $minute, $prefix_zeros_to_day = false)
 	}
 
 	return "Day: $day, Time: $hour:$minute";
+}
+
+function format_time_padded ($day, $hour, $minute)
+{
+	if ($minute > 59)
+	{
+		$minute -= 60;
+		$hour++;
+	}
+
+	if ($hour > 23)
+	{
+		$hour -= 24;
+		$day++;
+	}
+
+	if ($minute < 10)
+	{
+		$minute = "0".$minute;
+	}
+
+	if ($hour < 10)
+	{
+		$hour = "0".$hour;
+	}
+
+	if ($day < 10)
+	{
+		$day = "0000".$day;
+	}
+	else if ($day < 100)
+	{
+		$day = "000".$day;
+	}
+	else if ($day < 1000)
+	{
+		$day = "00".$day;
+	}
+	else if ($day < 10000)
+	{
+		$day = "0".$day;
+	}
+
+	return array ($day, $hour, $minute);
 }
 ?>
