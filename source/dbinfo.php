@@ -18,6 +18,9 @@ class dbinfo_t
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
 		$this->pass = "foursixty";
+/* 		$this->host = "localhost"; */
+/* 		$this->user = "root"; */
+/* 		$this->pass = ""; */
 		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 		$this->debug = true;
@@ -329,13 +332,13 @@ order by day desc, hour desc, minute desc limit 1");
 		$hr = $this->hour ();
 		$min = $this->minute ();
 		$result1 = $this->query ("select title, seller, category, end_day, end_hour, end_minute from item_listing
-where 	buyer = ''
-AND	(end_day < $day 
+where 	(buyer = '' OR buyer = 'None')
+AND	(end_day < $day
 	OR (end_day = $day
 		AND end_hour < $hr)
 	OR (end_day = $day
 		AND end_hour = $hr
-		AND end_minute < $min)
+		AND end_minute <= $min)
 	)");
 		if (mysql_num_rows ($result1) > 0)
 		{
