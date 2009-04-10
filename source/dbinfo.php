@@ -456,7 +456,7 @@ AND	buyer = username");
 		}
 	}
 
-	//<Begin - Changes made by Sayooj Valsan > # User Profile
+	//Begin - Changes made by Sayooj Valsan > # User Profile
 	// Gets the user description
 	function get_userdesc ($username)
 	{
@@ -464,8 +464,15 @@ AND	buyer = username");
 		$row = mysql_fetch_assoc ($result);
 		return $row['description'];
 	}
-	//<End - Changes made by Sayooj Valsan > # User Profile
-
+	//End - Changes made by Sayooj Valsan > # User Profile
+	//Begin - Changes made by Sayooj Valsan <04-10-2009>   
+	function get_picture ($username)
+	{
+		$result = $this->query ("select picture from user where username = '$username'");
+		$row = mysql_fetch_assoc ($result);
+		return $row['picture'];
+	}
+	//End - Changes made by Sayooj Valsan <04-10-2009>
 
 }
 
