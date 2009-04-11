@@ -56,18 +56,12 @@ echo $table->tr_end();
 echo $table->tr_begin();
 
 
-$result = $dbinfo->query ("select buyerfeedbackforseller_description from item_listing where seller ='$user_name'");
-$emptyctr = 0; #Counter which flags number of empty string
-#Check if the list contains empty string
-while (list($buyerfeedbackforseller_description) = mysql_fetch_row ($result))
-{
-	if($buyerfeedbackforseller_description=="")
-		$emptyctr++;
-			
-}
-			
+
+$result = $dbinfo->query ("select seller,buyer,buyerfeedbackforseller_description,buyerfeedbackforseller_rating,sellerfeedbackforbuyer_description from item_listing where (buyerfeedbackforseller_description!='' and buyerfeedbackforseller_rating !=-1 and seller ='$user_name') OR (sellerfeedbackforbuyer_description!='' AND buyer='$user_name')");
+
+		
 #If mysql_num_rows is 0,or No of empty strings = no of rows there are no feedbacks!
-if ((mysql_num_rows ($result)==0)||(mysql_num_rows ($result)==$emptyctr))
+if ((mysql_num_rows ($result)==0))
 {
 	$table = new table_common_t ();
 	$table->init ("tbl_std");
@@ -77,30 +71,120 @@ if ((mysql_num_rows ($result)==0)||(mysql_num_rows ($result)==$emptyctr))
 	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
 			
-		    echo $table->table_body_end ();
+	echo $table->table_body_end ();
 	echo $table->table_end ();
 }
 else
 {
-			$result = $dbinfo->query ("select buyerfeedbackforseller_description from item_listing where seller ='$user_name'");
-			$table = new table_common_t ();
-			$table->init ("tbl_std");
-			echo $table->table_begin ();
-			echo $table->table_head_begin ();
-			echo $table->tr ($table->td_span ("Feedback", "", 6));
-			echo $table->tr ($table->td ("From Selling","",6).
-					 $table->td ("From Buying"));
-			echo $table->table_head_end ();
-			echo $table->table_body_begin ();
-			while (list($buyerfeedbackforseller_description) = mysql_fetch_row ($result))
-			{
-				if($buyerfeedbackforseller_description!="") #Removing empty string values from displayed
-					echo $table->tr ($table->td ($buyerfeedbackforseller_description));
+	
+				$table = new table_common_t ();
+				$table->init ("tbl_std");
+				echo $table->table_begin ();
+				echo $table->table_head_begin ();
+				
+				echo $table->table_body_begin ();
+				
+					$table = new table_common_t();
+					$table->init ("tbl_std");
+					echo $table->table_begin();
+					echo $table->table_head_begin ();
+					echo $table->tr_begin();
+					
+					echo $table->td("Buyer's Feedback for you");
+					
+					echo $table->tr_end();
+					echo $table->table_head_end ();
+					echo $table->table_body_begin();
+					
+						$table = new table_common_t();
+						$table->init ("tbl_std");
+						echo $table->table_begin();
+						echo $table->table_head_begin ();
 						
-			}
-		    echo $table->table_body_end ();
-			echo $table->table_end ();
-			mysql_free_result ($result);
+						
+						echo $table->tr($table->td("Buyer").$table->td("Rating").$table->td("Feedback"));
+						
+						
+						echo $table->table_head_end();
+						echo $table->table_body_begin();
+						$result = $dbinfo->query ("select buyer,seller,buyerfeedbackforseller_rating,buyerfeedbackforseller_description from item_listing where seller ='$user_name' and buyerfeedbackforseller_rating!=-1 and buyerfeedbackforseller_description!=''");
+
+							while (list($buyer,$seller,$buyerfeedbackforseller_rating,$buyerfeedbackforseller_description) = mysql_fetch_row ($result))
+							{
+								
+									
+									if($seller==$user_name){
+										
+										
+										echo $table->tr($table->td($buyer).$table->td($buyerfeedbackforseller_rating).$table->td($buyerfeedbackforseller_description));
+										
+										
+										
+									}					
+										
+							}
+			
+			
+			
+						echo $table->table_body_end ();
+						echo $table->table_end ();
+					mysql_free_result ($result);
+					
+					$table = new table_common_t();
+					$table->init ("tbl_std");
+					echo $table->table_begin();
+					echo $table->table_head_begin ();
+					echo $table->tr_begin();
+					
+					echo $table->td("Seller's Feedback for you");
+					
+					echo $table->tr_end();
+					echo $table->table_head_end ();
+					echo $table->table_body_begin();
+					
+						$table = new table_common_t();
+						$table->init ("tbl_std");
+						echo $table->table_begin();
+						echo $table->table_head_begin ();
+						
+						
+						echo $table->tr($table->td("Seller").$table->td("Feedback"));
+						
+						
+						echo $table->table_head_end();
+						echo $table->table_body_begin();
+						$result = $dbinfo->query ("select buyer, seller, sellerfeedbackforbuyer_description from item_listing where buyer = '$user_name' and sellerfeedbackforbuyer_description!=''");
+
+							while (list($buyer,$seller,$sellerfeedbackforbuyer_description) = mysql_fetch_row ($result))
+							{
+								
+									
+									if($buyer==$user_name){
+										
+										
+										echo $table->tr($table->td($seller).$table->td($sellerfeedbackforbuyer_description));
+										
+										
+										
+									}					
+										
+							}
+			
+			
+			
+						echo $table->table_body_end ();
+						echo $table->table_end ();
+					
+					echo $table->table_body_end ();
+					echo $table->table_end ();
+					
+					
+					
+				echo $table->table_body_end ();
+				echo $table->table_end ();
+			
+	
+	
 }			
 			
 
