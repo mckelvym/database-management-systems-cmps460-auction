@@ -46,154 +46,56 @@ echo $table->table_end();
 </td>
 <td width="50%" valign="top">
 <?php
-
-$table = new table_common_t();
-echo $table->table_begin();
-echo $table->tr_begin();
 if ($mode == "") {
-	//For current users mode, display welcome message
-	echo $table->td("Welcome, " . $dbinfo->realname());
-}
-else if($mode == "view"){
 	
-	#If the Realname is empty, do not display anything
-	if($dbinfo->get_realname($user_name)!=""){ 
-		echo $table->td($dbinfo->get_realname($user_name)."' Profile");
-	}
-	else{ 
-		echo $table->td("Unknown Profile");
-	}
+	cout ("Welcome to your profile page.");
 	
-
+}// Viewing someother's profile
+else
+{
+	cout ("Welcome to $user_name's profile page.");
 }
 
-
-
-echo $table->tr_end();
-echo $table->tr_begin();
-echo $table->td("<br>");
-echo $table->tr_end();
-echo $table->tr_begin();
+cout ("");
 
 #Query to check if the user is a seller and  has any feeback from buyer
-$result_seller = $dbinfo->query("select buyer,seller,buyerfeedbackforseller_rating,buyerfeedbackforseller_description from item_listing where seller ='$user_name' and buyerfeedbackforseller_rating!=-1 and buyerfeedbackforseller_description!=''");
+$result_seller = $dbinfo->query ("select buyer,seller,buyerfeedbackforseller_rating,buyerfeedbackforseller_description from item_listing where seller ='$user_name' and buyerfeedbackforseller_rating!=-1 and buyerfeedbackforseller_description!='' and buyerfeedbackforseller_rating!=-1 order by end_day desc,end_hour desc,end_minute desc");
 #Query to check if the user is a buyer  has any feeback from seller
 $result_buyer = $dbinfo->query("select buyer, seller, sellerfeedbackforbuyer_description from item_listing where buyer = '$user_name' and sellerfeedbackforbuyer_description!=''");
-
-#If mysql_num_rows is 0, there will be  no feedbacks!
-if ((mysql_num_rows($result_seller) == 0) and (mysql_num_rows($result_buyer) == 0)) {
-	$table = new table_common_t();
-	$table->init("tbl_std");
-	echo $table->table_begin();
-	echo $table->table_head_begin();
-	echo $table->tr($table->td_span("No Feedbacks found!", "", 6));
-	echo $table->table_head_end();
-	echo $table->table_body_begin();
-	echo $table->table_body_end();
-	echo $table->table_end();
-} else #Feedback exists
-	{
-	$table = new table_common_t();
-	$table->init("tbl_std");
-	echo $table->table_begin();
-	echo $table->table_head_begin();
-	echo $table->tr_begin();
-	echo $table->td("Feedback");
-	echo $table->tr_end();
-	echo $table->table_end();
-?>
-			<br>
-			<?php
-
-	if (mysql_num_rows($result_seller) != 0) { #check if any Buyer's Feedback exists
-
-		$table = new table_common_t();
-		$table->init("tbl_std");
-		echo $table->table_begin();
-		echo $table->table_head_begin();
-		echo $table->tr_begin();
-
-		echo $table->td("Buyer's Feedback for you");
-
-		echo $table->tr_end();
-
-		echo $table->table_head_end();
-
-		echo $table->table_body_begin();
-
-		$table = new table_common_t();
-		$table->init("tbl_std");
-		echo $table->table_begin();
-		echo $table->table_head_begin();
-
-		echo $table->tr($table->td("Buyer") . $table->td("Rating") . $table->td("Feedback"));
-
-		echo $table->table_head_end();
-		echo $table->table_body_begin();
-		$result = $dbinfo->query("select buyer,seller,buyerfeedbackforseller_rating,buyerfeedbackforseller_description from item_listing where seller ='$user_name' and buyerfeedbackforseller_rating!=-1 and buyerfeedbackforseller_description!='' order by end_day desc,end_hour desc,end_minute desc");
-		#Listing the buyer,buyerfeedbackforseller_rating & buyerfeedbackforseller_description
-		while (list ($buyer, $seller, $buyerfeedbackforseller_rating, $buyerfeedbackforseller_description) = mysql_fetch_row($result)) {
-
+if(mysql_num_rows($result_seller) == 0 && mysql_num_rows($result_buyer) == 0)
+{
+	echo div ("No feedbacks found!", "feedback");
+}
+if(mysql_num_rows($result_seller) != 0){
+	cout ("Feedback for items sold :");
+	while (list ($buyer, $seller, $buyerfeedbackforseller_rating, $buyerfeedbackforseller_description) = mysql_fetch_row($result_seller)) {
+			
+				
 			if ($seller == $user_name) {
-
-				echo $table->tr($table->td($buyer) . $table->td($buyerfeedbackforseller_rating) . $table->td($buyerfeedbackforseller_description));
+				$winner_realname = href ("profile.php?mode=view&username=$buyer", $dbinfo->get_realname ($buyer));
+				echo div ("$winner_realname has left the following feedback \"$buyerfeedbackforseller_description\"", "feedback");
 
 			}
 
-		}
-
-		echo $table->table_body_end();
-		echo $table->table_end();
-		mysql_free_result($result);
-	}
-?>
-<br>					
-<?php
-
-	if (mysql_num_rows($result_buyer) != 0) { #check if any seller's Feedback exists
-
-		$table = new table_common_t();
-		$table->init("tbl_std");
-		echo $table->table_begin();
-		echo $table->table_head_begin();
-		echo $table->tr_begin();
-
-		echo $table->td("Seller's Feedback for you");
-
-		echo $table->tr_end();
-		echo $table->table_head_end();
-		echo $table->table_body_begin();
-
-		$table = new table_common_t();
-		$table->init("tbl_std");
-		echo $table->table_begin();
-		echo $table->table_head_begin();
-
-		echo $table->tr($table->td("Seller") . $table->td("Feedback"));
-
-		echo $table->table_head_end();
-		echo $table->table_body_begin();
-		$result = $dbinfo->query("select buyer, seller, sellerfeedbackforbuyer_description from item_listing where buyer = '$user_name' and sellerfeedbackforbuyer_description!='' order by end_day desc,end_hour desc,end_minute desc");
-		#Listing the buyer,seller,sellerfeedbackforbuyer_description
-		while (list ($buyer, $seller, $sellerfeedbackforbuyer_description) = mysql_fetch_row($result)) {
-
-			if ($buyer == $user_name) {
-
-				echo $table->tr($table->td($seller) . $table->td($sellerfeedbackforbuyer_description));
-			}
-		}
-
-		echo $table->table_body_end();
-		echo $table->table_end();
-
-		echo $table->table_body_end();
-		echo $table->table_end();
-	}
-
+		}	
 }
 
-echo $table->tr_end();
-echo $table->table_end();
+
+if(mysql_num_rows($result_buyer)!=0)
+{
+	cout ("Feedback for items bought :");
+	while (list ($buyer, $seller, $sellerfeedbackforbuyer_description) = mysql_fetch_row($result_buyer)) {
+			
+				
+			if ($buyer == $user_name) {
+				$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
+				echo div ("$seller_realname has left the following feedback \"$sellerfeedbackforbuyer_description\"", "feedback");
+
+			}
+
+		}	
+}
+
 
 ?>
 </td>
