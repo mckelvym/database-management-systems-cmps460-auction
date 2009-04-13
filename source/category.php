@@ -194,7 +194,7 @@ if ($dbinfo->logged_in ())
                  current_price from item_listing where category =
                  '$category' AND end_day >= '$day' AND end_hour >=
                  '$hour' AND end_minute > '$minute' order by
-                 current_bid";
+                 current_price";
 	}
 
 	else
