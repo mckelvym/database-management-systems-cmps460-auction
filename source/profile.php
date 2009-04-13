@@ -11,6 +11,7 @@ if (!$dbinfo->logged_in())
 $mode = get("mode");
 
 $user_name = $dbinfo->username();
+$home_user = $user_name;
 //If mode is empty, the user is current user
 if ($mode == "") {
 		
@@ -51,12 +52,15 @@ if ($mode == "") {
 	cout ("Welcome to your profile page.");
 	
 }// Viewing someother's profile
-else
+else if($mode == "view")
 {
+	if($user_name == $home_user){//You are visinting your own page
+			cout ("Welcome to your profile page.");
+	}else
 	cout ("Welcome to $user_name's profile page.");
 }
 
-cout ("");
+
 
 #Query to check if the user is a seller and  has any feeback from buyer
 $result_seller = $dbinfo->query ("select buyer,seller,buyerfeedbackforseller_rating,buyerfeedbackforseller_description from item_listing where seller ='$user_name' and buyerfeedbackforseller_rating!=-1 and buyerfeedbackforseller_description!='' and buyerfeedbackforseller_rating!=-1 order by end_day desc,end_hour desc,end_minute desc");
@@ -96,6 +100,24 @@ if(mysql_num_rows($result_buyer)!=0)
 		}	
 }
 
+cout ("Bid history:");
+
+$result_bid =  $dbinfo->query (" select username,item_seller, item_title ,bid_day, bid_hour, bid_minute, bid_amount from bids_on where username = '$user_name' order by bid_amount desc");
+while (list ($username, $item_seller, $item_title, $bid_day, $bid_hour,$bid_minute,$bid_amount) = mysql_fetch_row($result_bid)) {
+			
+			$seller_realname = href ("profile.php?mode=view&username=$item_seller", $dbinfo->get_realname ($item_seller));
+			
+			if($username == $home_user)			
+				$bidder_realname = "You";
+			else{
+			$bidder_realname = href ("profile.php?mode=view&username=$username", $dbinfo->get_realname ($username));
+			
+			}
+			
+			echo div (span (format_time ($bid_day, $bid_hour, $bid_minute), "time").
+					  "$bidder_realname made a bid of \$$bid_amount on $seller_realname's auction ", "bidhistory");
+
+		}	
 
 ?>
 </td>
