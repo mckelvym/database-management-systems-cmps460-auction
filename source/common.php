@@ -341,4 +341,9 @@ function is_older ($d1, $h1, $m1, $d2, $h2, $m2)
 	return false;
 }
 
+function escape ($val)
+{
+	return mysql_real_escape_string ($val);
+}
+
 ?>
