@@ -18,9 +18,6 @@ class dbinfo_t
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
 		$this->pass = "foursixty";
-/* 		$this->host = "localhost"; */
-/* 		$this->user = "root"; */
-/* 		$this->pass = ""; */
 		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 		$this->debug = true;
@@ -436,6 +433,43 @@ limit 1");
 		}
 	}
 
+	function get_registration_date ($username)
+	{
+		$result = $this->query ("select day, hour, minute from user_activity
+where 	username = '$username'
+AND	activity = 'Registered'
+order by day desc, hour desc, minute desc
+limit 1");
+		if (mysql_num_rows ($result) == 0)
+			return array (-1, -1, -1);
+		else
+		{
+			list ($day, $hr, $min) = mysql_fetch_row ($result);
+			return array ($day, $hr, $min);
+		}
+	}
+
+	function auction_exists ($title, $seller, $category, $end_day, $end_hour, $end_minute)
+	{
+		$result = $this->query ("select seller from item_listing
+where title = '$title'
+AND	seller = '$seller'
+AND	category = '$category'
+AND	end_day = $end_day
+AND	end_hour = $end_hour
+AND	end_minute = $end_minute");
+		if (mysql_num_rows ($result) == 0)
+		{
+			mysql_free_result ($result);
+			return false;
+		}
+		else
+		{
+			mysql_free_result ($result);
+			return true;
+		}
+	}
+
 	function get_winner ($title, $seller, $category, $end_day, $end_hour, $end_minute)
 	{
 		$result = $this->query ("select buyer, realname, current_price from item_listing, user
@@ -454,6 +488,19 @@ AND	buyer = username");
 			list ($username, $realname, $bid_amount) = mysql_fetch_row ($result);
 			return array ($username, $realname, $bid_amount);
 		}
+	}
+
+	function get_num_bids ($title, $seller, $category, $end_day, $end_hour, $end_minute)
+	{
+		$result = $this->query ("select count(*) from bids_on
+where	item_title = '$title'
+AND	item_seller = '$seller'
+AND	item_category = '$category'
+AND	item_end_day = $end_day
+AND	item_end_hour = $end_hour
+AND	item_end_minute = $end_minute");
+		list ($bid_count) = mysql_fetch_row ($result);
+		return $bid_count;
 	}
 
 	//Begin - Changes made by Sayooj Valsan > # User Profile
