@@ -41,10 +41,10 @@ if ($dbinfo->logged_in ())
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		$category = "Books";
 	}
-	else if ($view == "clothes")
+	else if ($view == "clothing")
 	{
 		print '<font size="5" color="blue">';
-		print "Clothes</font><br><br>";
+		print "Clothing</font><br><br>";
 
 		echo "<a href=category.php?view=clothes&sortby=time_remaining>
 		        Sort by Time Remaining</a> |
@@ -54,7 +54,7 @@ if ($dbinfo->logged_in ())
 		        Sort by Seller</a> |
 		      <a href=category.php?view=clothes&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Clothes";
+		$category = "Clothing";
 	}
 	else if ($view == "collectibles")
 	{
