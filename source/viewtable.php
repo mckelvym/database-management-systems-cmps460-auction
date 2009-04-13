@@ -220,7 +220,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 
 	            echo $table->table_body_begin ();
 		        echo $table->tr ($table->td ("Title").
-		                         $table->td ($title));
+		                         $table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title)));
 				echo $table->tr ($table->td ("Seller").
 		                         $table->td ($seller));
 				echo $table->tr ($table->td ("Category").
