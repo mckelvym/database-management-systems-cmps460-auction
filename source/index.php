@@ -38,6 +38,38 @@ AND	bid_minute = $bid_min");
 if ($dbinfo->logged_in () && $mode == "feedback")
 {
 	// Need to save feedback for user.
+	$title = post ("title");
+	$seller = post ("seller");
+	$category = post ("category");
+	$end_day = post ("end_day");
+	$end_hour = post ("end_hour");
+	$end_min = post ("end_min");
+	$description = post ("feedback");
+	$rating = post ("rating");
+	$for = post ("for");
+	if ($for == "buyer")
+	{
+		$dbinfo->query ("update item_listing set sellerfeedbackforbuyer_description = '$description'
+where 	title = '$title'
+AND	seller = '$seller'
+AND	category = '$category'
+AND	end_day = $end_day
+AND	end_hour = $end_hour
+AND	end_minute = $end_min");
+		$dbinfo->save_activity ("You left feedback for the winner of your auction \"$title\"");
+	}
+	if ($for == "seller")
+	{
+		$dbinfo->query ("update item_listing set buyerfeedbackforseller_description = '$description',
+buyerfeedbackforseller_rating = $rating
+where 	title = '$title'
+AND	seller = '$seller'
+AND	category = '$category'
+AND	end_day = $end_day
+AND	end_hour = $end_hour
+AND	end_minute = $end_min");
+		$dbinfo->save_activity ("You left feedback for the seller of the auction \"$title\"");
+	}
 }
 
 if ($dbinfo->logged_in ())
@@ -45,11 +77,117 @@ if ($dbinfo->logged_in ())
 	cout ("Welcome to the home page. There will be much more fun to come!");
 	cout ("You'll get to see things like notifications and activities and feedback - oh my!");
 
+	// Get all feedback notifications which you are seller for
+	$result = $dbinfo->query ("select * from item_listing
+where 	seller = '$username'
+AND 	(end_day < $curr_day
+	OR (end_day = $curr_day
+		AND end_hour < $curr_hour)
+	OR (end_day = $curr_day
+		AND end_hour = $curr_hour
+		AND end_minute < $curr_minute))
+AND	(buyer <> 'None')
+order by end_day desc, end_hour desc, end_minute desc");
+	$t = new table_common_t ();
+	$t->init ("feedback");
+	while (list ($title, $seller, $category, $end_day, $end_hour, $end_min,
+		     $description, $shipping_cost, $shipping_method, $starting_price,
+		     $current_price, $picture, $buyer, $buyer_fdbk, $buyer_fdbk_rating,
+		     $seller_fdbk)
+	       = mysql_fetch_row ($result))
+	{
+		$winner_realname = href ("profile.php?mode=view&username=$buyer", $dbinfo->get_realname ($buyer));
+		if (empty ($buyer_fdbk))
+		{
+			$bfdbk = "$winner_realname has not left any feedback for you.<br/>";
+		}
+		else
+		{
+			$bfdbk = "$winner_realname has given you a rating of \"$buyer_fdbk_rating\"
+and has left the following feedback: \"$buyer_fdbk\"";
+		}
+
+		if (empty ($seller_fdbk))
+			$sfdbk = $t->table_begin ().$t->table_head_begin ().
+				$t->tr ($t->td ("Leave feedback for $winner_realname?")).
+				$t->table_head_end ().$t->table_body_begin ().
+				form_begin ("$current_script?mode=feedback", "post").
+				$t->tr ($t->td (text_input_s ("feedback", "", 50, 250).
+						hidden_input ("title", $title).
+						hidden_input ("seller", $seller).
+						hidden_input ("category", $category).
+						hidden_input ("end_day", $end_day).
+						hidden_input ("end_hour", $end_hour).
+						hidden_input ("end_min", $end_min).
+						hidden_input ("for", "buyer")).
+					$t->td_span (submit_input ("Save"), "", 1, "center")).
+				form_end ().
+				$t->table_body_end ().$t->table_end ();
+		else
+			$sfdbk = "<br/>You left the following feedback: \"$seller_fdbk\".";
+
+		echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
+			  "Regarding your auction \"$title\" which has ended, $winner_realname won with a high bid of \$$current_price.<br/>$bfdbk$sfdbk", "feedback");
+	}
+	mysql_free_result ($result);
+
+
+	// Get all feedback notifications which you are buyer for
+	$result = $dbinfo->query ("select * from item_listing
+where 	buyer = '$username'
+order by end_day desc, end_hour desc, end_minute desc");
+	while (list ($title, $seller, $category, $end_day, $end_hour, $end_min,
+		     $description, $shipping_cost, $shipping_method, $starting_price,
+		     $current_price, $picture, $buyer, $buyer_fdbk, $buyer_fdbk_rating,
+		     $seller_fdbk)
+	       = mysql_fetch_row ($result))
+	{
+		$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
+
+		if (empty ($seller_fdbk))
+			$sfdbk = "$seller_realname has not left any feedback for you.<br/>";
+		else
+			$sfdbk = "$seller_realname has left the following feedback: \"$seller_fdbk\"";
+
+		if (empty ($buyer_fdbk))
+		{
+			$options = "";
+			for ($i = 10; $i >= 0; $i--)
+			{
+				$options = $options.option ($i, $i, "");
+			}
+			$bfdbk = $t->table_begin ().$t->table_head_begin ().
+				$t->tr ($t->td ("Leave feedback for $seller_realname?")).
+				$t->table_head_end ().$t->table_body_begin ().
+				form_begin ("$current_script?mode=feedback", "post").
+				$t->tr ($t->td (text_input_s ("feedback", "", 50, 250).
+						hidden_input ("title", $title).
+						hidden_input ("seller", $seller).
+						hidden_input ("category", $category).
+						hidden_input ("end_day", $end_day).
+						hidden_input ("end_hour", $end_hour).
+						hidden_input ("end_min", $end_min).
+						hidden_input ("for", "seller")).
+					$t->td (select ("rating", $options)).
+					$t->td_span (submit_input ("Save"), "", 1, "center")).
+				form_end ().
+				$t->table_body_end ().$t->table_end ();
+		}
+		else
+		{
+			$bfdbk = "<br/>You rated $seller_realname '$buyer_fdbk_rating' and left the following feedback: \"$buyer_fdbk\".";
+		}
+
+		echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
+			  "Regarding the auction \"$title\" you have won with a high bid of \$$current_price.<br/>$sfdbk$bfdbk", "feedback");
+	}
+	mysql_free_result ($result);
+
 	// Get all closed auction notifications
 	list ($lastvisit_day, $lastvisit_hour, $lastvisit_min) = $dbinfo->get_lastlogout ($username);
 	if ($lastvisit_day != -1)
 	{
-		// Get closed auctions they have bid on
+		// Get closed auctions they have bid on, since last visit
 		$result = $dbinfo->query ("select * from bids_on
 where 	username = '$username'
 AND 	(item_end_day < $curr_day
@@ -72,7 +210,7 @@ order by item_end_day desc, item_end_hour desc, item_end_minute desc");
 			$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
 			list ($winner, $winner_realname, $win_price) =
 				$dbinfo->get_winner ($title, $seller, $category, $end_day, $end_hour, $end_min);
-			if ($winner != -1)
+			if ($winner != -1 && $winner != $username)
 			{
 				$winner_realname = href ("profile.php?mode=view&username=$winner", $winner_realname);
 				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
@@ -81,8 +219,10 @@ order by item_end_day desc, item_end_hour desc, item_end_minute desc");
 			}
 			else
 			{
+				$winner_realname = href ("profile.php?mode=view&username=$winner", $winner_realname);
 				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-					  "The auction \"$title\" by $seller_realname that you have partipated in has ended since your last visit. There was no winner.", "closed");
+					  "The auction \"$title\" by $seller_realname that you have partipated in has ended since your last visit. ".
+					  "You won the auction with a bid of \$$win_price.", "closed");
 			}
 		}
 		mysql_free_result ($result);
@@ -107,7 +247,7 @@ order by end_day desc, end_hour desc, end_minute desc");
 		$t->init ("feedback");
 		while (list ($title, $seller, $category, $end_day, $end_hour, $end_min,
 			     $description, $shipping_cost, $shipping_method, $starting_price,
-			     $current_price, $picture, $buyer, $buyerfdbk, $buyerfdbk_rating,
+			     $current_price, $picture, $buyer, $buyer_fdbk, $buyer_fdbk_rating,
 			     $seller_fdbk)
 		       = mysql_fetch_row ($result))
 		{
@@ -119,20 +259,9 @@ order by end_day desc, end_hour desc, end_minute desc");
 			else
 			{
 				$winner_realname = href ("profile.php?mode=view&username=$buyer", $dbinfo->get_realname ($buyer));
-				if (empty ($seller_fdbk))
-					$fdbk = $t->table_begin ().$t->table_head_begin ().
-						$t->tr ($t->td ("Leave feedback for $winner_realname:")).
-						$t->table_head_end ().$t->table_body_begin ().
-						form_begin ("$current_script?mode=feedback", "post").
-						$t->tr ($t->td (text_input_s ("feedback", "", 50, 250))).
-						$t->tr ($t->td_span (submit_input ("Save"), "", 1, "center")).
-						form_end ().
-						$t->table_body_end ().$t->table_end ();
-				else
-					$fdbk = "<br/>You left the following feedback: \"$seller_fdbk\".";
-
 				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-					  "Your auction \"$title\" has ended since your last visit, with $winner_realname winning with a high bid of \$$current_price.$fdbk", "closed");
+					  "Your auction \"$title\" has ended since your last visit, with
+$winner_realname winning with a high bid of \$$current_price.", "closed");
 			}
 
 		}
