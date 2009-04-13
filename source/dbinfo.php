@@ -322,6 +322,27 @@ order by day desc, hour desc, minute desc limit 1");
 		return true;
 	}
 
+	function update_auction_before_bid ($title, $seller, $category, $end_day, $end_hour, $end_minute, $bid_amount)
+	{
+		$this->query ("update bids_on set 
+display_notification = 'y'
+where	display_notification = 'n'
+AND 	item_title = '$title'
+AND 	item_seller = '$seller'
+AND 	item_category = '$category'
+AND 	item_end_day = $end_day
+AND 	item_end_hour = $end_hour
+AND 	item_end_minute = $end_minute");
+		$this->query ("update item_listing set
+current_price = $bid_amount
+where 	title = '$title'
+AND 	seller = '$seller'
+AND 	category = '$category'
+AND 	end_day = $end_day
+AND 	end_hour = $end_hour
+AND 	end_minute = $end_minute");
+	}
+
 	// Updates all item listing buyer information for closed auctions
 	function update_closed_item_listings ()
 	{
@@ -487,6 +508,25 @@ AND	buyer = username");
 		{
 			list ($username, $realname, $bid_amount) = mysql_fetch_row ($result);
 			return array ($username, $realname, $bid_amount);
+		}
+	}
+
+	function get_highest_bidder ($title, $seller, $category, $end_day, $end_hour, $end_minute)
+	{
+		$result = $this->query ("select username, bid_amount from bids_on
+where	item_title = '$title'
+AND	item_seller = '$seller'
+AND	item_category = '$category'
+AND	item_end_day = $end_day
+AND	item_end_hour = $end_hour
+AND	item_end_minute = $end_minute
+order by bid_amount desc");
+		if (mysql_num_rows ($result) == 0)
+			return array ("None", 0);
+		else
+		{
+			list ($username, $bid_amount) = mysql_fetch_row ($result);
+			return array ($username, $bid_amount);
 		}
 	}
 
