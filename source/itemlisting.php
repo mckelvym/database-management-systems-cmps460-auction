@@ -264,10 +264,12 @@ AND	end_minute = $end_minute");
 		}
 		$num_bids = $dbinfo->get_num_bids ($title, $seller, $category, $end_day, $end_hour, $end_min);
 
-		if ($username == $seller)
+		if ($username == $seller || $dbinfo->is_admin ())
 		{
 			echo_div ("scriptstatus");
 			echo href ("$current_script?mode=edit&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_minute", "Edit Listing");
+			echo " | ";
+			echo href ("$current_script?mode=delete&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_minute", "Delete Listing");
 			end_div ();
 		}
 
@@ -290,6 +292,32 @@ AND	end_minute = $end_minute");
 				$t->td ($category)).
 			$time_message.
 			$t->table_body_end ().$t->table_end ();
+
+		// Get bid history for item.
+		$result = $dbinfo->query ("select username, bid_day, bid_hour, bid_minute, bid_amount from bids_on
+where	item_title = '$title'
+AND	item_seller = '$seller'
+AND	item_category = '$category'
+AND	item_end_day = $end_day
+AND	item_end_hour = $end_hour
+AND	item_end_minute = $end_minute
+order by bid_amount desc");
+		cout ("");
+		cout ("Bid history:");
+		if (mysql_num_rows ($result) == 0)
+		{
+			echo div ("$bidder_realname bid \$$bid_amount.", "bidhistory");
+		}
+		else
+		{
+			while (list ($bidder, $bid_day, $bid_hour, $bid_minute, $bid_amount)
+			       = mysql_fetch_row ($result))
+			{
+				$bidder_realname = href ("profile.php?mode=view&username=$bidder", $dbinfo->get_realname ($bidder));
+				echo div (span (format_time ($bid_day, $bid_hour, $bid_minute), "time").
+					  "$bidder_realname bid \$$bid_amount.", "bidhistory");
+			}
+		}
 	}
 }
 else if ($mode == "new")
@@ -366,17 +394,6 @@ else if ($mode == "save")
 			$post_end_minute = post ("end_minute");
 			$post_picture = str_replace (" ", "_", strtolower ($post_category.$post_picture));
 			// insert user into the database
-			echo "update item_listing set
-description = '$post_description',
-shipping_cost = $post_shipping_cost,
-shipping_method = '$post_shipping_method',
-picture = '$post_picture'
-where 	title = '$post_title'
-AND	seller = '$post_seller'
-AND	category = '$post_category'
-AND	end_day = $post_end_day
-AND	end_hour = $post_end_hour
-AND	end_minute = $post_end_minute";
 			$dbinfo->query ("update item_listing set
 description = '$post_description',
 shipping_cost = $post_shipping_cost,
@@ -392,6 +409,41 @@ AND	end_minute = $post_end_minute");
 				cout ("Auction update successful.");
 				cout ("Would you like to ".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", "view")." it?");
 		}
+}
+else if ($mode == "delete")
+{
+	$title = get ("title");
+	$seller = get ("seller");
+	$category = get ("category");
+	$end_day = get ("end_day");
+	$end_hour = get ("end_hour");
+	$end_minute = get ("end_minute");
+	if ($dbinfo->is_admin () || ($seller == $username))
+	{
+		if ($dbinfo->get_num_bids ($title, $seller, $category,
+					   $end_day, $end_hour, $end_minute) == 0)
+		{
+			$dbinfo->query ("delete from item_listing where
+where 	title = '$title'
+AND	seller = '$seller'
+AND	category = '$category'
+AND	end_day = $end_day
+AND	end_hour = $end_hour
+AND	end_minute = $end_minute");
+		}
+		else
+		{
+			echo "Errors were detected:<br/>";
+			echo ul (li ("Error: There must be no bids for the item listing."));
+			cout ("Back to the ".href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_minute", "item").".");
+		}
+	}
+	else
+	{
+		echo "Errors were detected:<br/>";
+		echo ul (li ("Error: Must be an administrator or be the seller for this auction."));
+		cout ("Back to the ".href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_minute", "item").".");
+	}
 }
 
 echo_footer ($dbinfo);

@@ -26,7 +26,7 @@ if (empty ($mode))
 }
 else
 {
-	$file = strtolower (post ("category"));
+	$file = str_replace (" ", "_", strtolower (post ("category")));
 	for ($i = 1; $i <= 3; $i++)
 	{
 		cout (local_img ("$file$i.jpg"));
