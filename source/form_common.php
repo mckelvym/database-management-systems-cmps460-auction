@@ -45,6 +45,11 @@ function submit_input ($value)
 	return input ("formsubmit", $value, "", "", "submit");
 }
 
+function hidden_input ($name, $value)
+{
+	return "<input type=\"hidden\" name=\"$name\" value=\"$value\">\n";
+}
+
 // Input for a form that has more freedom
 function input ($name, $value, $size, $id, $type, $maxsize = "", $other_opts = "")
 {
