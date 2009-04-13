@@ -264,3 +264,51 @@ tbody.tbl_std img {
     border: 0px;
 }
 
+
+
+
+
+
+table.itemlisting {	
+    padding: 0px;
+    margin: 0px auto;
+    border-collapse: collapse;	
+}
+
+table.itemlisting a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.itemlisting a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.itemlisting td{
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    text-align: center;
+}
+
+tbody.itemlisting {
+    border-left: 1px dotted navy;
+    border-right: 1px dotted navy;
+}
+
+tbody.itemlisting td {
+    font-size: 0.8em;
+    border-bottom: 1px dotted navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-collapse: separate;
+}
+
+tbody.itemlisting img {
+    max-width: 200px;
+    border: 0px;
+}
+
