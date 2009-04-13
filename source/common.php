@@ -238,6 +238,10 @@ function cout ($str)
 
 function format_time ($day, $hour, $minute, $prefix_zeros_to_day = false)
 {
+	$day += 0;
+	$hour += 0;
+	$minute += 0;
+
 	if ($minute > 59)
 	{
 		$minute -= 60;
@@ -326,4 +330,15 @@ function pad_time ($day, $hour, $minute, $priority = 0)
 
 	return "$day$hour$minute$priority ";
 }
+
+// If time1 is older than time2, returns true
+function is_older ($d1, $h1, $m1, $d2, $h2, $m2)
+{
+	if (($d1 < $d2) ||
+	    ($d1 == $d2 && $h1 < $h2) ||
+	    ($d1 == $d2 && $h1 == $h2 && $m1 < $m2))
+		return true;
+	return false;
+}
+
 ?>
