@@ -142,7 +142,7 @@ AND	end_minute = $m");
 		$options = "";
 		for ($i = $curr_day; $i <= $curr_day + 7; $i++)
 		{
-			for ($j = ($i == $curr_day)? $curr_hour + 1 : 0; $j <= 24; $j++)
+			for ($j = ($i == $curr_day)? $curr_hour + 1 : 0; $j < 24; $j++)
 			{
 				$options = $options.option ("$i $j 0", format_time ($i, $j, 0));
 			}
@@ -219,6 +219,21 @@ function verify_data ()
 	return $errors;
 }
 
+if ($mode == "bid")
+{
+	$title = post ("title");
+	$seller = post ("seller");
+	$category = post ("category");
+	$end_day = post ("end_day");
+	$end_hour = post ("end_hour");
+	$end_minute = post ("end_minute");
+	$bid_amount = post ("bid_amount");
+	$dbinfo->update_auction_before_bid ($title, $seller, $category, $end_day, $end_hour, $end_minute, $bid_amount);
+	$dbinfo->query ("insert into bids_on values ('$username', '$title', '$seller', '$category', $end_day, $end_hour, $end_minute, $curr_day, $curr_hour, $curr_minute, $bid_amount, 'n')");
+	$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&hour=$end_hour&end_minute=$end_minute", $title)."\".");
+	$mode = "view";
+}
+
 // View an auction listing
 if ($mode == "view")
 {
@@ -248,7 +263,8 @@ AND	end_minute = $end_minute");
 		$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
 		list ($d, $h, $m) = $dbinfo->get_registration_date ($seller);
 		$seller_registration = format_time ($d, $h, $m);
-		if (is_older ($end_day, $end_hour, $end_minute, $curr_day, $curr_hour, $curr_minute))
+		$closed = is_older ($end_day, $end_hour, $end_minute, $curr_day, $curr_hour, $curr_minute);
+		if ($closed)
 		{
 			$time_message = $t->tr ($t->td ("Ended on:").
 						$t->td (format_time ($end_day, $end_hour, $end_min)));
@@ -259,8 +275,38 @@ AND	end_minute = $end_minute");
 		{
 			$time_message = $t->tr ($t->td ("Ends on:").
 						$t->td (format_time ($end_day, $end_hour, $end_min)));
-			$curr_price_message = $t->tr ($t->td ("Current Price:").
-						      $t->td ("\$$current_price"));
+			list ($highest_bidder, $highest_bid) =
+				$dbinfo->get_highest_bidder ($title, $seller, $category, $end_day, $end_hour, $end_min);
+			if ($highest_bidder == "None")
+				$highest_bid = $current_price;
+
+			if ($username != $seller &&
+			    $username != $highest_bidder)
+			{
+				$options = "";
+				for ($i = $highest_bid + 0.50; $i <= $highest_bid + 50; $i += 0.50)
+				{
+					$i = sprintf ("%.2f", $i);
+					$options = $options.option ($i, "\$$i");
+				}
+				$curr_price_message = $t->tr ($t->td ("Current Price:").
+							      $t->td ("\$$current_price".
+								      form_begin ("$current_script?mode=bid", "post").
+								      select ("bid_amount", $options).
+								      hidden_input ("title", $title).
+								      hidden_input ("seller", $seller).
+								      hidden_input ("category", $category).
+								      hidden_input ("end_day", $end_day).
+								      hidden_input ("end_hour", $end_hour).
+								      hidden_input ("end_minute", $end_min).
+								      submit_input ("Place Bid").
+								      form_end ()));
+			}
+			else
+			{
+				$curr_price_message = $t->tr ($t->td ("Current Price:").
+							      $t->td ("\$$current_price"));
+			}
 		}
 		$num_bids = $dbinfo->get_num_bids ($title, $seller, $category, $end_day, $end_hour, $end_min);
 
@@ -306,7 +352,7 @@ order by bid_amount desc");
 		cout ("Bid history:");
 		if (mysql_num_rows ($result) == 0)
 		{
-			echo div ("$bidder_realname bid \$$bid_amount.", "bidhistory");
+			echo div ("None.", "bidhistory");
 		}
 		else
 		{
@@ -430,6 +476,7 @@ AND	category = '$category'
 AND	end_day = $end_day
 AND	end_hour = $end_hour
 AND	end_minute = $end_minute");
+			cout ("Back to your ".href ("index.php", "home").".");
 		}
 		else
 		{
