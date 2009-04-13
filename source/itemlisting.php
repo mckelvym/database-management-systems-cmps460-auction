@@ -221,16 +221,19 @@ function verify_data ()
 
 if ($mode == "bid")
 {
-	$title = post ("title");
-	$seller = post ("seller");
-	$category = post ("category");
-	$end_day = post ("end_day");
-	$end_hour = post ("end_hour");
-	$end_minute = post ("end_minute");
+	$bid_title = post ("title");
+	$bid_seller = post ("seller");
+	$bid_category = post ("category");
+	$bid_end_day = post ("end_day");
+	$bid_end_hour = post ("end_hour");
+	$bid_end_minute = post ("end_minute");
 	$bid_amount = post ("bid_amount");
-	$dbinfo->update_auction_before_bid ($title, $seller, $category, $end_day, $end_hour, $end_minute, $bid_amount);
-	$dbinfo->query ("insert into bids_on values ('$username', '$title', '$seller', '$category', $end_day, $end_hour, $end_minute, $curr_day, $curr_hour, $curr_minute, $bid_amount, 'n')");
-	$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&hour=$end_hour&end_minute=$end_minute", $title)."\".");
+	$dbinfo->update_auction_before_bid (
+		$bid_title, $bid_seller, $bid_category,
+		$bid_end_day, $bid_end_hour, $bid_end_minute,
+		$bid_amount);
+	$dbinfo->query ("insert into bids_on values ('$username', '$bid_title', '$bid_seller', '$bid_category', $bid_end_day, $bid_end_hour, $bid_end_minute, $curr_day, $curr_hour, $curr_minute, $bid_bid_amount, 'n')");
+	$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$bid_title&seller=$bid_seller&category=$bid_category&end_day=$bid_end_day&end_hour=$bid_end_hour&end_minute=$bid_end_minute", $bid_title)."\".");
 	$mode = "view";
 }
 
@@ -392,7 +395,10 @@ else if ($mode == "savenew")
 		else
 		{
 			$post_picture = str_replace (" ", "_", strtolower ($post_category.$post_picture));
-			// insert user into the database
+			$post_title = escape ($post_title);
+			$post_description = escape ($post_description);
+
+			// insert item into the database
 			$dbinfo->query ("insert into item_listing values (
 '$post_title',
 '$username',
@@ -439,7 +445,7 @@ else if ($mode == "save")
 			$post_end_hour = post ("end_hour");
 			$post_end_minute = post ("end_minute");
 			$post_picture = str_replace (" ", "_", strtolower ($post_category.$post_picture));
-			// insert user into the database
+			// update item in the database
 			$dbinfo->query ("update item_listing set
 description = '$post_description',
 shipping_cost = $post_shipping_cost,
@@ -452,8 +458,13 @@ AND	end_day = $post_end_day
 AND	end_hour = $post_end_hour
 AND	end_minute = $post_end_minute");
 			$dbinfo->save_activity ("Edited auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", $post_title)."\".");
-				cout ("Auction update successful.");
-				cout ("Would you like to ".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", "view")." it?");
+			if ($dbinfo->is_admin () && $post_seller != $username)
+			{
+				$realname = href ("profile.php?mode=view&username=$username", $dbinfo->realname ());
+				$dbinfo->save_activity_for ($post_seller, "$realname edited your auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", $post_title)."\".");
+			}
+			cout ("Auction update successful.");
+			cout ("Would you like to ".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", "view")." it?");
 		}
 }
 else if ($mode == "delete")
@@ -476,6 +487,12 @@ AND	category = '$category'
 AND	end_day = $end_day
 AND	end_hour = $end_hour
 AND	end_minute = $end_minute");
+			$dbinfo->save_activity ("Deleted the auction \"$title\".");
+			if ($dbinfo->is_admin () && ($seller != $username))
+			{
+				$realname = href ("profile.php?mode=view&username=$username", $dbinfo->realname ());
+				$dbinfo->save_activity_for ($seller, "$realname deleted the auction \"$title\".");
+			}
 			cout ("Back to your ".href ("index.php", "home").".");
 		}
 		else

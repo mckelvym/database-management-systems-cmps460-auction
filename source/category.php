@@ -11,6 +11,24 @@ if (!$dbinfo->logged_in ())
 
 if ($dbinfo->logged_in ())
 {
+	if (empty ($view))
+	{
+		cout ("Select a category:");
+		$options = "";
+		$options = $options.option ("Art", "Art");
+		$options = $options.option ("Books", "Books");
+		$options = $options.option ("Clothes", "Clothes");
+		$options = $options.option ("Collectibles", "Collectibles");
+		$options = $options.option ("Electronics", "Electronics");
+		$options = $options.option ("Entertainment", "Entertainment");
+		$options = $options.option ("Jewelry", "Jewelry");
+		$options = $options.option ("Sporting Goods", "Sporting Goods");
+		$options = $options.option ("Toys", "Toys");
+		echo form_begin ("$current_script?", "post");
+		echo select ("view", $options);
+		echo submit_input ("Select");
+	}
+
 	if ($view == "art")
 	{
 		print '<font size="5" color="blue">';
