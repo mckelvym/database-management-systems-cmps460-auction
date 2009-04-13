@@ -10,6 +10,9 @@ $curr_day = $dbinfo->day ();
 $curr_hour = $dbinfo->hour ();
 $curr_minute = $dbinfo->minute ();
 
+$x = 0;
+$output;
+
 // Remove an outbid notification
 if ($dbinfo->logged_in () && $mode == "remove")
 {
@@ -35,6 +38,7 @@ AND	bid_hour = $bid_hour
 AND	bid_minute = $bid_min");
 }
 
+// Save feedback
 if ($dbinfo->logged_in () && $mode == "feedback")
 {
 	// Need to save feedback for user.
@@ -47,6 +51,7 @@ if ($dbinfo->logged_in () && $mode == "feedback")
 	$description = post ("feedback");
 	$rating = post ("rating");
 	$for = post ("for");
+	$real_title = href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title);
 	if ($for == "buyer")
 	{
 		$dbinfo->query ("update item_listing set sellerfeedbackforbuyer_description = '$description'
@@ -56,7 +61,7 @@ AND	category = '$category'
 AND	end_day = $end_day
 AND	end_hour = $end_hour
 AND	end_minute = $end_min");
-		$dbinfo->save_activity ("You left feedback for the winner of your auction \"$title\"");
+		$dbinfo->save_activity ("You left feedback for the winner of your auction \"$real_title\"");
 	}
 	if ($for == "seller")
 	{
@@ -68,15 +73,13 @@ AND	category = '$category'
 AND	end_day = $end_day
 AND	end_hour = $end_hour
 AND	end_minute = $end_min");
-		$dbinfo->save_activity ("You left feedback for the seller of the auction \"$title\"");
+		$dbinfo->save_activity ("You left feedback for the seller of the auction \"$real_title\"");
 	}
 }
 
+// The big mambo jambo
 if ($dbinfo->logged_in ())
 {
-	cout ("Welcome to the home page. There will be much more fun to come!");
-	cout ("You'll get to see things like notifications and activities and feedback - oh my!");
-
 	// Get all feedback notifications which you are seller for
 	$result = $dbinfo->query ("select * from item_listing
 where 	seller = '$username'
@@ -96,6 +99,7 @@ order by end_day desc, end_hour desc, end_minute desc");
 		     $seller_fdbk)
 	       = mysql_fetch_row ($result))
 	{
+		$real_title = href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title);
 		$winner_realname = href ("profile.php?mode=view&username=$buyer", $dbinfo->get_realname ($buyer));
 		if (empty ($buyer_fdbk))
 		{
@@ -126,8 +130,9 @@ and has left the following feedback: \"$buyer_fdbk\"";
 		else
 			$sfdbk = "<br/>You left the following feedback: \"$seller_fdbk\".";
 
-		echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-			  "Regarding your auction \"$title\" which has ended, $winner_realname won with a high bid of \$$current_price.<br/>$bfdbk$sfdbk", "feedback");
+		$output[$x] = pad_time ($end_day, $end_hour, $end_min, 5).div (span (format_time ($end_day, $end_hour, $end_min), "time").
+			  "Regarding your auction \"$real_title\" which has ended, $winner_realname won with a high bid of \$$current_price.<br/>$bfdbk$sfdbk", "feedback");
+		$x++;
 	}
 	mysql_free_result ($result);
 
@@ -142,6 +147,7 @@ order by end_day desc, end_hour desc, end_minute desc");
 		     $seller_fdbk)
 	       = mysql_fetch_row ($result))
 	{
+		$real_title = href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title);
 		$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
 
 		if (empty ($seller_fdbk))
@@ -178,8 +184,9 @@ order by end_day desc, end_hour desc, end_minute desc");
 			$bfdbk = "<br/>You rated $seller_realname '$buyer_fdbk_rating' and left the following feedback: \"$buyer_fdbk\".";
 		}
 
-		echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-			  "Regarding the auction \"$title\" you have won with a high bid of \$$current_price.<br/>$sfdbk$bfdbk", "feedback");
+		$output[$x] = pad_time ($end_day, $end_hour, $end_min, 5).div (span (format_time ($end_day, $end_hour, $end_min), "time").
+			  "Regarding the auction \"$real_title\" you have won with a high bid of \$$current_price.<br/>$sfdbk$bfdbk", "feedback");
+		$x++;
 	}
 	mysql_free_result ($result);
 
@@ -207,22 +214,25 @@ order by item_end_day desc, item_end_hour desc, item_end_minute desc");
 			     $bid_day, $bid_hour, $bid_min, $bid_amt)
 		       = mysql_fetch_row ($result))
 		{
+			$real_title = href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title);
 			$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
 			list ($winner, $winner_realname, $win_price) =
 				$dbinfo->get_winner ($title, $seller, $category, $end_day, $end_hour, $end_min);
 			if ($winner != -1 && $winner != $username)
 			{
 				$winner_realname = href ("profile.php?mode=view&username=$winner", $winner_realname);
-				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-					  "The auction \"$title\" by $seller_realname that you have partipated in has ended since your last visit. ".
+				$output[$x] = pad_time ($end_day, $end_hour, $end_min, 4).div (span (format_time ($end_day, $end_hour, $end_min), "time").
+					  "The auction \"$real_title\" by $seller_realname that you have partipated in has ended since your last visit. ".
 					  "$winner_realname won the auction with a bid of \$$win_price.", "closed");
+				$x++;
 			}
 			else
 			{
 				$winner_realname = href ("profile.php?mode=view&username=$winner", $winner_realname);
-				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-					  "The auction \"$title\" by $seller_realname that you have partipated in has ended since your last visit. ".
+				$output[$x] = pad_time ($end_day, $end_hour, $end_min, 4).div (span (format_time ($end_day, $end_hour, $end_min), "time").
+					  "The auction \"$real_title\" by $seller_realname that you have partipated in has ended since your last visit. ".
 					  "You won the auction with a bid of \$$win_price.", "closed");
+				$x++;
 			}
 		}
 		mysql_free_result ($result);
@@ -251,17 +261,20 @@ order by end_day desc, end_hour desc, end_minute desc");
 			     $seller_fdbk)
 		       = mysql_fetch_row ($result))
 		{
+			$real_title = href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title);
 			if ($buyer == "None")
 			{
-				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-					  "Your auction \"$title\" has ended since your last visit with no buyer.", "closed");
+				$output[$x] = pad_time ($end_day, $end_hour, $end_min, 4).div (span (format_time ($end_day, $end_hour, $end_min), "time").
+					  "Your auction \"$real_title\" has ended since your last visit with no buyer.", "closed");
+				$x++;
 			}
 			else
 			{
 				$winner_realname = href ("profile.php?mode=view&username=$buyer", $dbinfo->get_realname ($buyer));
-				echo div (span (format_time ($end_day, $end_hour, $end_min), "time").
-					  "Your auction \"$title\" has ended since your last visit, with
+				$output[$x] = pad_time ($end_day, $end_hour, $end_min, 4).div (span (format_time ($end_day, $end_hour, $end_min), "time").
+					  "Your auction \"$real_title\" has ended since your last visit, with
 $winner_realname winning with a high bid of \$$current_price.", "closed");
+				$x++;
 			}
 
 		}
@@ -281,6 +294,7 @@ order by bid_day desc, bid_hour desc, bid_minute desc");
 		     $bid_day, $bid_hour, $bid_min, $bid_amt)
 	       = mysql_fetch_row ($result))
 	{
+		$real_title = href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title);
 		// Find the person that out bid "you"
 		$result2 = $dbinfo->query ("select username, bid_amount, bid_day, bid_hour, bid_minute from bids_on
 where 	item_title = '$title'
@@ -311,11 +325,12 @@ order by bid_amount desc");
 		$seller_realname = href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller));
 		$bid_diff = $outbid_amt - $bid_amt;
 		$highest_bid_diff = $highest_amt - $bid_amt;
-		echo div (div (href ("$current_script?mode=remove&t=$title&s=$seller&c=$category&d=$end_day&h=$end_hour&m=$end_min&bd=$bid_day&bh=$bid_hour&bm=$bid_min", "X"), "outbid_hide").
+		$output[$x] = pad_time ($outbid_day, $outbid_hour, $outbid_min, 6).div (div (href ("$current_script?mode=remove&t=$title&s=$seller&c=$category&d=$end_day&h=$end_hour&m=$end_min&bd=$bid_day&bh=$bid_hour&bm=$bid_min", "X"), "outbid_hide").
 			  span (format_time ($outbid_day, $outbid_hour, $outbid_min), "time").
-			  "$outbid_realname outbid you by \$$bid_diff on $seller_realname's auction of \"$title\" with a bid of \$$outbid_amt.<br/>".
+			  "$outbid_realname outbid you by \$$bid_diff on $seller_realname's auction of \"$real_title\" with a bid of \$$outbid_amt.<br/>".
 			  span (format_time ($highest_day, $highest_hour, $highest_min), "time2")."$highest_realname became the highest bidder (\$$highest_bid_diff over your bid) with a bid of \$$highest_amt.<br/>".
 			  span (format_time ($end_day, $end_hour, $end_min), "time2")." The auction will end.", "outbid");
+		$x++;
 	}
 	mysql_free_result ($result);
 
@@ -326,10 +341,21 @@ AND activity != 'Current Time'
 order by day desc, hour desc, minute desc");
 	while (list ($d, $h, $m, $a) = mysql_fetch_row ($result))
 	{
-		echo div (span (format_time ($d, $h, $m), "time")."$a", "useractivity");
+		$output[$x] = pad_time ($d, $h, $m, 3).div (span (format_time ($d, $h, $m), "time")."$a", "useractivity");
+		$x++;
 	}
 	mysql_free_result ($result);
 
+
+	// Actual output of all notifications
+	cout ("Welcome to your home page.");
+	cout ("");
+	cout ("Activity and notifications:");
+	rsort ($output);
+	for ($i = 0; $i < count ($output); $i++)
+	{
+		echo substr ($output[$i], strpos ($output[$i], " "), strlen ($output[$i]));
+	}
 }
 else
 {
