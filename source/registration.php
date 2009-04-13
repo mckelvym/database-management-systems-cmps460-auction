@@ -201,7 +201,7 @@ function registration_form ($user = "")
 		$options = $options.option ("default_profile.jpg", "Default", $picture);
 		for ($i = 1; $i <= 6; $i++)
 		{
-			$options = $options.option ("profile$i.jpg", "Nerdy Picture $i", $picture);
+			$options = $options.option ("profile$i.jpg", "Picture $i", $picture);
 		}
 		echo $table->tr ($table->td ("Profile Picture").
 				 $table->td (select ("picture", $options).
@@ -250,16 +250,18 @@ function verify_data ()
 	$post_description = "N/A";
 
 	if (empty ($post_username))
-		$errors = $errors.li ("Username can't be empty");
+		$errors = $errors.li ("Username can't be empty.");
 	if (!$dbinfo->logged_in () && $dbinfo->user_exists ($post_username))
-		$errors = $errors.li ("Username already exists");
+		$errors = $errors.li ("Username already exists.");
+	if (strlen ($post_username) > 50)
+		$errors = $errors.li ("Username must be less than 50 characters.");
 	if (empty ($passwd1))
 		$errors = $errors.li ("Password can't be empty");
 	if ($passwd1 != $passwd2)
 		$errors = $errors.li ("Passwords don't match");
 	if ($dbinfo->is_admin () && $is_admin == 0 && $dbinfo->username () == $post_username)
 	{
-		$result = $dbinfo->query ("select username from user where username != '$post_username' AND is_admin = true");
+		$result = $dbinfo->query ("select username from user where username != '$post_username' AND is_admin = 1");
 		if (mysql_num_rows ($result) == 0)
 			$errors = $errors.li ("The number of users left that are admins can't be zero.");
 	}
@@ -312,7 +314,7 @@ if ($dbinfo->logged_in ())
 	{
 		$errors = "";
 		// check to make sure not last user and that there is at least one admin
-		$result = $dbinfo->query ("select username from user where username != '$user' AND is_admin = true");
+		$result = $dbinfo->query ("select username from user where username != '$user' AND is_admin = 1");
 		if (mysql_num_rows ($result) == 0)
 			$errors = $errors.li ("The number of users left that are admins can't be zero.");
 		mysql_free_result ($result);
@@ -342,7 +344,7 @@ if ($dbinfo->logged_in ())
 	{
 		$errors = "";
 		// check to make sure not last user and that there is at least one admin
-		$result = $dbinfo->query ("select username from user where username != '$user' AND is_admin = true");
+		$result = $dbinfo->query ("select username from user where username != '$user' AND is_admin = 1");
 		if (mysql_num_rows ($result) == 0)
 			$errors = $errors.li ("The number of users left that are admins can't be zero.");
 		mysql_free_result ($result);
@@ -493,6 +495,7 @@ else // User is not logged in, display new registration page or save registratio
 		else
 		{
 			// insert user into the database
+			$is_admin = 0;
 			$dbinfo->query ("insert into user values ('$post_username', '$passwd1', $is_admin, '$post_realname', '$post_birth_date', '$post_street', '$post_city', '$post_state', $post_zip, '$post_phone', '$post_email', '$post_card_type', $post_card_number, '$post_card_expire', '$post_picture', '$post_description')");
 			if (!$dbinfo->user_exists ($post_username))
 			{
