@@ -163,7 +163,7 @@ function span ($text, $style_name)
 // make a quick link
 function href ($url, $text)
 {
-	return "<a href=\"$url\">$text</a>\n";
+	return "<a href=\"$url\">$text</a>";
 }
 
 // Make the user go to a different page
@@ -273,7 +273,7 @@ function format_time ($day, $hour, $minute, $prefix_zeros_to_day = false)
 	return "Day: $day, Time: $hour:$minute";
 }
 
-function format_time_padded ($day, $hour, $minute)
+function pad_time ($day, $hour, $minute, $priority = 0)
 {
 	if ($minute > 59)
 	{
@@ -314,6 +314,6 @@ function format_time_padded ($day, $hour, $minute)
 		$day = "0".$day;
 	}
 
-	return array ($day, $hour, $minute);
+	return "$day$hour$minute$priority ";
 }
 ?>
