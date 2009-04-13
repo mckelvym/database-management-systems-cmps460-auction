@@ -18,9 +18,6 @@ class dbinfo_t
 		$this->host = "calvados.ucs.louisiana.edu";
 		$this->user = "cs4601i";
 		$this->pass = "foursixty";
-		$this->host = "localhost";
-		$this->user = "root";
-		$this->pass = "cbwka4u";
 		$this->dbname = "cs4601_i";
 		$this->admin = 0;
 		$this->debug = true;
