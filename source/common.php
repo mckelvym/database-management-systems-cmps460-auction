@@ -166,6 +166,16 @@ function href ($url, $text)
 	return "<a href=\"$url\">$text</a>";
 }
 
+function img ($path)
+{
+	return "<img src=\"$path\">";
+}
+
+function local_img ($path)
+{
+	return "<img src=\"images/$path\">";
+}
+
 // Make the user go to a different page
 function redirect ($url)
 {

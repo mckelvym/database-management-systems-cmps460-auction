@@ -204,7 +204,8 @@ function registration_form ($user = "")
 			$options = $options.option ("profile$i.jpg", "Nerdy Picture $i", $picture);
 		}
 		echo $table->tr ($table->td ("Profile Picture").
-				 $table->td (select ("picture", $options)));
+				 $table->td (select ("picture", $options).
+					     href ("profile_pictures.php", "?")));
 	}
 
 	// Save or register depending on if logged in
