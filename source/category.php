@@ -221,14 +221,33 @@ if ($dbinfo->logged_in ())
 			while (list($title, $seller, $end_day, $end_hour,$end_min,
 				    $curr_price) = mysql_fetch_row($results_id))
 			{
-				echo "<pre>";
-				echo "Title:           $title<br>";
-				echo "Seller:          $seller<br>";
-				echo "End Day:         $end_day<br>";
-				echo "End Hour:        $end_hour<br>";
-				echo "End Minute:      $end_min<br>";
-				echo "Current Price:   $curr_price<br>";
-				echo "</pre>";
+    		    // Start writing table to page
+	            $table = new table_common_t ();
+	            $table->init ("tbl_std");
+
+	            echo $table->table_begin ();
+	            echo $table->table_head_begin ();
+		        echo $table->tr ($table->td_span ("Available for Bid", "", 6));
+	            echo $table->tr_end ();
+	            echo $table->table_head_end ();
+	            
+	            echo $table->table_body_begin ();				     
+		        echo $table->tr ($table->td ("Title").
+		                         $table->td ($title));
+				echo $table->tr ($table->td ("Seller").
+		                         $table->td ($seller));		 
+				echo $table->tr ($table->td ("End Day").
+		                         $table->td ($end_day));
+				echo $table->tr ($table->td ("End Hour").
+		                         $table->td ($end_hour));				 
+				echo $table->tr ($table->td ("End Minute").
+		                         $table->td ($end_min));					 
+				echo $table->tr ($table->td ("Current Price").
+		                         $table->td ($curr_price));	
+				echo $table->table_body_end ();
+				
+	            echo $table->table_end ();
+	            echo "<br><br>";
 			}
 		}
 	}

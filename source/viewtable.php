@@ -53,24 +53,53 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 				    $picture, $descr)
 			       = mysql_fetch_row($results_id))
 			{
-				echo "<pre>";
-				echo "Username:    $username<br>";
-				echo "Password:    $passwd<br>";
-				echo "Is_Admin:    $is_admin<br>";
-				echo "Name:        $name<br>";
-				echo "D.O.B.:      $dob<br>";
-				echo "Street:      $street<br>";
-				echo "City:        $city<br>";
-				echo "State:       $state<br>";
-				echo "Zip:         $zip<br>";
-				echo "Phone:       $phone<br>";
-				echo "Email:       $email<br>";
-				echo "Credit Card: $cc<br>";
-				echo "CC Number:   $ccn<br>";
-				echo "CC Exp.Date: $ccx<br>";
-				echo "Picture:     $picture<br>";
-				echo "Description: $descr<br><br>";
-				echo "</pre>";
+    		    // Start writing table to page
+	            $table = new table_common_t ();
+	            $table->init ("tbl_std");
+
+	            echo $table->table_begin ();
+	            echo $table->table_head_begin ();
+		        echo $table->tr ($table->td_span ("Registered User of iBay", "", 6));
+	            echo $table->tr_end ();
+	            echo $table->table_head_end ();
+	            
+	            echo $table->table_body_begin ();				     
+		        echo $table->tr ($table->td ("Username").
+		                         $table->td ($username));
+				echo $table->tr ($table->td ("Password").
+		                         $table->td ($passwd));		 
+				echo $table->tr ($table->td ("Admin?").
+		                         $table->td ($is_admin));					 
+				echo $table->tr ($table->td ("Name").
+		                         $table->td ($name));					 
+				echo $table->tr ($table->td ("D.O.B.").
+		                         $table->td ($dob));					 
+				echo $table->tr ($table->td ("Street").
+		                         $table->td ($street));					 
+				echo $table->tr ($table->td ("City").
+		                         $table->td ($city));					 
+				echo $table->tr ($table->td ("State").
+		                         $table->td ($state));					 
+				echo $table->tr ($table->td ("Zip").
+		                         $table->td ($zip));					 
+				echo $table->tr ($table->td ("Phone").
+		                         $table->td ($phone));					 
+				echo $table->tr ($table->td ("Email").
+		                         $table->td ($email));					 
+				echo $table->tr ($table->td ("Credit Card").
+		                         $table->td ($cc));					 
+				echo $table->tr ($table->td ("CC Number").
+		                         $table->td ($ccn));				 
+				echo $table->tr ($table->td ("CC Exp.Date").
+		                         $table->td ($ccx));				 
+				echo $table->tr ($table->td ("Picture").
+		                         $table->td ($picture));					 
+				echo $table->tr ($table->td ("Description").
+		                         $table->td ($descr));				
+				echo $table->table_body_end ();
+				
+	            echo $table->table_end ();
+	            echo "<br><br>";				
 			}
 		}
 		else if ($dbinfo->debug ())
@@ -99,13 +128,32 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 			while (list($username, $day, $hour, $minute, $activity)
 			       = mysql_fetch_row($results_id))
 			{
-				echo "<pre>";
-				echo "Username:  $username<br>";
-				echo "Day:       $day<br>";
-				echo "Hour:      $hour<br>";
-				echo "Minute:    $minute<br>";
-				echo "Activity:  $activity<br><br>";
-				echo "</pre>";
+    		    // Start writing table to page
+	            $table = new table_common_t ();
+	            $table->init ("tbl_std");
+
+	            echo $table->table_begin ();
+	            echo $table->table_head_begin ();
+		        echo $table->tr ($table->td_span ("Activity Log Entry", "", 6));
+	            echo $table->tr_end ();
+	            echo $table->table_head_end ();
+	            
+	            echo $table->table_body_begin ();				     
+		        echo $table->tr ($table->td ("Username").
+		                         $table->td ($username));
+				echo $table->tr ($table->td ("Day").
+		                         $table->td ($day));		 
+				echo $table->tr ($table->td ("Hour").
+		                         $table->td ($hour));					 
+				echo $table->tr ($table->td ("Minute").
+		                         $table->td ($minute));					 
+				echo $table->tr ($table->td ("Activity").
+		                         $table->td ($activity));	
+				echo $table->table_body_end ();
+				
+	            echo $table->table_end ();
+	            echo "<br><br>";
+
 			}
 		}
 		else if ($dbinfo->debug ())
@@ -160,24 +208,53 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 				    $buy_fdbk_rate, $sell_fdbk_descr)
 			       = mysql_fetch_row($results_id))
 			{
-				echo "<pre>";
-				echo "Title:           $title<br>";
-				echo "Seller:          $seller<br>";
-				echo "Category:        $category<br>";
-				echo "End Day:         $end_day<br>";
-				echo "End Hour:        $end_hour<br>";
-				echo "End Minute:      $end_min<br>";
-				echo "Description:     $descr<br>";
-				echo "Shipping Cost:   $ship_cost<br>";
-				echo "Shipping Method: $ship_meth<br>";
-				echo "Starting Price:  $str_price<br>";
-				echo "Current Price:   $curr_price<br>";
-				echo "Picture:         $pict<br>";
-				echo "Buyer:           $buyer<br>";
-				echo "Buyer Feedback Description:  $buy_fdbk_descr<br>";
-				echo "Buyer Feedback Rating:       $buy_fdbk_rate<br>";
-				echo "Seller Feedback Description: $sell_fdbk_descr<br><br>";
-				echo "</pre>";
+    		    // Start writing table to page
+	            $table = new table_common_t ();
+	            $table->init ("tbl_std");
+
+	            echo $table->table_begin ();
+	            echo $table->table_head_begin ();
+		        echo $table->tr ($table->td_span ("Auction Item Listing", "", 6));
+	            echo $table->tr_end ();
+	            echo $table->table_head_end ();
+	            
+	            echo $table->table_body_begin ();				     
+		        echo $table->tr ($table->td ("Title").
+		                         $table->td ($title));
+				echo $table->tr ($table->td ("Seller").
+		                         $table->td ($seller));		 
+				echo $table->tr ($table->td ("Category").
+		                         $table->td ($category));					 
+				echo $table->tr ($table->td ("End Day").
+		                         $table->td ($end_day));					 
+				echo $table->tr ($table->td ("End Hour").
+		                         $table->td ($end_hour));					 
+				echo $table->tr ($table->td ("End Minute").
+		                         $table->td ($end_min));					 
+				echo $table->tr ($table->td ("Description").
+		                         $table->td ($descr));					 
+				echo $table->tr ($table->td ("Shipping Cost").
+		                         $table->td ($ship_cost));					 
+				echo $table->tr ($table->td ("Shipping Method").
+		                         $table->td ($ship_meth));					 
+				echo $table->tr ($table->td ("Starting Price").
+		                         $table->td ($str_price));					 
+				echo $table->tr ($table->td ("Current Price").
+		                         $table->td ($curr_price));					 
+				echo $table->tr ($table->td ("Picture").
+		                         $table->td ($pict));					 
+				echo $table->tr ($table->td ("Buyer").
+		                         $table->td ($buyer));				 
+				echo $table->tr ($table->td ("Buyer Feedback Description").
+		                         $table->td ($buy_fdbk_descr));				 
+				echo $table->tr ($table->td ("Buyer Feedback Rating").
+		                         $table->td ($buy_fdbk_rate));					 
+				echo $table->tr ($table->td ("Seller Feedback Description").
+		                         $table->td ($sell_fdbk_descr));				
+				echo $table->table_body_end ();
+				
+	            echo $table->table_end ();
+	            echo "<br><br>";
 			}
 		}
 		else if ($dbinfo->debug ())
@@ -231,20 +308,45 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 				    $bid_amt, $disp_notif)
 			       = mysql_fetch_row($results_id))
 			{
-				echo "<pre>";
-				echo "Username:             $username<br>";
-				echo "Title:                $title<br>";
-				echo "Seller:               $seller<br>";
-				echo "Category:             $category<br>";
-				echo "End Day:              $end_day<br>";
-				echo "End Hour:             $end_hour<br>";
-				echo "End Minute:           $end_min<br>";
-				echo "Bid Day:              $bid_day<br>";
-				echo "Bid Hour:             $bid_hour<br>";
-				echo "Bid Minute:           $bid_min<br>";
-				echo "Bid Amount:           $bid_amt<br>";
-				echo "Display Notification: $disp_notif<br><br>";
-				echo "</pre>";
+    		    // Start writing table to page
+	            $table = new table_common_t ();
+	            $table->init ("tbl_std");
+
+	            echo $table->table_begin ();
+	            echo $table->table_head_begin ();
+		        echo $table->tr ($table->td_span ("Bid Information", "", 6));
+	            echo $table->tr_end ();
+	            echo $table->table_head_end ();
+	            
+	            echo $table->table_body_begin ();				     
+		        echo $table->tr ($table->td ("Username").
+		                         $table->td ($username));
+		        echo $table->tr ($table->td ("Title").
+		                         $table->td ($title));
+				echo $table->tr ($table->td ("Seller").
+		                         $table->td ($seller));		 
+				echo $table->tr ($table->td ("Category").
+		                         $table->td ($category));					 
+				echo $table->tr ($table->td ("End Day").
+		                         $table->td ($end_day));					 
+				echo $table->tr ($table->td ("End Hour").
+		                         $table->td ($end_hour));					 
+				echo $table->tr ($table->td ("End Minute").
+		                         $table->td ($end_min));
+				echo $table->tr ($table->td ("Bid Day").
+		                         $table->td ($bid_day));					 
+				echo $table->tr ($table->td ("Bid Hour").
+		                         $table->td ($bid_hour));					 
+				echo $table->tr ($table->td ("Bid Minute").
+		                         $table->td ($bid_min));					 
+				echo $table->tr ($table->td ("Bid Amount").
+		                         $table->td ($bid_amt));					 
+				echo $table->tr ($table->td ("Display Notification").
+		                         $table->td ($disp_notif));				
+				echo $table->table_body_end ();
+				
+	            echo $table->table_end ();
+	            echo "<br><br>";
 			}
 		}
 		else if ($dbinfo->debug ())
