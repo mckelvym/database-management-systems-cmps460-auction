@@ -99,6 +99,16 @@ body {
     border: 1px dotted navy;
 }
 
+#bidhistory {
+    position: relative;
+    margin-top: 1em;
+    padding-left: 2em;
+    text-align: left;
+    font-size: 0.8em;
+    background-color: #d0d0d0;
+    border: 1px dotted navy;
+}
+
 #outbid_hide {
     position: relative;
     float: right;
