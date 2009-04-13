@@ -64,7 +64,7 @@ $result_seller = $dbinfo->query ("select buyer,seller,buyerfeedbackforseller_rat
 $result_buyer = $dbinfo->query("select buyer, seller, sellerfeedbackforbuyer_description from item_listing where buyer = '$user_name' and sellerfeedbackforbuyer_description!=''");
 if(mysql_num_rows($result_seller) == 0 && mysql_num_rows($result_buyer) == 0)
 {
-	echo div ("No feedbacks found!", "feedback");
+	echo div ("No feedback found!", "feedback");
 }
 if(mysql_num_rows($result_seller) != 0){
 	cout ("Feedback for items sold :");
