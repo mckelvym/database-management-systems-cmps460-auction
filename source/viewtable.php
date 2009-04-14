@@ -23,6 +23,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 	if ($name == "reload")
 	{
 		passthru ("/pkgs2/mysql/bin/mysql -h calvados.ucs.louisiana.edu -u cs4601i -pfoursixty cs4601_i < ../data/db.dump.sql");
+		cout ("Done.");
 		echo href ("index.php", "Refresh");
 	}
 	else if ($name == "user")
