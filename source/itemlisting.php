@@ -323,19 +323,21 @@ function verify_data ()
 
 if ($mode == "bid")
 {
-	$bid_title = post ("title");
+	$bid_title = (post ("title"));
 	$bid_seller = post ("seller");
 	$bid_category = post ("category");
 	$bid_end_day = post ("end_day");
 	$bid_end_hour = post ("end_hour");
 	$bid_end_minute = post ("end_minute");
 	$bid_amount = post ("bid_amount");
+
+	$bid_title = escape ($bid_title);
 	$dbinfo->update_auction_before_bid (
 		$bid_title, $bid_seller, $bid_category,
 		$bid_end_day, $bid_end_hour, $bid_end_minute,
 		$bid_amount);
 	$dbinfo->query ("insert into bids_on values ('$username', '$bid_title', '$bid_seller', '$bid_category', $bid_end_day, $bid_end_hour, $bid_end_minute, $curr_day, $curr_hour, $curr_minute, $bid_amount, 'n')");
-	$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$bid_title&seller=$bid_seller&category=$bid_category&end_day=$bid_end_day&end_hour=$bid_end_hour&end_minute=$bid_end_minute", $bid_title)."\".");
+	$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$bid_title&seller=$bid_seller&category=$bid_category&end_day=$bid_end_day&end_hour=$bid_end_hour&end_minute=$bid_end_minute", stripslashes ($bid_title))."\".");
 	$mode = "view";
 }
 
@@ -469,12 +471,12 @@ AND	end_minute = $end_minute");
 				$url = "$current_script?";
 				foreach ($_GET as $var => $val)
 					$url = $url."$var=$val&";
-				$url = $url."mode=bid";
+				$url = stripslashes ($url)."mode=bid";
 				$curr_price_message = $t->tr ($t->td ("Current Price:").
 							      $t->td ("\$$current_price".
 								      form_begin ("$url", "post").
 								      select ("bid_amount", $options).
-								      hidden_input ("title", $title).
+								      hidden_input ("title", stripslashes ($title)).
 								      hidden_input ("seller", $seller).
 								      hidden_input ("category", $category).
 								      hidden_input ("end_day", $end_day).
@@ -522,6 +524,18 @@ AND	end_minute = $end_minute");
 			$t->table_body_end ().$t->table_end ();
 
 		// Get bid history for item.
+		if (false && $dbinfo->debug ())
+		{
+			cout ("Debug enabled.");
+			cout ("select username, bid_day, bid_hour, bid_minute, bid_amount from bids_on
+where	item_title = '$title'
+AND	item_seller = '$seller'
+AND	item_category = '$category'
+AND	item_end_day = $end_day
+AND	item_end_hour = $end_hour
+AND	item_end_minute = $end_minute
+order by bid_amount desc");
+		}
 		$result = $dbinfo->query ("select username, bid_day, bid_hour, bid_minute, bid_amount from bids_on
 where	item_title = '$title'
 AND	item_seller = '$seller'
@@ -655,7 +669,7 @@ AND	end_minute = $post_end_minute");
 }
 else if ($mode == "delete")
 {
-	$title = get ("title");
+	$title = stripslashes (get ("title"));
 	$seller = get ("seller");
 	$category = get ("category");
 	$end_day = get ("end_day");
