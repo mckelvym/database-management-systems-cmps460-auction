@@ -283,6 +283,57 @@ tbody.tbl_std img {
 
 
 
+table.category_listing {	
+    padding: 0px;
+    margin: 0px auto;
+    border-collapse: collapse;
+    position: relative;
+    top: 30px;	
+    width: 580px;
+}
+
+table.category_listing a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.category_listing a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.category_listing td{
+    font-size: 0.8em;
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid navy;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    text-align: center;
+}
+
+tbody.category_listing {
+    border-left: 1px dotted navy;
+    border-right: 1px dotted navy;
+}
+
+tbody.category_listing td {
+    font-size: 0.7em;
+    border-bottom: 1px dotted navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-collapse: separate;
+}
+
+tbody.category_listing img {
+    max-width: 20px;
+    border: 0px;
+}
+
+
+
+
+
 table.itemlisting {	
     padding: 0px;
     margin: 0px auto;
