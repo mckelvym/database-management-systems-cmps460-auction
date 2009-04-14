@@ -124,18 +124,18 @@ if ($mode == "" || $mode == "view" )
 	else
 		cout ("Bid history for you:");
 
-	$result_bid =  $dbinfo->query ("select username, item_seller, item_title, item_category, item_end_day, item_end_hour, item_end_minute, bid_amount
-from bids_on
+	$result_bid =  $dbinfo->query ("select * from bids_on
 where 	username = '$user_name'
-order by bid_amount desc");
+order by bid_day, bid_hour, bid_minute desc");
 	if(mysql_num_rows($result_bid) == 0)
 	{
 		echo div ("No bid history found.", "bidhistory");
 	}
 	else
 	{
-		while (list ($username, $item_seller, $item_title, $item_category,
+		while (list ($username, $item_title, $item_seller, $item_category,
 			     $item_end_day, $item_end_hour, $item_end_minute,
+			     $bid_day, $bid_hour, $bid_minute,
 			     $bid_amount)
 		       = mysql_fetch_row($result_bid))
 		{
@@ -149,7 +149,7 @@ order by bid_amount desc");
 							 $dbinfo->get_realname ($username));
 			}
 
-			echo div (span (format_time ($bid_day, $bid_hour, $bid_minute), "time").
+			echo div (span (format_time ($bid_day, $bid_hour, $bid_minute), "time2").
 				  "$bidder_realname  made a bid of \$$bid_amount on $seller_realname's auction : \"".href ("itemlisting.php?mode=view&title=$item_title&seller=$item_seller&category=$item_category&end_day=$item_end_day&end_hour=$item_end_hour&end_minute=$item_end_minute", $item_title)."\".", "bidhistory");
 		}
 	}
