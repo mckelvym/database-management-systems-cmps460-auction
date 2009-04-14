@@ -372,12 +372,6 @@ tbody.user_database img {
 
 
 
-
-
-
-
-
-
 table.user_activity_database {	
     padding: 0px;
     margin: 0px auto;
@@ -416,9 +410,7 @@ tbody.user_activity_database td {
 tbody.user_activity_database img {
     max-width: 200px;
     border: 0px;
-}-1 
-
-
+} 
 
 
 table.item_listing_database {	
