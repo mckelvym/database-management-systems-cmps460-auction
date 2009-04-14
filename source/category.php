@@ -40,18 +40,16 @@ if ($dbinfo->logged_in ())
 
 		echo h3 ("$view");
 		echo_div ("scriptstatus");
-		echo href (" itemlisting.php?mode=new", "Create a New Item Listing");
+		echo href ("category.php?view=$view&sortby=time_remaining", "Sort by Time Remaining");
+		echo " | ";
+		echo href ("category.php?view=$view&sortby=title", "Sort by Title");
+		echo " | ";
+		echo href ("category.php?view=$view&sortby=seller", "Sort by Seller");
+		echo " | ";
+		echo href ("category.php?view=$view&sortby=current_bid", "Sort by Current Bid (Lowest Bid at Top)");
+		echo " | ";
+		echo href ("itemlisting.php?mode=new", "Create a New Item Listing");
 		end_div ();
-
-		echo "<a href=category.php?view=$view&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=$view&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=$view&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=$view&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";	
-	
 
 	    if ($sortby == "time_remaining")
 	    {
