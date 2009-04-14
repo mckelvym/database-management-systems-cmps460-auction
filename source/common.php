@@ -75,7 +75,7 @@ HEREDOC;
 
 		$nav = $nav.li_wrap (href ("category.php", "All Categories"));
 		$nav = $nav.li_wrap (href ("category.php?view=Art", " - Art"));
-		$nav = $nav.li_wrap (href ("category.php?view=Cooks", " - Books"));
+		$nav = $nav.li_wrap (href ("category.php?view=Books", " - Books"));
 		$nav = $nav.li_wrap (href ("category.php?view=Clothing", " - Clothing"));
 		$nav = $nav.li_wrap (href ("category.php?view=Collectibles", " - Collectibles"));
 		$nav = $nav.li_wrap (href ("category.php?view=Electronics", " - Electronics"));
