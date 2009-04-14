@@ -7,6 +7,11 @@ function form_begin ($action, $method)
 	return "<form action=\"$action\" method=\"$method\">\n";
 }
 
+function form_begin_n ($action, $method, $name, $on_submit)
+{
+	return "<form action=\"$action\" method=\"$method\" accept-charset=\"UTF-8\" name=\"$name\" onsubmit=\"$on_submit\">\n";
+}
+
 function form_end ()
 {
 	return "</form>\n";
