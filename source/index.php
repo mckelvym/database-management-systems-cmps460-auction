@@ -350,7 +350,10 @@ order by day desc, hour desc, minute desc");
 	// Actual output of all notifications
 	echo h3 ("Welcome to your home page.");
 	cout ("Activity and notifications:");
-	rsort ($output);
+	if ($x > 1)
+		rsort ($output);
+	else
+		cout ("None.");
 	for ($i = 0; $i < count ($output); $i++)
 	{
 		echo substr ($output[$i], strpos ($output[$i], " "), strlen ($output[$i]));
