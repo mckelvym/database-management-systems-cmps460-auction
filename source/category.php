@@ -40,7 +40,7 @@ if ($dbinfo->logged_in ())
 
 		echo h3 ("$view");
 		echo_div ("scriptstatus");
-		echo href (" itemlisting.php?mode=create", "Create a New Item Listing");
+		echo href (" itemlisting.php?mode=new", "Create a New Item Listing");
 		end_div ();
 
 		echo "<a href=category.php?view=$view&sortby=time_remaining>
