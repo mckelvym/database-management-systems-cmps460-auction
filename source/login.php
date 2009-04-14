@@ -15,7 +15,6 @@ if (empty ($mode))
 	$msg = get ("message");
 	if (!empty ($msg))
 		cout ($msg);
-	cout ("Take a test spin in an admin account! jim_admin foursixty");
 	$table = new table_common_t ();
 	$table->init ("tbl_std");
 	echo $table->table_begin ();
@@ -25,9 +24,9 @@ if (empty ($mode))
 	echo $table->table_body_begin ();
 	echo form_begin ("login.php?login=y", "post");
 	echo $table->tr ($table->td ("Username").
-			 $table->td (text_input ("username", "")));
+			 $table->td (text_input_s ("username", "", 20, 50)));
 	echo $table->tr ($table->td ("Password").
-			 $table->td (password_input ("password", "")));
+			 $table->td (password_input_s ("password", "", 20, 50)));
 	echo $table->tr ($table->td_span (submit_input ("Login"), "", 2, "center"));
 	echo form_end ();
 	echo $table->table_body_end ();
