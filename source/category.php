@@ -64,13 +64,13 @@ if ($dbinfo->logged_in ())
 		print '<font size="5" color="blue">';
 		print "Clothing</font><br><br>";
 
-		echo "<a href=category.php?view=clothes&sortby=time_remaining>
+		echo "<a href=category.php?view=clothing&sortby=time_remaining>
 		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=clothes&sortby=title>
+		      <a href=category.php?view=clothing&sortby=title>
 		        Sort by Title</a> |
-		      <a href=category.php?view=clothes&sortby=seller>
+		      <a href=category.php?view=clothing&sortby=seller>
 		        Sort by Seller</a> |
-		      <a href=category.php?view=clothes&sortby=current_bid>
+		      <a href=category.php?view=clothing&sortby=current_bid>
 		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
 		$category = "Clothing";
 	}
