@@ -425,6 +425,7 @@ table.item_listing_database {
     padding: 0px;
     margin: 0px auto;
     border-collapse: collapse;	
+    min-width: 580px;
 }
 
 table.item_listing_database a {
@@ -479,7 +480,7 @@ table.bidding_database {
 table.bidding_database a {
     color: #5A58F8;
     text-decoration: none;
-}
+};
 
 table.bidding_database a:hover{
     color: #000000;
