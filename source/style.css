@@ -322,3 +322,191 @@ tbody.itemlisting img {
     border: 0px;
 }
 
+
+
+
+table.user_database {	
+    padding: 0px;
+    margin: 0px auto;
+    border-collapse: collapse;	
+}
+
+table.user_database a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.user_database a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.user_database td{
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    text-align: center;
+}
+
+tbody.user_database {
+    border-left: 1px dotted navy;
+    border-right: 1px dotted navy;
+}
+
+tbody.user_database td {
+    font-size: 0.8em;
+    border-bottom: 1px dotted navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-collapse: separate;
+}
+
+tbody.user_database img {
+    max-width: 200px;
+    border: 0px;
+}
+
+
+
+
+
+
+
+
+
+table.user_activity_database {	
+    padding: 0px;
+    margin: 0px auto;
+    border-collapse: collapse;	
+}
+
+table.user_activity_database a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.user_activity_database a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.user_activity_database td{
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid navy;
+    padding-right: 0.2em;
+    padding-left: 0.2em;
+    text-align: center;
+}
+
+tbody.user_activity_database {
+}
+
+tbody.user_activity_database td {
+    font-size: 0.7em;
+    padding-right: 1em;
+    padding-left: 0.2em;
+    border-collapse: separate;
+}
+
+tbody.user_activity_database img {
+    max-width: 200px;
+    border: 0px;
+}
+
+
+
+
+table.item_listing_database {	
+    padding: 0px;
+    margin: 0px auto;
+    border-collapse: collapse;	
+}
+
+table.item_listing_database a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.item_listing_database a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.item_listing_database td{
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    text-align: center;
+}
+
+tbody.item_listing_database {
+    border-left: 1px dotted navy;
+    border-right: 1px dotted navy;
+}
+
+tbody.item_listing_database td {
+    font-size: 0.8em;
+    border-bottom: 1px dotted navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-collapse: separate;
+}
+
+tbody.item_listing_database img {
+    max-width: 200px;
+    border: 0px;
+}
+
+
+
+
+
+
+
+table.bidding_database {	
+    padding: 0px;
+    margin: 0px auto;
+    border-collapse: collapse;	
+}
+
+table.bidding_database a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.bidding_database a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.bidding_database td{
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    text-align: center;
+}
+
+tbody.bidding_database {
+    border-left: 1px dotted navy;
+    border-right: 1px dotted navy;
+}
+
+tbody.bidding_database td {
+    font-size: 0.8em;
+    border-bottom: 1px dotted navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-collapse: separate;
+}
+
+tbody.bidding_database img {
+    max-width: 200px;
+    border: 0px;
+}
