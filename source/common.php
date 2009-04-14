@@ -74,15 +74,15 @@ HEREDOC;
 			$nav = $nav.li_wrap (href ("registration.php?mode=browse", "All Accounts"));
 
 		$nav = $nav.li_wrap (href ("category.php", "All Categories"));
-		$nav = $nav.li_wrap (href ("category.php?view=art", " - Art"));
-		$nav = $nav.li_wrap (href ("category.php?view=books", " - Books"));
-		$nav = $nav.li_wrap (href ("category.php?view=clothing", " - Clothing"));
-		$nav = $nav.li_wrap (href ("category.php?view=collectibles", " - Collectibles"));
-		$nav = $nav.li_wrap (href ("category.php?view=electronics", " - Electronics"));
-		$nav = $nav.li_wrap (href ("category.php?view=entertainment", " - Entertainment"));
-		$nav = $nav.li_wrap (href ("category.php?view=jewelry", " - Jewelry"));
-		$nav = $nav.li_wrap (href ("category.php?view=sporting_goods", " - Sporting Goods"));
-		$nav = $nav.li_wrap (href ("category.php?view=toys", " - Toys"));
+		$nav = $nav.li_wrap (href ("category.php?view=Art", " - Art"));
+		$nav = $nav.li_wrap (href ("category.php?view=Cooks", " - Books"));
+		$nav = $nav.li_wrap (href ("category.php?view=Clothing", " - Clothing"));
+		$nav = $nav.li_wrap (href ("category.php?view=Collectibles", " - Collectibles"));
+		$nav = $nav.li_wrap (href ("category.php?view=Electronics", " - Electronics"));
+		$nav = $nav.li_wrap (href ("category.php?view=Entertainment", " - Entertainment"));
+		$nav = $nav.li_wrap (href ("category.php?view=Jewelry", " - Jewelry"));
+		$nav = $nav.li_wrap (href ("category.php?view=Sporting Goods", " - Sporting Goods"));
+		$nav = $nav.li_wrap (href ("category.php?view=Toys", " - Toys"));
 		$nav = $nav.li_wrap (href ("itemlisting.php?mode=new", "Create Auction"));
 
 		if ($dbinfo->is_admin ())
