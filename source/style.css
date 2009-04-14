@@ -475,7 +475,7 @@ table.bidding_database {
 table.bidding_database a {
     color: #5A58F8;
     text-decoration: none;
-};
+}
 
 table.bidding_database a:hover{
     color: #000000;
