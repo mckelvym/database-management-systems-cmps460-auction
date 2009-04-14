@@ -126,7 +126,7 @@ if ($mode == "" || $mode == "view" )
 
 	$result_bid =  $dbinfo->query ("select * from bids_on
 where 	username = '$user_name'
-order by bid_day, bid_hour, bid_minute desc");
+order by bid_day desc, bid_hour desc, bid_minute desc");
 	if(mysql_num_rows($result_bid) == 0)
 	{
 		echo div ("No bid history found.", "bidhistory");
