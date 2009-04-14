@@ -621,10 +621,10 @@ card_number = $post_card_number, card_expire = '$post_card_expire' where usernam
 	// browse a list of registered users
 	else if ($mode == "browse" && $dbinfo->is_admin ())
 	{
+		echo h3 ("All Accounts");
 		echo_div ("scriptstatus");
 		echo href ("$current_script?mode=view", "View Your Account");
 		end_div ();
-		echo h3 ("All Accounts");
 
 		$curr_user = $dbinfo->username ();
 		$result = $dbinfo->query ("select u.username, is_admin, realname, email, day, hour, minute

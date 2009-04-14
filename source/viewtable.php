@@ -22,12 +22,12 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 {
 	if ($name == "user")
 	{
+		echo h3 ("User Data");
 		echo_div ("scriptstatus");
 		echo href ("$current_script?name=user&order=username&desc=0", "Sort Ascending (Usernames)");
 		echo " | ";
 		echo href ("$current_script?name=user&order=username&desc=1", "Sort Descending (Usernames)");
 		end_div ();
-		echo h3 ("User Data");
 
 		// Select the database
 
@@ -121,12 +121,12 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 
 	else if ($name == "user_activity")
 	{
+		echo h3 ("User Activity Data");
 		echo_div ("scriptstatus");
 		echo href ("$current_script?name=user_activity&order=username", "Sort by username");
 		echo " | ";
 		echo href ("$current_script?name=user_activity&order=time", "Sort by time");
 		end_div ();
-		echo h3 ("User Activity Data");
 
 		// Select the database
 		if (empty ($order) || $order == "time")
@@ -174,12 +174,12 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 
 	else if ($name == "item_listing")
 	{
+		echo h3 ("Item Listing Data");
 		echo_div ("scriptstatus");
 		echo href ("$current_script?name=item_listing&order=seller&desc=0", "Sort by seller (ascending)");
 		echo " | ";
 		echo href ("$current_script?name=item_listing&order=seller&desc=1", "Sort by seller (descending)");
 		end_div ();
-		echo h3 ("Item Listing Data");
 
 		// Select the database
 
@@ -312,12 +312,12 @@ AND	bid_hour = $bid_hour
 AND	bid_minute = $bid_minute");
 		}
 
+		echo h3 ("Bidding Data");
 		echo_div ("scriptstatus");
 		echo href ("$current_script?name=bids_on&order=username&desc=0", "Sort by username (ascending)");
 		echo " | ";
 		echo href ("$current_script?name=bids_on&order=username&desc=1", "Sort by username (descending)");
 		end_div ();
-		echo h3 ("Bidding Data");
 
 		// Select the database
 		if ($order == "username")
