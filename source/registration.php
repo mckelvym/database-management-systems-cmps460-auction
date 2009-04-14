@@ -275,16 +275,19 @@ function registration_form ($user = "")
 	// If editing, then make username field read only
 	if (empty ($user))
 		echo $table->tr ($table->td ("Desired Username").
-				 $table->td (text_input_s ("username", $username, 30, 50).alert ("50 characters or less. Have fun.", "?")));
+				 $table->td (text_input_s ("username", $username, 30, 50).
+					     alert ("50 characters or less. Have fun.", "?")));
 	else
 		echo $table->tr ($table->td ("Username<br/>".href ("$current_script?mode=delete&username=$username", "Delete Account")).
 				 $table->td (text_input_sr ("username", $username, 30, 50)));
 
 	// Passwords must match
 	echo $table->tr ($table->td ("Desired Password").
-			 $table->td (password_input_s ("password", $passwd, 30, 50).alert ("50 characters or less, must match. Make it super secret.", "?")));
+			 $table->td (password_input_s ("password", $passwd, 30, 50).
+				     alert ("50 characters or less, must match. Make it super secret.", "?")));
 	echo $table->tr ($table->td ("Repeat Password").
-			 $table->td (password_input_s ("password2", $passwd, 30, 50).alert ("You thought there would be something helpful here. Just type the same thing as in the above box.", "?")));
+			 $table->td (password_input_s ("password2", $passwd, 30, 50).
+				     alert ("You thought there would be something helpful here. Just type the same thing as in the above box.", "?")));
 
 	// Only allow editing of this if the current user is already an admin
 	if ($dbinfo->is_admin ())
@@ -293,16 +296,21 @@ function registration_form ($user = "")
 		$options = $options.option ("0", "No", $is_admin);
 		$options = $options.option ("1", "Yes", $is_admin);
 		echo $table->tr ($table->td ("Admin").
-				 $table->td (select ("is_admin", $options).alert ("Give administrator priv.", "?")));
+				 $table->td (select ("is_admin", $options).
+					     alert ("Give administrator priv.", "?")));
 	}
 	echo $table->tr ($table->td ("Real Name").
-			 $table->td (text_input_s ("realname", $name, 30, 100).alert ("100 characters or less. e.g. John Smith", "?")));
+			 $table->td (text_input_s ("realname", $name, 30, 100).
+				     alert ("100 characters or less. e.g. John Smith", "?")));
 	echo $table->tr ($table->td ("Birth Date").
-			 $table->td (text_input_s ("birth_date", $dob, 10, 10).alert ("Up to 10 characters, at least 6. e.g. 1980-10-17", "?")));
+			 $table->td (text_input_s ("birth_date", $dob, 10, 10).
+				     alert ("Up to 10 characters, at least 6. e.g. 1980-10-17", "?")));
 	echo $table->tr ($table->td ("Shipping Street").
-			 $table->td (text_input_s ("shipping_street", $street, 30, 100).alert ("100 characters or less. e.g. 56 Dodo Ln", "?")));
+			 $table->td (text_input_s ("shipping_street", $street, 30, 100).
+				     alert ("100 characters or less. e.g. 56 Dodo Ln", "?")));
 	echo $table->tr ($table->td ("Shipping City").
-			 $table->td (text_input_s ("shipping_city", $city, 30, 50).alert ("50 characters or less. e.g. Eunice", "?")));
+			 $table->td (text_input_s ("shipping_city", $city, 30, 50).
+				     alert ("50 characters or less. e.g. Eunice", "?")));
 	$options = "";
 	$options = $options.option ("Alabama", "Alabama", $state);
 	$options = $options.option ("Alaska", "Alaska", $state);
@@ -361,22 +369,28 @@ function registration_form ($user = "")
 	$options = $options.option ("Wisconsin", "Wisconsin", $state);
 	$options = $options.option ("Wyoming", "Wyoming", $state);
 	echo $table->tr ($table->td ("Shipping State").
-			 $table->td (select ("shipping_state", $options).alert ("Don't lie on this choice.", "?")));
+			 $table->td (select ("shipping_state", $options).
+				     alert ("Don't lie on this choice.", "?")));
 	echo $table->tr ($table->td ("Shipping Zip Code").
-			 $table->td (text_input_s ("shipping_zip", $zip, 5, 10).alert ("5 to 10 digits only. e.g. 90210", "?")));
+			 $table->td (text_input_s ("shipping_zip", $zip, 5, 10).
+				     alert ("5 to 10 digits only. e.g. 90210", "?")));
 	echo $table->tr ($table->td ("Phone Number").
-			 $table->td (text_input_s ("phone", $phone, 12, 12).alert ("10 to 12 characters. e.g. 123-456-7890", "?")));
+			 $table->td (text_input_s ("phone", $phone, 12, 12).
+				     alert ("10 to 12 characters. e.g. 123-456-7890", "?")));
 	echo $table->tr ($table->td ("Email Address").
-			 $table->td (text_input_s ("email", $email, 30, 50).alert ("50 characters or less. e.g. bill@hat.com.", "?")));
+			 $table->td (text_input_s ("email", $email, 30, 50).
+				     alert ("50 characters or less. e.g. bill@hat.com.", "?")));
 	$options = "";
 	$options = $options.option ("American Express", "American Express", $cc);
 	$options = $options.option ("Discover", "Discover", $cc);
 	$options = $options.option ("Mastercard", "Mastercard", $cc);
 	$options = $options.option ("Visa", "Visa", $cc);
 	echo $table->tr ($table->td ("Credit Card Type").
-			 $table->td (select ("card_type", $options).alert ("You better have one.", "?")));
+			 $table->td (select ("card_type", $options).
+				     alert ("You better have one.", "?")));
 	echo $table->tr ($table->td ("Credit Card Number").
-			 $table->td (text_input_s ("card_number", $ccn, 16, 16).alert ("12 to 16 digits. e.g. 1111222233334444", "?")));
+			 $table->td (text_input_s ("card_number", $ccn, 16, 16).
+				     alert ("12 to 16 digits. e.g. 1111222233334444", "?")));
 
 	// For credit card expiration dates
 	$options = "";
@@ -393,7 +407,8 @@ function registration_form ($user = "")
 		}
 	}
 	echo $table->tr ($table->td ("Credit Card Expiration").
-			 $table->td (select ("card_expire", $options).alert ("Expiration date of your credit card.", "?")));
+			 $table->td (select ("card_expire", $options).
+				     alert ("Expiration date of your credit card.", "?")));
 
 	// Save or register depending on if logged in
 	if ($dbinfo->logged_in ())
