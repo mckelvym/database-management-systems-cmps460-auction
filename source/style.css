@@ -238,6 +238,7 @@ table.tbl_std {
     border-collapse: collapse;
     position: relative;
     top: 30px;	
+    width: 580px;
 }
 
 table.tbl_std a {
