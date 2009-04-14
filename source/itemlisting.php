@@ -240,6 +240,32 @@ if ($mode == "bid")
 // View an auction listing
 if ($mode == "view")
 {
+	$sfdbk = get ("sfdbk");
+	$bfdbk = get ("bfdbk");
+	if ($dbinfo->is_admin () && !empty ($sfdbk))
+	{
+		$dbinfo->query ("update item_listing set
+sellerfeedbackforbuyer_description = ''
+where	title = '$title'
+AND	seller = '$seller'
+AND	category = '$category'
+AND	end_day = $end_day
+AND	end_hour = $end_hour
+AND	end_minute = $end_minute");
+	}
+	if ($dbinfo->is_admin () && !empty ($bfdbk))
+	{
+		$dbinfo->query ("update item_listing set
+buyerfeedbackforseller_description = '',
+buyerfeedbackforseller_rating = -1
+where	title = '$title'
+AND	seller = '$seller'
+AND	category = '$category'
+AND	end_day = $end_day
+AND	end_hour = $end_hour
+AND	end_minute = $end_minute");
+	}
+
 	$result = $dbinfo->query ("select * from item_listing
 where	title = '$title'
 AND	seller = '$seller'
@@ -273,6 +299,52 @@ AND	end_minute = $end_minute");
 						$t->td (format_time ($end_day, $end_hour, $end_min)));
 			$curr_price_message = $t->tr ($t->td ("End Price:").
 						      $t->td ("\$$current_price"));
+			if ($buyer_fdbk_rating != -1)
+			{
+				if ($dbinfo->is_admin ())
+				{
+					$url = "$current_script?";
+					foreach ($_GET as $var => $val)
+						$url = $url."$var=$val&";
+					$url = $url."bfdbk=delete";
+					$fdbk = $t->tr ($t->td ("Feedback from buyer:<br/>".
+								href ($url, "Delete")).
+							$t->td ($buyer_fdbk." Rating: $buyer_fdbk_rating"));
+				}
+				else
+				{
+					$fdbk = $t->tr ($t->td ("Feedback from buyer:").
+							$t->td ($buyer_fdbk." Rating: $buyer_fdbk_rating"));
+				}
+			}
+			else
+			{
+				$fdbk = $t->tr ($t->td ("Feedback from buyer:").
+						$t->td ("None."));
+			}
+			if (!empty ($seller_fdbk))
+			{
+				if ($dbinfo->is_admin ())
+				{
+					$url = "$current_script?";
+					foreach ($_GET as $var => $val)
+						$url = $url."$var=$val&";
+					$url = $url."sfdbk=delete";
+					$fdbk = $fdbk.$t->tr ($t->td ("Feedback from seller:<br/>".
+								      href ($url, "Delete")).
+							      $t->td ($seller_fdbk));
+				}
+				else
+				{
+					$fdbk = $fdbk.$t->tr ($t->td ("Feedback from seller:").
+							      $t->td ($seller_fdbk));
+				}
+			}
+			else
+			{
+				$fdbk = $fdbk.$t->tr ($t->td ("Feedback from seller:").
+						      $t->td ("None."));
+			}
 		}
 		else
 		{
@@ -340,6 +412,7 @@ AND	end_minute = $end_minute");
 			$t->tr ($t->td ("Sold in:").
 				$t->td ($category)).
 			$time_message.
+			$fdbk.
 			$t->table_body_end ().$t->table_end ();
 
 		// Get bid history for item.
