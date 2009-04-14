@@ -4,6 +4,209 @@ include_once ("common.php");
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
 
+echo <<<HEREDOC
+<script type="text/javascript">
+function reset_inputs (thisform)
+{
+	// reset inputs
+	// http://webcheatsheet.com/javascript/form_validation.php
+	for each (elem in thisform.elements)
+	{
+		if (elem.type == "text" || elem.type == "select-one")
+		{
+			elem.style.background = '';
+		}
+	}
+}
+
+function validate_required (field)
+{
+	// http://www.w3schools.com/jS/js_form_validation.asp
+	// http://webcheatsheet.com/javascript/form_validation.php
+	with (field)
+	{
+		if (value == null || value == "" || value == "-")
+		{
+			field.style.background = 'Yellow';
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+}
+
+function field_set (fieldvar, field)
+{
+	if (fieldvar == null)
+		return field;
+	else
+		return fieldvar;
+}
+
+function append_with_newline (orig, append_text)
+{
+	if (orig != null)
+		return orig + '\\n' + append_text;
+	return append_text;
+}
+
+function validate_email (field)
+{
+	// http://www.w3schools.com/jS/js_form_validation.asp
+	// http://webcheatsheet.com/javascript/form_validation.php
+
+	var email_filter = /^[^@]+@[^@.]+\.[^@]*\w\w$/;
+	var illegal_chars= /[\(\)\<\>\,\;\:\\\"\[\]]/;
+	var value = trim (field.value);
+
+	if (value == null
+		|| value == ""
+		|| !email_filter.test (value)
+		|| value.match (illegal_chars))
+	{
+		field.style.background = 'Yellow';
+		return false;
+	}
+	return true;
+}
+
+function trim (string)
+{
+	// regex to replace one or more spaces at beginning of string
+	// or one or more spaces at end of string, with empty string
+	return string.replace (/^\s+|\s+$/, '');
+}
+
+function validate_int (field, length)
+{
+	with (field)
+	{
+		if (value.length < length || value * 1 == 0)
+		{
+			field.style.background = 'Yellow';
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+}
+
+function validate_form (thisform)
+{
+	var field_of_focus;
+	var alert_message;
+
+	reset_inputs (thisform);
+
+	with (thisform)
+	{
+		if (validate_required (username) == false)
+		{
+			field_of_focus = field_set (field_of_focus, username);
+			alert_message = append_with_newline (alert_message, "Username required.");
+		}
+		if (validate_required (password) == false)
+		{
+			field_of_focus = field_set (field_of_focus, password);
+			alert_message = append_with_newline (alert_message, "Password required.");
+		}
+		if (validate_required (password2) == false)
+		{
+			field_of_focus = field_set (field_of_focus, password2);
+			alert_message = append_with_newline (alert_message, "Password confirmation required.");
+		}
+		if (password.value != password2.value)
+		{
+			field_of_focus = field_set (field_of_focus, password);
+			alert_message = append_with_newline (alert_message, "Passwords must match.");
+		}
+		if (validate_required (realname) == false)
+		{
+			field_of_focus = field_set (field_of_focus, realname);
+			alert_message = append_with_newline (alert_message, "Real name required.");
+		}
+		if (validate_required (birth_date) == false)
+		{
+			field_of_focus = field_set (field_of_focus, birth_date);
+			alert_message = append_with_newline (alert_message, "Birth date required.");
+		}
+		else if ((birth_date.value.length >= 6) == false)
+		{
+			field_of_focus = field_set (field_of_focus, birth_date);
+			alert_message = append_with_newline (alert_message, "Birth date too short.");
+		}
+		if (validate_required (shipping_street) == false)
+		{
+			field_of_focus = field_set (field_of_focus, shipping_street);
+			alert_message = append_with_newline (alert_message, "Street required.");
+		}
+		if (validate_required (shipping_city) == false)
+		{
+			field_of_focus = field_set (field_of_focus, shipping_city);
+			alert_message = append_with_newline (alert_message, "City required.");
+		}
+		if (validate_required (shipping_zip) == false)
+		{
+			field_of_focus = field_set (field_of_focus, shipping_zip);
+			alert_message = append_with_newline (alert_message, "Postal/zip code required.");
+		}
+		else if (validate_int (shipping_zip, 5) == false) // this test works only for US codes
+		{
+			field_of_focus = field_set (field_of_focus, shipping_zip);
+			alert_message = append_with_newline (alert_message, "Postal/zip code is not valid.");
+		}
+		if (validate_required (phone) == false)
+		{
+			field_of_focus = field_set (field_of_focus, phone);
+			alert_message = append_with_newline (alert_message, "Phone number required.");
+		}
+		else if ((phone.value.length >= 10) == false)
+		{
+			field_of_focus = field_set (field_of_focus, phone);
+			alert_message = append_with_newline (alert_message, "Phone number required.");
+		}
+		if (validate_required (email) == false)
+		{
+			field_of_focus = field_set (field_of_focus, email);
+			alert_message = append_with_newline (alert_message, "E-mail required.");
+		}
+		else if (validate_email (email) == false)
+		{
+			field_of_focus = field_set (field_of_focus, email);
+			alert_message = append_with_newline (alert_message, "E-mail address not valid.");
+		}
+		if (validate_required (card_number) == false)
+		{
+			field_of_focus = field_set (field_of_focus, card_number);
+			alert_message = append_with_newline (alert_message, "Credit card number required.");
+		}
+		else if (validate_int (card_number, 12) == false)
+		{
+			field_of_focus = field_set (field_of_focus, card_number);
+			alert_message = append_with_newline (alert_message, "Credit card number is too short.");
+		}
+
+		if (alert_message != null)
+		{
+			alert (alert_message);
+			field_of_focus.focus();
+			return false;
+		}
+	}
+}
+
+/* onload = function() */
+/* { */
+/* } */
+
+</script>
+HEREDOC;
+
+
 $mode = get ("mode");
 $current_script = current_script ();
 
@@ -60,30 +263,28 @@ function registration_form ($user = "")
 		echo $table->tr ($table->td_span ("Update (not) your iBay account", "", 2));
 	else
 		echo $table->tr ($table->td_span ("Update your iBay account", "", 2));
-
-/* 	echo $table->tr_end (); */
 	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
 
 	// Different modes depending on if user is logged in or not
 	if ($dbinfo->logged_in ())
-		echo form_begin ("$current_script?mode=save", "post");
+		echo form_begin_n ("$current_script?mode=save", "post", "registration_form", "return validate_form (this)");
 	else
-		echo form_begin ("$current_script?mode=savenew", "post");
+		echo form_begin_n ("$current_script?mode=savenew", "post", "registration_form", "return validate_form (this)");
 
 	// If editing, then make username field read only
 	if (empty ($user))
 		echo $table->tr ($table->td ("Desired Username").
-				 $table->td (text_input_s ("username", $username, 20, 50)));
+				 $table->td (text_input_s ("username", $username, 30, 50).alert ("50 characters or less. Have fun.", "?")));
 	else
 		echo $table->tr ($table->td ("Username<br/>".href ("$current_script?mode=delete&username=$username", "Delete Account")).
-				 $table->td (text_input_sr ("username", $username, 20, 50)));
+				 $table->td (text_input_sr ("username", $username, 30, 50)));
 
 	// Passwords must match
 	echo $table->tr ($table->td ("Desired Password").
-			 $table->td (password_input_s ("password", $passwd, 20, 50)));
+			 $table->td (password_input_s ("password", $passwd, 30, 50).alert ("50 characters or less, must match. Make it super secret.", "?")));
 	echo $table->tr ($table->td ("Repeat Password").
-			 $table->td (password_input_s ("password2", $passwd, 20, 50)));
+			 $table->td (password_input_s ("password2", $passwd, 30, 50).alert ("You thought there would be something helpful here. Just type the same thing as in the above box.", "?")));
 
 	// Only allow editing of this if the current user is already an admin
 	if ($dbinfo->is_admin ())
@@ -92,16 +293,16 @@ function registration_form ($user = "")
 		$options = $options.option ("0", "No", $is_admin);
 		$options = $options.option ("1", "Yes", $is_admin);
 		echo $table->tr ($table->td ("Admin").
-				 $table->td (select ("is_admin", $options)));
+				 $table->td (select ("is_admin", $options).alert ("Give administrator priv.", "?")));
 	}
 	echo $table->tr ($table->td ("Real Name").
-			 $table->td (text_input_s ("realname", $name, 20, 100)));
+			 $table->td (text_input_s ("realname", $name, 30, 100).alert ("100 characters or less. e.g. John Smith", "?")));
 	echo $table->tr ($table->td ("Birth Date").
-			 $table->td (text_input_s ("birth_date", $dob, 10, 10)));
+			 $table->td (text_input_s ("birth_date", $dob, 10, 10).alert ("Up to 10 characters, at least 6. e.g. 1980-10-17", "?")));
 	echo $table->tr ($table->td ("Shipping Street").
-			 $table->td (text_input_s ("shipping_street", $street, 20, 100)));
+			 $table->td (text_input_s ("shipping_street", $street, 30, 100).alert ("100 characters or less. e.g. 56 Dodo Ln", "?")));
 	echo $table->tr ($table->td ("Shipping City").
-			 $table->td (text_input_s ("shipping_city", $city, 20, 50)));
+			 $table->td (text_input_s ("shipping_city", $city, 30, 50).alert ("50 characters or less. e.g. Eunice", "?")));
 	$options = "";
 	$options = $options.option ("Alabama", "Alabama", $state);
 	$options = $options.option ("Alaska", "Alaska", $state);
@@ -160,22 +361,22 @@ function registration_form ($user = "")
 	$options = $options.option ("Wisconsin", "Wisconsin", $state);
 	$options = $options.option ("Wyoming", "Wyoming", $state);
 	echo $table->tr ($table->td ("Shipping State").
-			 $table->td (select ("shipping_state", $options)));
+			 $table->td (select ("shipping_state", $options).alert ("Don't lie on this choice.", "?")));
 	echo $table->tr ($table->td ("Shipping Zip Code").
-			 $table->td (text_input_s ("shipping_zip", $zip, 5, 10)));
+			 $table->td (text_input_s ("shipping_zip", $zip, 5, 10).alert ("5 to 10 digits only. e.g. 90210", "?")));
 	echo $table->tr ($table->td ("Phone Number").
-			 $table->td (text_input_s ("phone", $phone, 12, 12)));
+			 $table->td (text_input_s ("phone", $phone, 12, 12).alert ("10 to 12 characters. e.g. 123-456-7890", "?")));
 	echo $table->tr ($table->td ("Email Address").
-			 $table->td (text_input_s ("email", $email, 20, 50)));
+			 $table->td (text_input_s ("email", $email, 30, 50).alert ("50 characters or less. e.g. bill@hat.com.", "?")));
 	$options = "";
 	$options = $options.option ("American Express", "American Express", $cc);
 	$options = $options.option ("Discover", "Discover", $cc);
 	$options = $options.option ("Mastercard", "Mastercard", $cc);
 	$options = $options.option ("Visa", "Visa", $cc);
 	echo $table->tr ($table->td ("Credit Card Type").
-			 $table->td (select ("card_type", $options)));
+			 $table->td (select ("card_type", $options).alert ("You better have one.", "?")));
 	echo $table->tr ($table->td ("Credit Card Number").
-			 $table->td (text_input_s ("card_number", $ccn, 16, 16)));
+			 $table->td (text_input_s ("card_number", $ccn, 16, 16).alert ("12 to 16 digits. e.g. 1111222233334444", "?")));
 
 	// For credit card expiration dates
 	$options = "";
@@ -192,21 +393,7 @@ function registration_form ($user = "")
 		}
 	}
 	echo $table->tr ($table->td ("Credit Card Expiration").
-			 $table->td (select ("card_expire", $options)));
-
-	// Only allow new registrants to pick a profile picture, otherwise they need to use the profile page.
-	if (!$dbinfo->logged_in ())
-	{
-		$options = "";
-		$options = $options.option ("default_profile.jpg", "Default", $picture);
-		for ($i = 1; $i <= 7; $i++)
-		{
-			$options = $options.option ("profile$i.jpg", "Picture $i", $picture);
-		}
-		echo $table->tr ($table->td ("Profile Picture").
-				 $table->td (select ("picture", $options).
-					     href ("profile_pictures.php", "?")));
-	}
+			 $table->td (select ("card_expire", $options).alert ("Expiration date of your credit card.", "?")));
 
 	// Save or register depending on if logged in
 	if ($dbinfo->logged_in ())
@@ -246,7 +433,7 @@ function verify_data ()
 	$post_card_type = post ("card_type");
 	$post_card_number = post ("card_number");
 	$post_card_expire = post ("card_expire");
-	$post_picture = post ("picture");
+	$post_picture = "default_profile.jpg";
 	$post_description = "N/A";
 
 	if (empty ($post_username))
@@ -385,6 +572,16 @@ if ($dbinfo->logged_in ())
 			// We might be saving information for another user that isn't the current user
 			// $post_username will be the current user if not admin since it isn't editable.
 			$admin_user = $dbinfo->username ();
+			if (empty ($is_admin))
+				$is_admin = 0;
+			if ($dbinfo->debug ())
+			{
+				cout ("Debug enabled.");
+				cout ("update user set password = '$passwd1', is_admin = $is_admin,
+realname = '$post_realname', birth_date = '$post_birth_date', shipping_street = '$post_street', shipping_city = '$post_city',
+shipping_state = '$post_state', shipping_zip = $post_zip, phone = '$post_phone', email = '$post_email', card_type = '$post_card_type',
+card_number = $post_card_number, card_expire = '$post_card_expire' where username = '$post_username'");
+			}
 			$dbinfo->query ("update user set password = '$passwd1', is_admin = $is_admin,
 realname = '$post_realname', birth_date = '$post_birth_date', shipping_street = '$post_street', shipping_city = '$post_city',
 shipping_state = '$post_state', shipping_zip = $post_zip, phone = '$post_phone', email = '$post_email', card_type = '$post_card_type',
@@ -505,8 +702,9 @@ else // User is not logged in, display new registration page or save registratio
 			else
 			{
 				$dbinfo->save_registration ($post_username);
+				$dbinfo->login_as ($post_username);
 				cout ("Registration successful.");
-				cout ("Would you like to ".href ("login.php", "login")."?");
+				cout ("Click to automatically login and continue to your ".href ("index.php", "home")."?");
 			}
 		}
 	}
