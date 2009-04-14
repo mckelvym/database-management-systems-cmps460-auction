@@ -235,7 +235,9 @@ body {
 table.tbl_std {	
     padding: 0px;
     margin: 0px auto;
-    border-collapse: collapse;	
+    border-collapse: collapse;
+    position: relative;
+    top: 30px;	
 }
 
 table.tbl_std a {
