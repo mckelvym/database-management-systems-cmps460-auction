@@ -465,9 +465,13 @@ AND	end_minute = $end_minute");
 					$i = sprintf ("%.2f", $i);
 					$options = $options.option ($i, "\$$i");
 				}
+				$url = "$current_script?";
+				foreach ($_GET as $var => $val)
+					$url = $url."$var=$val&";
+				$url = $url."mode=bid";
 				$curr_price_message = $t->tr ($t->td ("Current Price:").
 							      $t->td ("\$$current_price".
-								      form_begin ("$current_script?mode=bid", "post").
+								      form_begin ("$url", "post").
 								      select ("bid_amount", $options).
 								      hidden_input ("title", $title).
 								      hidden_input ("seller", $seller).
