@@ -305,7 +305,7 @@ else if ($mode == "save")
 		// Update the database
 		$dbinfo->query ("update user set picture = '$post_picture', description = '$post_description' where username = '$user_name'");
 
-		$dbinfo->save_activity ("You updated your registration information.");
+		$dbinfo->save_activity ("You updated your profile information.");
 		cout ("Update successful.");
 		echo href ("$current_script?mode=view&username=$user_name", "Click to refresh");
 	}
