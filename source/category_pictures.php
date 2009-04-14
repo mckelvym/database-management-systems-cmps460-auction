@@ -14,7 +14,7 @@ if (empty ($mode))
 	$options = "";
 	$options = $options.option ("Art", "Art");
 	$options = $options.option ("Books", "Books");
-	$options = $options.option ("Clothes", "Clothes");
+	$options = $options.option ("Clothing", "Clothing");
 	$options = $options.option ("Collectibles", "Collectibles");
 	$options = $options.option ("Electronics", "Electronics");
 	$options = $options.option ("Entertainment", "Entertainment");

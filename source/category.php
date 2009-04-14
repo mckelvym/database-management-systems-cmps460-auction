@@ -105,7 +105,7 @@ end_hour desc, end_minute desc";
 				while (list($title, $seller, $end_day, $end_hour,$end_min,
 					    $curr_price) = mysql_fetch_row($results_id))
 				{
-					echo $table->tr ($table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$view&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title)).
+					echo $table->tr ($table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$view&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", stripslashes ($title))).
 							 $table->td (href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller))).
 							 $table->td (format_time ($end_day,
 										  $end_hour, $end_minute)).

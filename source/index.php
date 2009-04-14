@@ -341,7 +341,7 @@ AND activity != 'Current Time'
 order by day desc, hour desc, minute desc");
 	while (list ($d, $h, $m, $a) = mysql_fetch_row ($result))
 	{
-		$output[$x] = pad_time ($d, $h, $m, 3).div (span (format_time ($d, $h, $m), "time")."$a", "useractivity");
+		$output[$x] = pad_time ($d, $h, $m, 3).div (span (format_time ($d, $h, $m), "time").stripslashes ($a), "useractivity");
 		$x++;
 	}
 	mysql_free_result ($result);
