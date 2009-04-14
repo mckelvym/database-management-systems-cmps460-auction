@@ -168,7 +168,7 @@ AND	end_minute = $m");
 	{
 		echo form_begin_n ("$current_script?mode=save", "post", "item_listing_form", "return validate_form (this)");
 		echo $table->tr ($table->td ("Title<br/>".href ("$current_script?mode=delete&title=$t&seller=$s&category=$c&end_day=$d&end_hour=$h&end_minute=$m", "Delete Auction")).
-				 $table->td (text_input_sr ("title", stripslashes ($t), 20, 50).
+				 $table->td (text_input_sr ("title", stripslashes (stripslashes ($t)), 20, 50).
 					     alert ("A required field, this is the title of the auction", "?")));
 		if ($dbinfo->is_admin () && $username != $s)
 			echo $table->tr ($table->td ("Seller").
@@ -180,7 +180,7 @@ AND	end_minute = $m");
 				 $table->td (text_input_sr ("category", $c, 20, 50).
 					     alert ("An auction can only belong to one category.", "?")));
 		echo $table->tr ($table->td ("Description").
-				 $table->td (text_input_s ("description", stripslashes ($description), 50, 250).
+				 $table->td (text_input_s ("description", stripslashes (stripslashes ($description)), 50, 250).
 					     alert ("Under no circumstances leave this blank. Be....descriptive", "?")));
 		echo $table->tr ($table->td ("Closing Time").
 				 $table->td (text_input_sr ("closing_time", format_time ($d, $h, $m), 20, 50).
@@ -604,8 +604,10 @@ $post_starting_price,
 			}
 			else
 			{
-				$dbinfo->save_activity ("Listed a new auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$username&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", $post_title)."\".");
+				$dbinfo->save_activity ("Listed a new auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$username&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", stripslashes ($post_title))."\".");
 				cout ("Auction listing successful.");
+				$post_title = stripslashes ($post_title);
+				$post_description = stripslashes ($post_description);
 				cout ("Would you like to ".href ("itemlisting.php?mode=view&title=$post_title&seller=$username&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", "view")." it?");
 			}
 		}
@@ -639,13 +641,15 @@ AND	category = '$post_category'
 AND	end_day = $post_end_day
 AND	end_hour = $post_end_hour
 AND	end_minute = $post_end_minute");
-			$dbinfo->save_activity ("Edited auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", $post_title)."\".");
+			$dbinfo->save_activity ("Edited auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", stripslashes ($post_title))."\".");
 			if ($dbinfo->is_admin () && $post_seller != $username)
 			{
 				$realname = href ("profile.php?mode=view&username=$username", $dbinfo->realname ());
-				$dbinfo->save_activity_for ($post_seller, "$realname edited your auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", $post_title)."\".");
+				$dbinfo->save_activity_for ($post_seller, "$realname edited your auction: \"".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", stripslashes ($post_title))."\".");
 			}
 			cout ("Auction update successful.");
+			$post_title = stripslashes ($post_title);
+			$post_description = stripslashes ($post_description);
 			cout ("Would you like to ".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", "view")." it?");
 		}
 }
