@@ -171,6 +171,7 @@ body {
     padding-top: 1em;
     #border: 1px dotted navy;
     min-height: 500px;
+    padding-bottom: 30px;
 }
 
 #content a {
@@ -329,6 +330,7 @@ table.user_database {
     padding: 0px;
     margin: 0px auto;
     border-collapse: collapse;	
+    min-width: 380px;
 }
 
 table.user_database a {
@@ -394,7 +396,7 @@ table.user_activity_database a:hover{
 
 thead.user_activity_database td{
     background-color: #000000;
-    color: #ffffff;
+    color: #ffffff;;
     border: 2px solid navy;
     padding-right: 0.2em;
     padding-left: 0.2em;
@@ -511,3 +513,5 @@ tbody.bidding_database img {
     max-width: 200px;
     border: 0px;
 }
+
+
