@@ -498,14 +498,14 @@ AND	end_minute = $end_minute");
 		else
 		{
 			echo "Errors were detected:<br/>";
-			echo ul (li ("Error: There must be no bids for the item listing."));
+			echo ul (li ("There must be no bids for the item listing."));
 			cout ("Back to the ".href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_minute", "item").".");
 		}
 	}
 	else
 	{
 		echo "Errors were detected:<br/>";
-		echo ul (li ("Error: Must be an administrator or be the seller for this auction."));
+		echo ul (li ("Must be an administrator or be the seller for this auction."));
 		cout ("Back to the ".href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_minute", "item").".");
 	}
 }
