@@ -247,12 +247,29 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 						 $table->td (local_img ($pict)));
 				echo $table->tr ($table->td ("Buyer").
 						 $table->td ($buyer));
-				echo $table->tr ($table->td ("Buyer Feedback Description").
-						 $table->td ($buy_fdbk_descr));
-				echo $table->tr ($table->td ("Buyer Feedback Rating").
-						 $table->td ($buy_fdbk_rate));
-				echo $table->tr ($table->td ("Seller Feedback Description").
-						 $table->td ($sell_fdbk_descr));
+				if ($buy_fdbk_rate != -1)
+				{
+					echo $table->tr ($table->td ("Buyer Feedback Description").
+							 $table->td ($buy_fdbk_descr));
+					echo $table->tr ($table->td ("Buyer Feedback Rating").
+							 $table->td ($buy_fdbk_rate));
+				}
+				else
+				{
+					echo $table->tr ($table->td ("Buyer Feedback Description").
+							 $table->td ("None."));
+				}
+
+				if (!empty ($sell_fdbk_descr))
+				{
+					echo $table->tr ($table->td ("Seller Feedback Description").
+							 $table->td ($sell_fdbk_descr));
+				}
+				else
+				{
+					echo $table->tr ($table->td ("Seller Feedback Description").
+							 $table->td ("None."));
+				}
 				echo $table->table_body_end ();
 
 				echo $table->table_end ();
