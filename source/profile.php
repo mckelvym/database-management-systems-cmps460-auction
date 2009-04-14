@@ -18,14 +18,18 @@ if ($mode == "") {
 	$user_name = $dbinfo->username();
 	
 }// Viewing someother's profile
-else if($mode == "view")
+else if($mode == "view"||$mode == "edit")
 {
 	$user_name = get("username");
 }
 if($mode == ""||$mode == "view" ){ 
 	
 	echo_div ("scriptstatus");
-	echo href ("$current_script?", "Edit Profile");
+	if($user_name!=$home_user)
+		echo href ("$current_script?", "View My Profile");
+	else
+		echo href ("$current_script?mode=edit&username=$user_name", "Edit Profile");
+	
 	end_div ();
 	?>
 	<table border="1" width="99%" cellpadding="10">
@@ -140,7 +144,7 @@ if($mode == ""||$mode == "view" ){
 else if ($mode == "browse")
 {
 	echo_div ("scriptstatus");
-	echo href ("$current_script?", "View Your Profile");
+	echo href ("$current_script?", "View My Profile");
 	end_div ();
 		$curr_user = $dbinfo->username ();
 		$result = $dbinfo->query ("select u.username,  realname,  day, hour, minute
@@ -181,8 +185,36 @@ ua.activity = 'Registered' order by username");
 		{
 			mysql_free_result ($result);
 			echo "Couldn't get user information.";
-			return;
+			
 		}
+}
+else if ($mode == "edit")
+{
+	
+	if($user_name!=$home_user){
+?>
+		<div style="text-align: center;">> Access Denied <</div>
+<?php
+		
+	}
+	else{ 
+		
+		$result = $dbinfo->query ("select username, description , picture from user where username = '$username'");
+		
+		$table = new table_common_t ();
+		$table->init ("tbl_std");
+	
+		echo $table->table_begin ();
+		echo $table->table_head_begin ();
+		if ($dbinfo->logged_in ())		
+			echo $table->tr ($table->td_span ("Update your iBay profile", "", 2));
+	
+		echo $table->tr_end ();
+		echo $table->table_head_end ();
+		echo $table->table_body_begin ();
+		if ($dbinfo->logged_in ())
+			echo form_begin ("$current_script?mode=save", "post");
+	}
 }
 
 echo_footer($dbinfo);
