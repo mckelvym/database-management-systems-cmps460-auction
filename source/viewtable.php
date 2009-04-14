@@ -55,7 +55,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 			{
 				// Start writing table to page
 				$table = new table_common_t ();
-				$table->init ("database");
+				$table->init ("user_database");
 
 				echo $table->table_begin ();
 				echo $table->table_head_begin ();
@@ -154,7 +154,6 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 					$table->td ($activity));
 			}
 			echo $table->table_body_end ();
-			echo $table->table_end ();
 		}
 		else if ($dbinfo->debug ())
 		{
@@ -294,6 +293,21 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		$results_id = mysql_query($query);
 		if($results_id)
 		{
+			$table = new table_common_t ();
+			$table->init ("bidding_database");
+
+			echo $table->table_begin ();
+			echo $table->table_head_begin ();
+			echo $table->tr ($table->td_span ("Bid Information", "", 8));
+			echo $table->tr ($table->td ("Bidder").
+					 $table->td ("Title / Category").
+					 $table->td ("Seller").
+					 $table->td ("End Time / Bid Time").
+					 $table->td ("Amount").
+					 $table->td ("Notify"));
+			echo $table->table_head_end ();
+			echo $table->table_body_begin ();
+
 			// Get each row of the result, assign a variable to each
 			// attribute in the row, and echo the data with labels
 			while (list($username, $title, $seller, $category, $end_day,
@@ -302,37 +316,21 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 			       = mysql_fetch_row($results_id))
 			{
 				// Start writing table to page
-				$table = new table_common_t ();
-				$table->init ("bidding_database");
-
-				echo $table->table_begin ();
-				echo $table->table_head_begin ();
-				echo $table->tr ($table->td_span ("Bid Information", "", 6));
-				echo $table->tr_end ();
-				echo $table->table_head_end ();
-
-				echo $table->table_body_begin ();
-				echo $table->tr ($table->td ("Username").
-						 $table->td (href ("profile.php?mode=view&username=$username", $username)));
-				echo $table->tr ($table->td ("Title").
-						 $table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title)));
-				echo $table->tr ($table->td ("Seller").
-						 $table->td (href ("profile.php?mode=view&username=$seller", $seller)));
-				echo $table->tr ($table->td ("Category").
-						 $table->td (href ("category.php?view=".str_replace (" ", "_", strtolower ($category)), $category)));
-				echo $table->tr ($table->td ("End Time").
-						 $table->td (format_time ($end_day, $end_hour, $end_min)));
-				echo $table->tr ($table->td ("Bid Time").
-						 $table->td (format_time ($bid_day, $bid_hour, $bid_min)));
-				echo $table->tr ($table->td ("Bid Amount").
-						 $table->td ("\$$bid_amt"));
-				echo $table->tr ($table->td ("Display Notification").
+				echo $table->tr ($table->td (href ("profile.php?mode=view&username=$username", $dbinfo->get_realname ($username))).
+						 $table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title).
+							     "<br/>(".
+							     href ("category.php?view=".str_replace (" ", "_", strtolower ($category)), $category).")").
+						 $table->td (href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller))).
+						 $table->td (format_time ($end_day, $end_hour, $end_min).
+							     "/<br/>".
+							     format_time ($bid_day, $bid_hour, $bid_min)).
+						 $table->td ("\$$bid_amt").
 						 $table->td ($disp_notif));
-				echo $table->table_body_end ();
-
-				echo $table->table_end ();
-				echo "<br><br>";
 			}
+			echo $table->table_body_end ();
+
+			echo $table->table_end ();
+			echo "<br><br>";
 		}
 		else if ($dbinfo->debug ())
 		{
