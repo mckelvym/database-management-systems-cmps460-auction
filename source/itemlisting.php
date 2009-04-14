@@ -148,6 +148,7 @@ AND	end_minute = $m");
 	}
 
 	// Start writing table to page
+	echo h3 ("Auction Management");
 	$table = new table_common_t ();
 	$table->init ("itemlisting");
 

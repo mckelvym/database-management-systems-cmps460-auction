@@ -27,6 +27,115 @@ body {
     #border: 1px dotted navy;
 }
 
+#navbar {
+    float: left;
+    position: relative;
+    margin: 0px;
+    padding-top: 0em;
+    padding-left: 10px;
+    text-align: left;
+    width: 140px;
+    font-size: 0.9em;
+    #border: 1px dotted navy;
+}
+
+#navbar ul {
+    position: relative;
+    margin: 0px;	
+    padding: 0px;
+    list-style: none;	
+}
+
+#navbar li {
+}
+
+#navbar li a {
+    position: relative;
+    color: #5A58F8;
+    font-family: Verdana;
+    font-variant: small-caps;
+    text-decoration: none;
+}
+
+#navbar li a:hover {
+    text-decoration: none;
+    color: #000000;
+}
+
+#content {
+    position: relative;
+    color: #000000;
+    font-family: serif;
+    font-variant: normal;
+    font-weight: normal;
+    text-decoration: none;
+    margin-left: 150px;
+    margin-right: 10px;
+    #border: 1px dotted navy;
+    min-height: 500px;
+    padding-bottom: 30px;
+    padding-top: 0px;
+    margin-top: 0em;
+}
+
+#content a {
+    font-family: sans-serif;
+    font-size: 1em;
+    font-variant: small-caps;	
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+#content a:hover {
+    text-decoration: none;
+    color: #000000;
+}
+
+#heading {
+    position: relative;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-right: 1em;
+    left: 0em;
+    font-family: sans-serif;
+    font-size: 1.4em;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+#heading2 {
+    position: relative;
+    margin-top: 1.5em;
+    margin-bottom: 0.2em;
+    margin-right: 1em;
+    left: 1em;
+    font-family: sans-serif;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #0000AA;	
+}
+
+#smalltext {
+    position: relative;
+    left: 0em;
+    font-family: serif;
+    font-size: 0.8em;
+    font-style: italic;
+    color: navy;
+    max-width: 30em;
+}
+
+#footer {
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 5em;
+    max-width: 20%;
+    font-size: 0.8em;
+    color: #0704C7;
+    background-color: #D4D4D4;	
+}
+
 #status {
     position: relative;
     margin: 0px;
@@ -124,113 +233,11 @@ body {
     text-decoration: none;
 }
 
-#navbar {
-    float: left;
-    position: relative;
-    margin: 0px;
-    padding-top: 1em;
-    padding-left: 10px;
-    text-align: left;
-    #border: 1px dotted navy;
-    width: 140px;
-    font-size: 0.9em;
-}
 
-#navbar ul {
-    position: relative;
-    margin: 0px;	
-    padding: 0px;
-    list-style: none;	
-}
 
-#navbar li {
-}
 
-#navbar li a {
-    position: relative;
-    color: #5A58F8;
-    font-family: Verdana;
-    font-variant: small-caps;
-    text-decoration: none;
-}
 
-#navbar li a:hover {
-    text-decoration: none;
-    color: #000000;
-}
 
-#content {
-    position: relative;
-    color: #000000;
-    font-family: serif;
-    font-variant: normal;
-    font-weight: normal;
-    text-decoration: none;
-    margin-left: 150px;
-    margin-right: 10px;
-    padding-top: 1em;
-    #border: 1px dotted navy;
-    min-height: 500px;
-    padding-bottom: 30px;
-}
-
-#content a {
-    font-family: sans-serif;
-    font-size: 1em;
-    font-variant: small-caps;	
-    color: #5A58F8;
-    text-decoration: none;
-}
-
-#content a:hover {
-    text-decoration: none;
-    color: #000000;
-}
-
-#heading {
-    position: relative;
-    margin-top: 2em;
-    margin-bottom: 1em;
-    margin-right: 1em;
-    left: 0em;
-    font-family: sans-serif;
-    font-size: 1.4em;
-    font-variant: small-caps;
-    font-weight: bold;
-}
-
-#heading2 {
-    position: relative;
-    margin-top: 1.5em;
-    margin-bottom: 0.2em;
-    margin-right: 1em;
-    left: 1em;
-    font-family: sans-serif;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #0000AA;	
-}
-
-#smalltext {
-    position: relative;
-    left: 0em;
-    font-family: serif;
-    font-size: 0.8em;
-    font-style: italic;
-    color: navy;
-    max-width: 30em;
-}
-
-#footer {
-    position: relative;
-    margin: 0 auto;
-    text-align: center;
-    margin-top: 5em;
-    max-width: 20%;
-    font-size: 0.8em;
-    color: #0704C7;
-    background-color: #D4D4D4;	
-}
 
 table.tbl_std {	
     padding: 0px;

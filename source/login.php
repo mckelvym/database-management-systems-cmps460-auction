@@ -15,6 +15,7 @@ if (empty ($mode))
 	$msg = get ("message");
 	if (!empty ($msg))
 		cout ($msg);
+	echo h3 ("Login");
 	$table = new table_common_t ();
 	$table->init ("tbl_std");
 	echo $table->table_begin ();

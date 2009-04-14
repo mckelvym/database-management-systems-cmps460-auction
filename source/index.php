@@ -348,8 +348,7 @@ order by day desc, hour desc, minute desc");
 
 
 	// Actual output of all notifications
-	cout ("Welcome to your home page.");
-	cout ("");
+	echo h3 ("Welcome to your home page.");
 	cout ("Activity and notifications:");
 	rsort ($output);
 	for ($i = 0; $i < count ($output); $i++)

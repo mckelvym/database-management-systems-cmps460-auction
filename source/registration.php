@@ -252,6 +252,7 @@ function registration_form ($user = "")
 	}
 
 	// Start writing table to page
+	echo h3 ("Accounts and Registration");
 	$table = new table_common_t ();
 	$table->init ("tbl_std");
 
@@ -623,6 +624,7 @@ card_number = $post_card_number, card_expire = '$post_card_expire' where usernam
 		echo_div ("scriptstatus");
 		echo href ("$current_script?mode=view", "View Your Account");
 		end_div ();
+		echo h3 ("All Accounts");
 
 		$curr_user = $dbinfo->username ();
 		$result = $dbinfo->query ("select u.username, is_admin, realname, email, day, hour, minute

@@ -13,10 +13,10 @@ if ($dbinfo->logged_in ())
 {
 	if (empty ($view))
 	{
-		echo h3 ("All Categories");
 		echo_div ("scriptstatus");
 		echo href (" itemlisting.php?mode=new", "Create a New Item Listing");
 		end_div ();
+		echo h3 ("All Categories");
 
 		cout ("Select a category:");
 		$options = "";
@@ -37,18 +37,18 @@ if ($dbinfo->logged_in ())
 	else
 	{
 
-		echo h3 ("$view");
 		echo_div ("scriptstatus");
-		echo href ("category.php?view=$view&sortby=time_remaining", "Sort by Time Remaining");
-		echo " | ";
-		echo href ("category.php?view=$view&sortby=title", "Sort by Title");
-		echo " | ";
-		echo href ("category.php?view=$view&sortby=seller", "Sort by Seller");
-		echo " | ";
-		echo href ("category.php?view=$view&sortby=current_bid", "Sort by Current Bid (Lowest Bid at Top)");
-		echo " | ";
 		echo href ("itemlisting.php?mode=new", "Create a New Item Listing");
+		echo "<br/>Sort by: ";
+		echo href ("category.php?view=$view&sortby=time_remaining", "Time Remaining");
+		echo " | ";
+		echo href ("category.php?view=$view&sortby=title", "Title");
+		echo " | ";
+		echo href ("category.php?view=$view&sortby=seller", "Seller");
+		echo " | ";
+		echo href ("category.php?view=$view&sortby=current_bid", "Current Bid (Lowest at Top)");
 		end_div ();
+		echo h3 ("$view");
 
 		$day = $dbinfo->day ();
 		$hour = $dbinfo->hour ();
