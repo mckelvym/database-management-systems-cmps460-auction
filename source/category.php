@@ -34,7 +34,6 @@ if ($dbinfo->logged_in ())
 		echo submit_input ("Select");
 
 	}
-	
 	else
 	{
 
@@ -51,101 +50,85 @@ if ($dbinfo->logged_in ())
 		echo href ("itemlisting.php?mode=new", "Create a New Item Listing");
 		end_div ();
 
-	    if ($sortby == "time_remaining")
-	    {
-		    $query = "select title, seller, end_day, end_hour, end_minute,
-                     current_price from item_listing where category =
-                     '$view' AND end_day >= '$day' AND end_hour >=
-                     '$hour' AND end_minute > '$minute' order by end_day
-                     desc, end_hour desc, end_minute desc";
-	    }
+		$day = $dbinfo->day ();
+		$hour = $dbinfo->hour ();
+		$minute = $dbinfo->minute ();
+		$query = "select title, seller, end_day, end_hour, end_minute, current_price from item_listing
+where	category = '$view'
+AND	((end_day > $day)
+	OR (end_day = $day AND end_hour > $hour)
+	OR (end_day = $day AND end_hour = $hour AND end_minute >= $minute))";
 
-	    else if ($sortby == "title")
-	    {
-		    $query = "select title, seller, end_day, end_hour, end_minute,
-                     current_price from item_listing where category =
-                     '$view' AND end_day >= '$day' AND end_hour >=
-                     '$hour' AND end_minute > '$minute' order by title";
-	    }
+		if ($sortby == "title")
+		{
+			$query = $query." order by title";
+		}
+		else if ($sortby == "seller")
+		{
+			$query = $query." order by seller";
+		}
 
-	    else if ($sortby == "seller")
-	    {
-		    $query = "select title, seller, end_day, end_hour, end_minute,
-                     current_price from item_listing where category =
-                     '$view' AND end_day >= '$day' AND end_hour >=
-                     '$hour' AND end_minute > '$minute' order by seller";
-	    }
+		else if ($sortby == "current_bid")
+		{
+			$query = $query." order by current_price";
+		}
+		else // ($sortby == "time_remaining")
+		{
+			$query = $query." order by end_day desc,
+end_hour desc, end_minute desc";
+		}
 
-	    else if ($sortby == "current_bid")
-	    {
-		    $query = "select title, seller, end_day, end_hour, end_minute,
-                     current_price from item_listing where category =
-                     '$view' AND end_day >= '$day' AND end_hour >=
-                     '$hour' AND end_minute > '$minute' order by
-                     current_price";
-	    }
+		// Run the query
+		$results_id = mysql_query($query);
+		if($results_id)
+		{
+			if (mysql_num_rows($results_id) == 0)
+			{
+				echo "No data.";
+			}
+			else
+			{
+				$table = new table_common_t ();
+				$table->init ("category_listing");
 
-	    else
-	    {
-		    $query = "select title, seller, end_day, end_hour, end_minute,
-                     current_price from item_listing where category =
-                     '$view' AND end_day >= '$day' AND end_hour >=
-                     '$hour' AND end_minute > '$minute'";
+				echo $table->table_begin ();
+				echo $table->table_head_begin ();
+				echo $table->tr ($table->td_span ("Auctions available for bid in \"$view\"", "", 6));
+				echo $table->tr ($table->td ("Title").
+						 $table->td ("Seller").
+						 $table->td ("Closing Time").
+						 $table->td ("Current Price"));
+				echo $table->tr_end ();
+				echo $table->table_head_end ();
 
-	    }
-
-	
-	    // Run the query
-	    $results_id = mysql_query($query);
-	    if($results_id)
-	    {
-		    if (mysql_num_rows($results_id) == 0)
-		    {
-			    echo "No data.";
-		    }
-		    else
-		    {
-                $table = new table_common_t ();
-                $table->init ("tbl_std");
-
-                echo $table->table_begin ();
-                echo $table->table_head_begin ();
-                echo $table->tr ($table->td_span ("Available for Bid", "", 6));
-                echo $table->tr ($table->td ("Title").
-			         $table->td ("Seller").
-			         $table->td ("Time").
-			         $table->td ("Current Price"));
-                echo $table->tr_end ();
-                echo $table->table_head_end ();
-                
-                echo $table->table_body_begin ();
-                while (list($title, $seller, $end_day, $end_hour,$end_min,
-		            $curr_price) = mysql_fetch_row($results_id))
-			    {
-                    echo $table->tr ($table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$view&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title)).
-				     $table->td (href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller))).
-		                             $table->td (format_time ($end_day,
-		                                         $end_hour, $end_minute)).
+				echo $table->table_body_begin ();
+				while (list($title, $seller, $end_day, $end_hour,$end_min,
+					    $curr_price) = mysql_fetch_row($results_id))
+				{
+					echo $table->tr ($table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$view&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title)).
+							 $table->td (href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller))).
+							 $table->td (format_time ($end_day,
+										  $end_hour, $end_minute)).
 					                 $table->td ("\$$curr_price"));
-				        
-				}	
-				echo $table->table_body_end ();
-				
-	            echo $table->table_end ();
-	            echo "<br><br>";
 
-		      }
-    	}
-    	
-	    else if ($dbinfo->debug ())
-	    {
-		    // Display the query and the MySQL error message
-		    print "<br><br>QUERY FAILED !!! <br><br>QUERY = $query <br>
+				}
+				echo $table->table_body_end ();
+
+				echo $table->table_end ();
+				echo "<br><br>";
+
+			}
+		}
+
+		else if ($dbinfo->debug ())
+		{
+			// Display the query and the MySQL error message
+			print "<br><br>QUERY FAILED !!! <br><br>QUERY = $query <br>
                     <br>ERROR = ";
-		    die (mysql_error());
-	    }
+			die (mysql_error());
+		}
 	}
-	
+
 
 }
 
