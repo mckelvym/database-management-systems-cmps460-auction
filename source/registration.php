@@ -61,7 +61,7 @@ function registration_form ($user = "")
 	else
 		echo $table->tr ($table->td_span ("Update your iBay account", "", 2));
 
-	echo $table->tr_end ();
+/* 	echo $table->tr_end (); */
 	echo $table->table_head_end ();
 	echo $table->table_body_begin ();
 
@@ -199,7 +199,7 @@ function registration_form ($user = "")
 	{
 		$options = "";
 		$options = $options.option ("default_profile.jpg", "Default", $picture);
-		for ($i = 1; $i <= 6; $i++)
+		for ($i = 1; $i <= 7; $i++)
 		{
 			$options = $options.option ("profile$i.jpg", "Picture $i", $picture);
 		}

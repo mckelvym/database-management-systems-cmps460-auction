@@ -9,7 +9,7 @@ cout ("The following are the available profile pictures:");
 cout (local_img ("default_profile.jpg"));
 cout ("default_profile.jpg");
 cout ("");
-for ($i = 1; $i <= 6; $i++)
+for ($i = 1; $i <= 7; $i++)
 {
 	cout (local_img ("profile$i.jpg"));
 	cout ("profile$i.jpg");
