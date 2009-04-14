@@ -154,10 +154,10 @@ order by bid_amount desc");
 }
 else if ($mode == "browse")
 {
+	echo h3 ("All Profiles");
 	echo_div ("scriptstatus");
 	echo href ("$current_script?", "View My Profile");
 	end_div ();
-	echo h3 ("All Profiles");
 
 	$curr_user = $dbinfo->username ();
 	$result = $dbinfo->query ("select u.username,  realname,  day, hour, minute
