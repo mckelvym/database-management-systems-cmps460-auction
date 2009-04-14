@@ -356,5 +356,9 @@ function escape ($val)
 	return mysql_real_escape_string ($val);
 }
 
+function alert ($msg, $linktext)
+{
+	return "<a href=\"javascript:alert ('$msg')\">$linktext</a>";
+}
 
 ?>
