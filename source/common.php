@@ -230,6 +230,16 @@ function h1 ($text)
 	return "<h1>$text</h1>\n";
 }
 
+function h2 ($text)
+{
+	return "<h2>$text</h2>\n";
+}
+
+function h3 ($text)
+{
+	return "<h3>$text</h3>\n";
+}
+
 // an echo with a <br/> at the end
 function cout ($str)
 {
@@ -345,5 +355,6 @@ function escape ($val)
 {
 	return mysql_real_escape_string ($val);
 }
+
 
 ?>
