@@ -8,6 +8,7 @@ $mode = get ("mode");
 
 if (empty ($mode))
 {
+	cout ("Listing of avialable pictures.");
 	cout ("Pick a category:");
 
 	$options = "";
