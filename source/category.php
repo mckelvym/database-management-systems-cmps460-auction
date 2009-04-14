@@ -15,7 +15,7 @@ if ($dbinfo->logged_in ())
 	{
 		echo h3 ("All Categories");
 		echo_div ("scriptstatus");
-		echo href (" itemlisting.php?mode=create", "Create a New Item Listing");
+		echo href (" itemlisting.php?mode=new", "Create a New Item Listing");
 		end_div ();
 
 		cout ("Select a category:");
