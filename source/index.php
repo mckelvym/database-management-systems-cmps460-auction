@@ -364,7 +364,7 @@ else
 	echo <<<HEREDOC
 Welcome to CMPS460 Group I's eBay-ish website "iBay"! You will need to $loginlink or $reglink to proceed further.
 HEREDOC;
-	echo_div("divname");
+	echo_div("home-img");
 	echo local_img("gavel.jpg");
 	end_div();
 }
