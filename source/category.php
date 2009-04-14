@@ -13,6 +13,9 @@ if ($dbinfo->logged_in ())
 {
 	if (empty ($view))
 	{
+		print '<font size="5" color="blue">';
+		print "All Categories</font><br><br>";
+
 		cout ("Select a category:");
 		$options = "";
 		$options = $options.option ("Art", "Art");
@@ -27,158 +30,29 @@ if ($dbinfo->logged_in ())
 		echo form_begin ("$current_script?", "get");
 		echo select ("view", $options);
 		echo submit_input ("Select");
-		
-		print '<font size="5" color="blue">';
-		print "All Categories</font><br><br>";
+
 	}
-
-	if ($view == "Art")
-	{
-		print '<font size="5" color="blue">';
-		print "Art</font><br><br>";
-
-		echo "<a href=category.php?view=art&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=art&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=art&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=art&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Art";
-	}
-	else if ($view == "Books")
-	{
-		print '<font size="5" color="blue">';
-		print "Books</font><br><br>";
-
-		echo "<a href=category.php?view=books&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=books&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=books&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=books&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Books";
-	}
-	else if ($view == "Clothing")
-	{
-		print '<font size="5" color="blue">';
-		print "Clothing</font><br><br>";
-
-		echo "<a href=category.php?view=clothing&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=clothing&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=clothing&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=clothing&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Clothing";
-	}
-	else if ($view == "Collectibles")
-	{
-		print '<font size="5" color="blue">';
-		print "Collectibles</font><br><br>";
-
-		echo "<a href=category.php?view=collectibles&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=collectibles&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=collectibles&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=collectibles&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Collectibles";
-	}
-	else if ($view == "Electronics")
-	{
-		print '<font size="5" color="blue">';
-		print "Electronics</font><br><br>";
-
-		echo "<a href=category.php?view=electronics&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=electronics&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=electronics&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=electronics&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Electronics";
-	}
-	else if ($view == "Entertainment")
-	{
-		print '<font size="5" color="blue">';
-		print "Entertainment</font><br><br>";
-
-		echo "<a href=category.php?view=entertainment&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=entertainment&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=entertainment&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=entertainment&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Entertainment";
-	}
-	else if ($view == "Jewelry")
-	{
-		print '<font size="5" color="blue">';
-		print "Jewelry</font><br><br>";
-
-		echo "<a href=category.php?view=jewelry&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=jewelry&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=jewelry&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=jewelry&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Jewelry";
-	}
-	else if ($view == "Sporting Goods")
-	{
-		print '<font size="5" color="blue">';
-		print "Sporting Goods</font><br><br>";
-
-		echo "<a href=category.php?view=sporting_goods&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=sporting_goods&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=sporting_goods&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=sporting_goods&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Sporting Goods";
-	}
-	else if ($view == "Toys")
-	{
-		print '<font size="5" color="blue">';
-		print "Toys</font><br><br>";
-
-		echo "<a href=category.php?view=toys&sortby=time_remaining>
-		        Sort by Time Remaining</a> |
-		      <a href=category.php?view=toys&sortby=title>
-		        Sort by Title</a> |
-		      <a href=category.php?view=toys&sortby=seller>
-		        Sort by Seller</a> |
-		      <a href=category.php?view=toys&sortby=current_bid>
-		        Sort by Current Bid (Lowest Bid at Top)</a><br>";
-		$category = "Toys";
-	}
-
-
-	// Select the database
 	
-	if (!empty($view))
+	else
 	{
+		print '<font size="5" color="blue">';
+		print "$view</font><br><br>";
+
+		echo "<a href=category.php?view=$view&sortby=time_remaining>
+		        Sort by Time Remaining</a> |
+		      <a href=category.php?view=$view&sortby=title>
+		        Sort by Title</a> |
+		      <a href=category.php?view=$view&sortby=seller>
+		        Sort by Seller</a> |
+		      <a href=category.php?view=$view&sortby=current_bid>
+		        Sort by Current Bid (Lowest Bid at Top)</a><br>";	
+	
 
 	    if ($sortby == "time_remaining")
 	    {
 		    $query = "select title, seller, end_day, end_hour, end_minute,
                      current_price from item_listing where category =
-                     '$category' AND end_day >= '$day' AND end_hour >=
+                     '$view' AND end_day >= '$day' AND end_hour >=
                      '$hour' AND end_minute > '$minute' order by end_day
                      desc, end_hour desc, end_minute desc";
 	    }
@@ -187,7 +61,7 @@ if ($dbinfo->logged_in ())
 	    {
 		    $query = "select title, seller, end_day, end_hour, end_minute,
                      current_price from item_listing where category =
-                     '$category' AND end_day >= '$day' AND end_hour >=
+                     '$view' AND end_day >= '$day' AND end_hour >=
                      '$hour' AND end_minute > '$minute' order by title";
 	    }
 
@@ -195,7 +69,7 @@ if ($dbinfo->logged_in ())
 	    {
 		    $query = "select title, seller, end_day, end_hour, end_minute,
                      current_price from item_listing where category =
-                     '$category' AND end_day >= '$day' AND end_hour >=
+                     '$view' AND end_day >= '$day' AND end_hour >=
                      '$hour' AND end_minute > '$minute' order by seller";
 	    }
 
@@ -203,7 +77,7 @@ if ($dbinfo->logged_in ())
 	    {
 		    $query = "select title, seller, end_day, end_hour, end_minute,
                      current_price from item_listing where category =
-                     '$category' AND end_day >= '$day' AND end_hour >=
+                     '$view' AND end_day >= '$day' AND end_hour >=
                      '$hour' AND end_minute > '$minute' order by
                      current_price";
 	    }
@@ -212,7 +86,7 @@ if ($dbinfo->logged_in ())
 	    {
 		    $query = "select title, seller, end_day, end_hour, end_minute,
                      current_price from item_listing where category =
-                     '$category' AND end_day >= '$day' AND end_hour >=
+                     '$view' AND end_day >= '$day' AND end_hour >=
                      '$hour' AND end_minute > '$minute'";
 
 	    }
