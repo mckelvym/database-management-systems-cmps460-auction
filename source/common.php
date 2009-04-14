@@ -11,6 +11,19 @@ function echo_header ($dbinfo)
 	if (!$dbinfo->connect ())
 		die ("Couldn't connect to database.");
 	$dbinfo->update_all ();
+	$site_time = post ("site_time");
+	if (!empty ($site_time))
+	{
+		$post_site_time = post ("site_time");
+		$post_curr_day = strtok ($post_site_time, " ");
+		$post_curr_hour = strtok (" ");
+		$post_curr_minute = strtok (" ");
+		$user = $dbinfo->username ();
+		$formatted_time = format_time ($post_curr_day, $post_curr_hour, $post_curr_minute);
+		$dbinfo->query ("insert into user_activity values (
+'$user', $post_curr_day, $post_curr_hour, $post_curr_minute, 'Updated website time to $formatted_time')");
+		$dbinfo->update_all ();
+	}
 
 	echo <<<HEREDOC
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -50,9 +63,23 @@ HEREDOC;
 		cout ("Welcome! $loginlink or $reglink");
 	}
 	echo ("Day: $day, Time: $hour:$minute");
-	if ($dbinfo->is_admin ())
+	if ($dbinfo->is_admin () && current_script () == "index.php")
 	{
-		echo "<br/>[Box to increase the time]";
+		$curr_day = $dbinfo->day ();
+		$curr_hour = $dbinfo->hour ();
+		$options = "";
+		for ($i = $curr_day; $i <= $curr_day + 7; $i++)
+		{
+			for ($j = ($i == $curr_day)? $curr_hour + 1 : 0; $j < 24; $j++)
+			{
+				$options = $options.option ("$i $j 0", format_time ($i, $j, 0));
+			}
+		}
+		echo form_begin ("$current_script", "post");
+		echo select ("site_time", $options);
+		echo submit_input ("Do it").alert ("This box allows you to advance the website time.", "?");
+		echo form_end ();
+//		echo "<br/>[Box to increase the time]";
 	}
 	end_div ();
 
