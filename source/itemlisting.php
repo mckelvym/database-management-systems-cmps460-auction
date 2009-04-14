@@ -3,6 +3,92 @@ include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
+
+echo <<<HEREDOC
+<script type="text/javascript">
+function reset_inputs (thisform)
+{
+	// reset inputs
+	// http://webcheatsheet.com/javascript/form_validation.php
+	for each (elem in thisform.elements)
+	{
+		if (elem.type == "text" || elem.type == "select-one")
+		{
+			elem.style.background = '';
+		}
+	}
+}
+
+function validate_required (field)
+{
+	// http://www.w3schools.com/jS/js_form_validation.asp
+	// http://webcheatsheet.com/javascript/form_validation.php
+	with (field)
+	{
+		if (value == null || value == "" || value == "-")
+		{
+			field.style.background = 'Yellow';
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+}
+
+function field_set (fieldvar, field)
+{
+	if (fieldvar == null)
+		return field;
+	else
+		return fieldvar;
+}
+
+function append_with_newline (orig, append_text)
+{
+	if (orig != null)
+		return orig + '\\n' + append_text;
+	return append_text;
+}
+
+function validate_form (thisform)
+{
+	var field_of_focus;
+	var alert_message;
+
+	reset_inputs (thisform);
+
+	with (thisform)
+	{
+		if (validate_required (title) == false)
+		{
+			field_of_focus = field_set (field_of_focus, title);
+			alert_message = append_with_newline (alert_message, "Auction title required.");
+		}
+		if (validate_required (description) == false)
+		{
+			field_of_focus = field_set (field_of_focus, description);
+			alert_message = append_with_newline (alert_message, "Auction description required.");
+		}
+
+		if (alert_message != null)
+		{
+			alert (alert_message);
+			field_of_focus.focus();
+			return false;
+		}
+	}
+}
+
+/* onload = function() */
+/* { */
+/* } */
+
+</script>
+HEREDOC;
+
+
 $mode = get ("mode");
 $current_script = current_script ();
 $username = $dbinfo->username ();
@@ -79,36 +165,44 @@ AND	end_minute = $m");
 	// Different modes depending on if editing or making new
 	if ($mode == "edit")
 	{
-		echo form_begin ("$current_script?mode=save", "post");
+		echo form_begin_n ("$current_script?mode=save", "post", "item_listing_form", "return validate_form (this)");
 		echo $table->tr ($table->td ("Title<br/>".href ("$current_script?mode=delete&title=$t&seller=$s&category=$c&end_day=$d&end_hour=$h&end_minute=$m", "Delete Auction")).
-				 $table->td (text_input_sr ("title", $t, 20, 50)));
+				 $table->td (text_input_sr ("title", stripslashes ($t), 20, 50).
+					     alert ("A required field, this is the title of the auction", "?")));
 		if ($dbinfo->is_admin () && $username != $s)
 			echo $table->tr ($table->td ("Seller").
-					 $table->td (text_input_sr ("seller", $s, 20, 50)));
+					 $table->td (text_input_sr ("seller", $s, 20, 50).
+						     alert ("The person who initiated the auction.", "?")));
 		else
 			echo hidden_input ("seller", $s);
 		echo $table->tr ($table->td ("Category").
-				 $table->td (text_input_sr ("category", $c, 20, 50)));
+				 $table->td (text_input_sr ("category", $c, 20, 50).
+					     alert ("An auction can only belong to one category.", "?")));
+		echo $table->tr ($table->td ("Description").
+				 $table->td (text_input_s ("description", stripslashes ($description), 50, 250).
+					     alert ("Under no circumstances leave this blank. Be....descriptive", "?")));
 		echo $table->tr ($table->td ("Closing Time").
 				 $table->td (text_input_sr ("closing_time", format_time ($d, $h, $m), 20, 50).
+					     alert ("Up to 10 days in advance. When do you want the fun to end?", "?").
 					     hidden_input ("end_day", $d).
 					     hidden_input ("end_hour", $h).
 					     hidden_input ("end_minute", $m)));
-		echo $table->tr ($table->td ("Description").
-				 $table->td (text_input_s ("description", $description, 50, 250)));
 		$options = "";
 		$options = $options.option ("FedEx", "FedEx", $shipping_method);
 		$options = $options.option ("UPS", "UPS", $shipping_method);
 		$options = $options.option ("Air", "Air", $shipping_method);
 		echo $table->tr ($table->td ("Shipping Method").
-				 $table->td (select ("shipping_method", $options)));
+				 $table->td (select ("shipping_method", $options).
+					     alert ("Sorry, we no longer ship via horse and carriage.", "?")));
 		$options = "";
 		for ($i = 1; $i <= 100; $i++)
 			$options = $options.option ($i, "\$$i.00", $shipping_cost);
 		echo $table->tr ($table->td ("Shipping Cost").
-				 $table->td (select ("shipping_cost", $options)));
+				 $table->td (select ("shipping_cost", $options).
+					     alert ("Your best estimate please.", "?")));
 		echo $table->tr ($table->td ("Starting Price").
-				 $table->td ("\$".text_input_sr ("starting_price", $starting_price, 10, 10)));
+				 $table->td ("\$".text_input_sr ("starting_price", $starting_price, 10, 10).
+					     alert ("Be competitive.", "?")));
 		$options = "";
 		for ($i = 1; $i <= 3; $i++)
 		{
@@ -122,9 +216,10 @@ AND	end_minute = $m");
 	}
 	else
 	{
-		echo form_begin ("$current_script?mode=savenew", "post");
+		echo form_begin_n ("$current_script?mode=savenew", "post", "item_listing_form", "return validate_form (this)");
 		echo $table->tr ($table->td ("Title").
-				 $table->td (text_input_s ("title", $t, 20, 50)));
+				 $table->td (text_input_s ("title", $t, 20, 50).
+					     alert ("A required field, this is the title of the auction", "?")));
 		$options = "";
 		$options = $options.option ("Art", "Art");
 		$options = $options.option ("Books", "Books");
@@ -136,9 +231,11 @@ AND	end_minute = $m");
 		$options = $options.option ("Sporting Goods", "Sporting Goods");
 		$options = $options.option ("Toys", "Toys");
 		echo $table->tr ($table->td ("Category").
-				 $table->td (select ("category", $options)));
+				 $table->td (select ("category", $options).
+					     alert ("An auction can only belong to one category.", "?")));
 		echo $table->tr ($table->td ("Description").
-				 $table->td (text_input_s ("description", "", 50, 250)));
+				 $table->td (text_input_s ("description", "", 50, 250).
+					     alert ("Under no circumstances leave this blank. Be....descriptive", "?")));
 		$options = "";
 		for ($i = $curr_day; $i <= $curr_day + 7; $i++)
 		{
@@ -148,18 +245,21 @@ AND	end_minute = $m");
 			}
 		}
 		echo $table->tr ($table->td ("Closing Time").
-				 $table->td (select ("closing_time", $options)));
+				 $table->td (select ("closing_time", $options).
+					     alert ("Up to 10 days in advance. When do you want the fun to end?", "?")));
 		$options = "";
 		$options = $options.option ("FedEx", "FedEx");
 		$options = $options.option ("UPS", "UPS");
 		$options = $options.option ("Air", "Air");
 		echo $table->tr ($table->td ("Shipping Method").
-				 $table->td (select ("shipping_method", $options)));
+				 $table->td (select ("shipping_method", $options).
+					     alert ("Sorry, we no longer ship via horse and carriage.", "?")));
 		$options = "";
 		for ($i = 1; $i <= 100; $i++)
 			$options = $options.option ($i, "\$$i.00");
 		echo $table->tr ($table->td ("Shipping Cost").
-				 $table->td (select ("shipping_cost", $options)));
+				 $table->td (select ("shipping_cost", $options).
+					     alert ("Your best estimate please.", "?")));
 		$options = "";
 		for ($i = 1; $i <= 350; $i++)
 		{
@@ -167,7 +267,8 @@ AND	end_minute = $m");
 			$options = $options.option ("$i.50", "\$$i.50");
 		}
 		echo $table->tr ($table->td ("Starting Price").
-				 $table->td (select ("starting_price", $options)));
+				 $table->td (select ("starting_price", $options).
+					     alert ("Be competitive.", "?")));
 
 		$options = "";
 		for ($i = 1; $i <= 3; $i++)
@@ -395,7 +496,7 @@ AND	end_minute = $end_minute");
 		}
 
 		echo $t->table_begin ().$t->table_head_begin ().
-			$t->tr ($t->td_span ("Auction Listing: \"$title\"", "", 2)).
+			$t->tr ($t->td_span ("Auction Listing: \"".stripslashes ($title)."\"", "", 2)).
 			$t->table_head_end ().$t->table_body_begin ().
 			$t->tr ($t->td_span (local_img ($picture), "", 2, "center")).
 			$t->tr ($t->td ("Start price:").
@@ -406,7 +507,7 @@ AND	end_minute = $end_minute");
 			$t->tr ($t->td ("Number of bids:").
 				$t->td ("$num_bids")).
 			$t->tr ($t->td ("Description:").
-				$t->td ($description)).
+				$t->td (stripslashes ($description))).
 			$t->tr ($t->td ("Sold by:").
 				$t->td ("$seller_realname<br/>(Registered since $seller_registration)")).
 			$t->tr ($t->td ("Sold in:").
@@ -519,6 +620,9 @@ else if ($mode == "save")
 			$post_end_minute = post ("end_minute");
 			$post_picture = str_replace (" ", "_", strtolower ($post_category.$post_picture));
 			// update item in the database
+			$post_title = escape ($post_title);
+			$post_description = escape ($post_description);
+
 			$dbinfo->query ("update item_listing set
 description = '$post_description',
 shipping_cost = $post_shipping_cost,
