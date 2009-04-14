@@ -158,12 +158,15 @@ else if ($mode == "browse")
 	echo href ("$current_script?", "View My Profile");
 	end_div ();
 	echo h3 ("All Profiles");
+
 	$curr_user = $dbinfo->username ();
 	$result = $dbinfo->query ("select u.username,  realname,  day, hour, minute
 from user u, user_activity ua
-where u.username = ua.username AND
-u.username != '$curr_user' AND
-ua.activity = 'Registered' order by username");
+where 	u.username = ua.username
+AND 	u.username != '$curr_user'
+AND	ua.activity = 'Registered'
+order by username");
+
 	if ($result)
 	{
 		$table = new table_common_t ();
@@ -177,12 +180,14 @@ ua.activity = 'Registered' order by username");
 				 $table->td ("Profile"));
 		echo $table->table_head_end ();
 		echo $table->table_body_begin ();
-		while (list($username,  $name,  $day, $hour, $min) = mysql_fetch_row ($result))
+		while (list($username,  $name,  $day, $hour, $min)
+		       = mysql_fetch_row ($result))
 		{
 			echo $table->tr ($table->td ($username).
 					 $table->td ($name).
 					 $table->td (format_time ($day, $hour, $min)).
-					 $table->td (href ("profile.php?mode=view&username=$username", "Show Profile")));
+					 $table->td (href ("profile.php?mode=view&username=$username",
+							   "Show Profile")));
 		}
 		echo $table->table_body_end ();
 		echo $table->table_end ();
@@ -197,21 +202,18 @@ ua.activity = 'Registered' order by username");
 	{
 		mysql_free_result ($result);
 		echo "Couldn't get user information.";
-
 	}
 }
 else if ($mode == "edit")
 {
 	//If mode is edit, user is allowed to change his picture and profile description.
-	if($user_name!=$home_user){
+	if($user_name != $home_user)
+	{
 		//If the user tries to edit the profile of other users, deny access.
-		?>
-		<div style="text-align: center;">> Access Denied <</div>
-			<?php
-
-			}
-	else{
-
+		cout ("Access Denied!");
+	}
+	else
+	{
 		if ($dbinfo->logged_in ())
 			echo form_begin ("$current_script?mode=save", "post");
 
@@ -219,10 +221,9 @@ else if ($mode == "edit")
 		$result = $dbinfo->query ("select username, description , picture from user where username = '$user_name'");
 		if ($result)
 		{
-			list($username, $description ,$picture) = mysql_fetch_row ($result);
-
+			list($username, $description ,$picture)
+				= mysql_fetch_row ($result);
 		}
-
 
 		$table = new table_common_t ();
 		$table->init ("tbl_std");
@@ -231,7 +232,6 @@ else if ($mode == "edit")
 		echo $table->table_head_begin ();
 		if ($dbinfo->logged_in ())
 			echo $table->tr ($table->td_span ("Update your iBay profile", "", 2));
-
 		echo $table->tr_end ();
 		echo $table->table_head_end ();
 		echo $table->table_body_begin ();
@@ -239,7 +239,7 @@ else if ($mode == "edit")
 			echo form_begin ("$current_script?mode=save", "post");
 		$options = "";
 		//Checking if the user has default picture, display default picture details.
-		if($picture=="default_profile.jpg") // Users has default picture
+		if( $picture == "default_profile.jpg") // Users has default picture
 		{
 			$options = $options.option ("default_profile.jpg", "Default", $usrpicture);
 			for ($i = 1; $i <= 7; $i++)
@@ -287,7 +287,6 @@ else if ($mode == "edit")
 		echo form_end ();
 		echo $table->table_body_end ();
 		echo $table->table_end ();
-
 	}
 }
 else if ($mode == "save")
