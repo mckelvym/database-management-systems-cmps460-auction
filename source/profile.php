@@ -85,6 +85,7 @@ if ($mode == "" || $mode == "view" )
 	}
 	if(mysql_num_rows($result_seller) != 0)
 	{
+		cout ("");
 		cout ("Feedback for items sold:");
 		while (list ($buyer, $seller,
 			     $buyerfeedbackforseller_rating,
@@ -101,6 +102,7 @@ if ($mode == "" || $mode == "view" )
 	}
 	if(mysql_num_rows($result_buyer) != 0)
 	{
+		cout ("");
 		cout ("Feedback for items bought:");
 		while (list ($buyer, $seller,
 			     $sellerfeedbackforbuyer_description)
