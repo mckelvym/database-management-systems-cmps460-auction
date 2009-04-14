@@ -74,8 +74,8 @@ AND	((end_day > $day)
 		}
 		else // ($sortby == "time_remaining")
 		{
-			$query = $query." order by end_day desc,
-end_hour desc, end_minute desc";
+			$query = $query." order by end_day,
+end_hour, end_minute";
 		}
 
 		// Run the query
