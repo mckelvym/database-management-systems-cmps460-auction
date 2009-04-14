@@ -290,6 +290,51 @@ tbody.tbl_std img {
 
 
 
+
+table.profile {	
+    padding: 0px;
+    border-collapse: collapse;
+    position: relative;
+    width: 580px;
+    align: left;
+}
+
+table.profile a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.profile a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.profile td{
+    font-weight: bold;
+    font-size: 1.1em;
+    padding-bottom: 0.5em;
+}
+
+tbody.profile {
+}
+
+tbody.profile td {
+    font-size: 0.8em;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-collapse: separate;
+}
+
+tbody.profile img {
+    max-width: 100px;
+    border: 0px;
+}
+
+
+
+
+
+
 table.category_listing {	
     padding: 0px;
     margin: 0px auto;
