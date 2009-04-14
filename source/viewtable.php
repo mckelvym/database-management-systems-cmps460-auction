@@ -4,15 +4,23 @@ include_once ("common.php");
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
 
-$table = get ("name");
+$mode = get ("mode");
+$name = get ("name");
 $order = get("order");
 $desc = get("desc");
 $current_script = current_script ();
 
+function display_message ()
+{
+	$message = get ("msg");
+	echo "Messages:<br/>";
+	echo ul (li ($message));
+}
+
+
 if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 {
-
-	if ($table == "user")
+	if ($name == "user")
 	{
 		echo h3 ("User Data");
 		echo_div ("scriptstatus");
@@ -27,20 +35,20 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		{
 			if ($desc == "0")
 			{
-				$query="select * from $table order by username";
+				$query="select * from $name order by username";
 			}
 
 			else if ($desc == "1")
 			{
-				$query="select * from $table order by username desc";
+				$query="select * from $name order by username desc";
 			}
 			else if ($desc != "0"|"1")
 			{
-				$query="select * from $table order by username";
+				$query="select * from $name order by username";
 			}
 		}
 
-		else $query="select * from $table";
+		else $query="select * from $name";
 
 		// Run the query
 		$results_id = mysql_query($query);
@@ -111,7 +119,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		}
 	}
 
-	else if ($table == "user_activity")
+	else if ($name == "user_activity")
 	{
 		echo h3 ("User Activity Data");
 		echo_div ("scriptstatus");
@@ -122,9 +130,9 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 
 		// Select the database
 		if (empty ($order) || $order == "time")
-			$query="select * from $table order by day desc, hour desc, minute desc";
+			$query="select * from $name order by day desc, hour desc, minute desc";
 		else
-			$query="select * from $table order by username";
+			$query="select * from $name order by username";
 
 		// Run the query
 		$results_id = mysql_query($query);
@@ -164,7 +172,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		}
 	}
 
-	else if ($table == "item_listing")
+	else if ($name == "item_listing")
 	{
 		echo h3 ("Item Listing Data");
 		echo_div ("scriptstatus");
@@ -179,20 +187,20 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		{
 			if ($desc == "0")
 			{
-				$query="select * from $table order by seller";
+				$query="select * from $name order by seller";
 			}
 
 			else if ($desc == "1")
 			{
-				$query="select * from $table order by seller desc";
+				$query="select * from $name order by seller desc";
 			}
 			else if ($desc != "0"|"1")
 			{
-				$query="select * from $table order by seller";
+				$query="select * from $name order by seller";
 			}
 		}
 
-		else $query="select * from $table";
+		else $query="select * from $name";
 
 		// Run the query
 		$results_id = mysql_query($query);
@@ -260,8 +268,33 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		}
 	}
 
-	else if ($table == "bids_on")
+	else if ($name == "bids_on")
 	{
+		if ($mode == "delete")
+		{
+			$user = get ("username");
+			$title = get ("title");
+			$seller = get ("seller");
+			$category = get ("category");
+			$end_day = get ("end_day");
+			$end_hour = get ("end_hour");
+			$end_minute = get ("end_minute");
+			$bid_day = get ("bid_day");
+			$bid_hour = get ("bid_hour");
+			$bid_minute = get ("bid_minute");
+			$dbinfo->query ("delete from bids_on
+where	username = '$user'
+AND	item_title = '$title'
+AND	item_seller = '$seller'
+AND	item_category = '$category'
+AND	item_end_day = $end_day
+AND	item_end_hour = $end_hour
+AND	item_end_minute = $end_minute
+AND	bid_day = $bid_day
+AND	bid_hour = $bid_hour
+AND	bid_minute = $bid_minute");
+		}
+
 		echo h3 ("Bidding Data");
 		echo_div ("scriptstatus");
 		echo href ("$current_script?name=bids_on&order=username&desc=0", "Sort by username (ascending)");
@@ -274,20 +307,20 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		{
 			if ($desc == "0")
 			{
-				$query="select * from $table order by username";
+				$query="select * from $name order by username";
 			}
 
 			else if ($desc == "1")
 			{
-				$query="select * from $table order by username desc";
+				$query="select * from $name order by username desc";
 			}
 			else if ($desc != "0"|"1")
 			{
-				$query="select * from $table order by username";
+				$query="select * from $name order by username";
 			}
 		}
 
-		else $query="select * from $table";
+		else $query="select * from $name";
 
 		// Run the query
 		$results_id = mysql_query($query);
@@ -304,7 +337,8 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 					 $table->td ("Seller").
 					 $table->td ("End Time / Bid Time").
 					 $table->td ("Amount").
-					 $table->td ("Notify"));
+					 $table->td ("Notify").
+					 $table->td ("Modify"));
 			echo $table->table_head_end ();
 			echo $table->table_body_begin ();
 
@@ -315,6 +349,15 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 				    $bid_amt, $disp_notif)
 			       = mysql_fetch_row($results_id))
 			{
+				if ($disp_notif != "n")
+				{
+					$can_delete = $table->td (href ("$current_script?name=$name&order=$order&desc=$desc&mode=delete&username=$username&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min&bid_day=$bid_day&bid_hour=$bid_hour&bid_minute=$bid_min", "X"));
+				}
+				else
+				{
+					$can_delete = $table->td ("-");
+				}
+
 				// Start writing table to page
 				echo $table->tr ($table->td (href ("profile.php?mode=view&username=$username", $dbinfo->get_realname ($username))).
 						 $table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title).
@@ -325,7 +368,8 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 							     "/<br/>".
 							     format_time ($bid_day, $bid_hour, $bid_min)).
 						 $table->td ("\$$bid_amt").
-						 $table->td ($disp_notif));
+						 $table->td ($disp_notif).
+						 $can_delete);
 			}
 			echo $table->table_body_end ();
 
@@ -356,3 +400,4 @@ else
 echo_footer ($dbinfo);
 
 ?>
+
