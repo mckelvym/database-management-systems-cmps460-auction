@@ -119,6 +119,7 @@ HEREDOC;
 			$nav = $nav.li_wrap (href ("viewtable.php?name=user_activity", "Activity Table"));
 			$nav = $nav.li_wrap (href ("viewtable.php?name=item_listing", "Auction Table"));
 			$nav = $nav.li_wrap (href ("viewtable.php?name=bids_on", "Bid Table"));
+			$nav = $nav.li_wrap (href ("viewtable.php?name=reload", "Reload DB"));
 		}
 		echo ul_wrap ($nav);
 	}

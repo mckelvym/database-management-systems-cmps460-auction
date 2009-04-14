@@ -20,7 +20,11 @@ function display_message ()
 
 if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 {
-	if ($name == "user")
+	if ($name == "reload")
+	{
+		passthru ("./reload.sh $dbinfo->host $dbinfo->user $dbinfo->pass $dbinfo->dbname db.dump.sql");
+	}
+	else if ($name == "user")
 	{
 		echo h3 ("User Data");
 		echo_div ("scriptstatus");

@@ -364,7 +364,7 @@ else
 	$loginlink = href ("login.php", "Login");
 	$reglink= href ("registration.php", "Register");
 	echo <<<HEREDOC
-Welcome to CMPS460 Group I's eBay-ish website "iBay"! You will need to $loginlink or $reglink to proceed further.
+Welcome "iBay", presented by CMPS460 Group I!<br/>You will need to $loginlink or $reglink to proceed further.
 HEREDOC;
 	echo_div("home-img");
 	echo local_img("gavel.jpg");
