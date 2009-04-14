@@ -3,7 +3,7 @@ include_once ("common.php");
 
 $dbinfo = new dbinfo_t();
 echo_header($dbinfo);
-
+$current_script = current_script ();
 // If the user is not logged in, redirect him to the index page.
 if (!$dbinfo->logged_in())
 	redirect("index.php");
@@ -12,6 +12,19 @@ $mode = get("mode");
 
 $user_name = $dbinfo->username();
 $home_user = $user_name;
+
+function verify_data ()
+{
+	global $dbinfo, $errors, $post_picture, $post_description;
+		$errors = "";
+		$post_picture = post("picture");
+		$post_description = post ("Description");
+		if(empty($post_description))
+			$errors = $errors.li ("Description can't be empty");
+		
+	return $errors;
+}
+
 //If mode is empty, the user is current user
 if ($mode == "") {
 		
@@ -190,8 +203,9 @@ ua.activity = 'Registered' order by username");
 }
 else if ($mode == "edit")
 {
-	
+	//If mode is edit, user is allowed to change his picture and profile description.
 	if($user_name!=$home_user){
+		//If the user tries to edit the profile of other users, deny access.
 ?>
 		<div style="text-align: center;">> Access Denied <</div>
 <?php
@@ -199,7 +213,17 @@ else if ($mode == "edit")
 	}
 	else{ 
 		
-		$result = $dbinfo->query ("select username, description , picture from user where username = '$username'");
+		if ($dbinfo->logged_in ())
+			echo form_begin ("$current_script?mode=save", "post");		
+		
+		//Retrieving inforamtion about the user from database.
+		$result = $dbinfo->query ("select username, description , picture from user where username = '$user_name'");
+		if ($result)
+		{
+			list($username, $description ,$picture) = mysql_fetch_row ($result);
+			
+		}
+		
 		
 		$table = new table_common_t ();
 		$table->init ("tbl_std");
@@ -214,7 +238,80 @@ else if ($mode == "edit")
 		echo $table->table_body_begin ();
 		if ($dbinfo->logged_in ())
 			echo form_begin ("$current_script?mode=save", "post");
+			$options = "";
+		//Checking if the user has default picture, display default picture details.
+		if($picture=="default_profile.jpg") // Users has default picture
+		{ 
+			$options = $options.option ("default_profile.jpg", "Default", $usrpicture);
+			for ($i = 1; $i <= 7; $i++)
+			{
+				$options = $options.option ("profile$i.jpg", "Picture $i", $usrpicture);			
+			}
+		}			
+		else
+		{//Display the picture details in database first
+//			$options = $options.option ($picture, $picture, $usrpicture);
+				
+				for ($k = 1; $k <= 7; $k++)
+				{
+					if($picture=="profile$k.jpg")
+						break;
+					
+				}
+			$options = $options.option ("profile$k.jpg", "Picture $k", $usrpicture);	
+			$options = $options.option ("default_profile.jpg", "Default", $usrpicture);
+			
+				for ($i = 1; $i <= 7; $i++)
+				{
+					if("Picture $k" != "Picture $i")
+						$options = $options.option ("profile$i.jpg", "Picture $i", $usrpicture);
+					
+				}
+		}			
+		echo $table->tr ($table->td ("Profile Picture").
+				 $table->td (select ("picture", $options).
+					     href ("profile_pictures.php", "?")));
+				     
+		if($description=="N/A") // Users has no description
+		{
+			
+			echo $table->tr ($table->td ("About Me").
+			 $table->td (text_input_s ("Description", $usrDesc, 70, 100)));
+		}
+		else
+		{	
+			
+			echo $table->tr ($table->td ("About Me").
+			 $table->td (text_input_s ("Description", $description, 70, 100)));
+		}
+		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2, "center"));		
+		echo form_end ();
+	echo $table->table_body_end ();
+	echo $table->table_end ();     
+		
 	}
+}
+else if ($mode == "save")
+{
+	verify_data();
+	if (!empty ($errors))
+	{
+		echo "Errors were detected. Please correct before continuing:<br/>";
+		echo ul ($errors);
+		echo href ("$current_script?mode=edit&username=$user_name", "Back to Edit Profile.");
+	}
+	else
+	{
+		$post_picture = post("picture");
+		$post_description = post ("Description");		
+		// Update the database
+		$dbinfo->query ("update user set picture = '$post_picture', description = '$post_description' where username = '$user_name'");
+		
+		$dbinfo->save_activity ("You updated your registration information.");
+		cout ("Update successful.");
+			echo href ("$current_script?mode=view&username=$user_name", "Click to refresh");
+	}
+	
 }
 
 echo_footer($dbinfo);
