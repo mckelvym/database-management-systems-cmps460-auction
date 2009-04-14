@@ -230,7 +230,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 				echo $table->tr ($table->td ("Seller").
 						 $table->td (href ("profile.php?mode=view&username=$seller", $seller)));
 				echo $table->tr ($table->td ("Category").
-						 $table->td (href ("category.php?view=".str_replace (" ", "_", strtolower ($category)), $category)));
+						 $table->td (href ("category.php?view=$category", $category)));
 				echo $table->tr ($table->td ("End Time").
 						 $table->td (format_time ($end_day, $end_hour, $end_min)));
 				echo $table->tr ($table->td ("Description").
@@ -379,7 +379,7 @@ AND	bid_minute = $bid_minute");
 				echo $table->tr ($table->td (href ("profile.php?mode=view&username=$username", $dbinfo->get_realname ($username))).
 						 $table->td (href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title).
 							     "<br/>(".
-							     href ("category.php?view=".str_replace (" ", "_", strtolower ($category)), $category).")").
+							     href ("category.php?view=$category", $category).")").
 						 $table->td (href ("profile.php?mode=view&username=$seller", $dbinfo->get_realname ($seller))).
 						 $table->td (format_time ($end_day, $end_hour, $end_min).
 							     "/<br/>".
