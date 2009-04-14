@@ -87,6 +87,7 @@ if(mysql_num_rows($result_seller) != 0){
 
 if(mysql_num_rows($result_buyer)!=0)
 {
+	cout ("");
 	cout ("Feedback for items bought :");
 	while (list ($buyer, $seller, $sellerfeedbackforbuyer_description) = mysql_fetch_row($result_buyer)) {
 			
@@ -99,26 +100,32 @@ if(mysql_num_rows($result_buyer)!=0)
 
 		}	
 }
+cout ("");
 
-cout ("Bid history:");
-
-$result_bid =  $dbinfo->query (" select username,item_seller, item_title ,bid_day, bid_hour, bid_minute, bid_amount from bids_on where username = '$user_name' order by bid_amount desc");
-while (list ($username, $item_seller, $item_title, $bid_day, $bid_hour,$bid_minute,$bid_amount) = mysql_fetch_row($result_bid)) {
-			
-			$seller_realname = href ("profile.php?mode=view&username=$item_seller", $dbinfo->get_realname ($item_seller));
-			
-			if($username == $home_user)			
-				$bidder_realname = "You";
-			else{
-			$bidder_realname = href ("profile.php?mode=view&username=$username", $dbinfo->get_realname ($username));
-			
-			}
-			
-			echo div (span (format_time ($bid_day, $bid_hour, $bid_minute), "time").
-					  "$bidder_realname made a bid of \$$bid_amount on $seller_realname's auction ", "bidhistory");
-
-		}	
-
+$result_bid =  $dbinfo->query (" select username,item_seller, item_title,item_category ,item_end_day, item_end_hour, item_end_minute, bid_amount from bids_on where username = '$user_name' order by bid_amount desc");
+if(mysql_num_rows($result_bid)==0)
+{
+	echo div ("No bid history found!", "history");
+	
+}
+else{ 
+	cout ("Bid history:");
+	while (list ($username, $item_seller, $item_title,$item_category, $item_end_day, $item_end_hour,$item_end_minute,$bid_amount) = mysql_fetch_row($result_bid)) {
+				
+				$seller_realname = href ("profile.php?mode=view&username=$item_seller", $dbinfo->get_realname ($item_seller));
+				
+				if($username == $home_user)			
+					$bidder_realname = "You";
+				else{
+				$bidder_realname = href ("profile.php?mode=view&username=$username", $dbinfo->get_realname ($username));
+				
+				}
+				
+				echo div (span (format_time ($bid_day, $bid_hour, $bid_minute), "time").
+						  "$bidder_realname  made a bid of \$$bid_amount on $seller_realname's auction : \"".href ("itemlisting.php?mode=view&title=$item_title&seller=$item_seller&category=$item_category&end_day=$item_end_day&end_hour=$item_end_hour&end_minute=$item_end_minute", $item_title)."\".", "bidhistory");
+	
+			}	
+}
 ?>
 </td>
 </tr>
