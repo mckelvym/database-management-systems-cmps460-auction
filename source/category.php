@@ -13,8 +13,10 @@ if ($dbinfo->logged_in ())
 {
 	if (empty ($view))
 	{
-		print '<font size="5" color="blue">';
-		print "All Categories</font><br><br>";
+		echo h3 ("All Categories");
+		echo_div ("scriptstatus");
+		echo href (" itemlisting.php?mode=create", "Create a New Item Listing");
+		end_div ();
 
 		cout ("Select a category:");
 		$options = "";
@@ -35,8 +37,11 @@ if ($dbinfo->logged_in ())
 	
 	else
 	{
-		print '<font size="5" color="blue">';
-		print "$view</font><br><br>";
+
+		echo h3 ("$view");
+		echo_div ("scriptstatus");
+		echo href (" itemlisting.php?mode=create", "Create a New Item Listing");
+		end_div ();
 
 		echo "<a href=category.php?view=$view&sortby=time_remaining>
 		        Sort by Time Remaining</a> |
@@ -142,6 +147,8 @@ if ($dbinfo->logged_in ())
 		    die (mysql_error());
 	    }
 	}
+	
+
 }
 
 echo_footer ($dbinfo);
