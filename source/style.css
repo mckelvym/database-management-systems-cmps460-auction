@@ -330,7 +330,7 @@ table.user_database {
     padding: 0px;
     margin: 0px auto;
     border-collapse: collapse;	
-    min-width: 380px;
+    min-width: 580px;
 }
 
 table.user_database a {
@@ -416,7 +416,7 @@ tbody.user_activity_database td {
 tbody.user_activity_database img {
     max-width: 200px;
     border: 0px;
-}
+}-1 
 
 
 
