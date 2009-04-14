@@ -232,7 +232,7 @@ if ($mode == "bid")
 		$bid_title, $bid_seller, $bid_category,
 		$bid_end_day, $bid_end_hour, $bid_end_minute,
 		$bid_amount);
-	$dbinfo->query ("insert into bids_on values ('$username', '$bid_title', '$bid_seller', '$bid_category', $bid_end_day, $bid_end_hour, $bid_end_minute, $curr_day, $curr_hour, $curr_minute, $bid_bid_amount, 'n')");
+	$dbinfo->query ("insert into bids_on values ('$username', '$bid_title', '$bid_seller', '$bid_category', $bid_end_day, $bid_end_hour, $bid_end_minute, $curr_day, $curr_hour, $curr_minute, $bid_amount, 'n')");
 	$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$bid_title&seller=$bid_seller&category=$bid_category&end_day=$bid_end_day&end_hour=$bid_end_hour&end_minute=$bid_end_minute", $bid_title)."\".");
 	$mode = "view";
 }
