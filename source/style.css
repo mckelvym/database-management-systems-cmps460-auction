@@ -486,10 +486,11 @@ table.bidding_database a:hover{
 
 thead.bidding_database td{
     background-color: #000000;
+    font-size: 0.8em;
     color: #ffffff;
-    border: 2px solid navy;
-    padding-right: 1em;
-    padding-left: 1em;
+    border: 1px solid navy;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
     text-align: center;
 }
 
@@ -499,7 +500,7 @@ tbody.bidding_database {
 }
 
 tbody.bidding_database td {
-    font-size: 0.8em;
+    font-size: 0.7em;
     border-bottom: 1px dotted navy;
     padding-right: 1em;
     padding-left: 1em;
