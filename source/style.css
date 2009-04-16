@@ -335,6 +335,63 @@ tbody.profile img {
 
 
 
+table.profile_edit {	
+    padding: 0px;
+    margin: 0px auto;
+    border-collapse: collapse;
+    position: relative;
+    top: 30px;	
+    width: 580px;
+}
+
+table.profile_edit a {
+    color: #5A58F8;
+    text-decoration: none;
+}
+
+table.profile_edit a:hover{
+    color: #000000;
+    text-decoration: underline;
+}
+
+thead.profile_edit td{
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    text-align: center;
+}
+
+tbody.profile_edit {
+    border-left: 1px dotted navy;
+    border-right: 1px dotted navy;
+}
+
+tbody.profile_edit td {
+    font-size: 0.8em;
+    border-bottom: 1px dotted navy;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-collapse: separate;
+}
+
+tbody.profile_edit img {
+    max-width: 100px;
+    border: 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 table.category_listing {	
     padding: 0px;
     margin: 0px auto;

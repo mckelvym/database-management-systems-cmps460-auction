@@ -71,6 +71,11 @@ function select ($name, $options)
 	return "<select name=\"$name\">\n$options \n</select>";
 }
 
+function select_dyn ($name, $options, $javascript_func)
+{
+	return "<select onChange=\"$javascript_func\" id=\"dyn$name\" name=\"$name\">\n$options \n</select>";
+}
+
 function option ($value, $display, $is_selected = "")
 {
 	if (!empty ($is_selected) && $value == $is_selected)

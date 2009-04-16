@@ -174,6 +174,7 @@ function end_div ()
 	echo "</div>\n";
 }
 
+// Wrap text in a div
 function div ($text, $style_name = "")
 {
 	if (!empty ($style_name))
@@ -181,6 +182,7 @@ function div ($text, $style_name = "")
 	return "<div $style_name>\n$text\n</div>\n";
 }
 
+// Wrap text in a span
 function span ($text, $style_name)
 {
 	if (!empty ($style_name))
@@ -194,14 +196,22 @@ function href ($url, $text)
 	return "<a href=\"$url\">$text</a>";
 }
 
+// make a quick link
+function hreft ($url, $text, $target)
+{
+	return "<a href=\"$url\" target=\"$target\">$text</a>";
+}
+
+// Quick html image code
 function img ($path)
 {
 	return "<img src=\"$path\">";
 }
 
+// Quick html image code for local images
 function local_img ($path)
 {
-	return "<img src=\"images/$path\">";
+	return "<img id=dynimg src=\"images/$path\">";
 }
 
 // Make the user go to a different page
@@ -258,11 +268,13 @@ function h1 ($text)
 	return "<h1>$text</h1>\n";
 }
 
+// Heading level 2
 function h2 ($text)
 {
 	return "<h2>$text</h2>\n";
 }
 
+// Heading level 3
 function h3 ($text)
 {
 	return "<h3>$text</h3>\n";
@@ -274,6 +286,7 @@ function cout ($str)
 	echo "$str"."<br/>\n";
 }
 
+// Format time to readable format
 function format_time ($day, $hour, $minute, $prefix_zeros_to_day = false)
 {
 	$day += 0;
@@ -325,6 +338,7 @@ function format_time ($day, $hour, $minute, $prefix_zeros_to_day = false)
 	return "Day: $day, Time: $hour:$minute";
 }
 
+// Pad time for sorting on the home page
 function pad_time ($day, $hour, $minute, $priority = 0)
 {
 	if ($minute > 59)
@@ -379,11 +393,19 @@ function is_older ($d1, $h1, $m1, $d2, $h2, $m2)
 	return false;
 }
 
+// Strip quotes from a string (for form input)
+function fix_quotes ($str)
+{
+	return str_replace ("\'", "", $str);
+}
+
+// Escape quotes in a string
 function escape ($val)
 {
 	return mysql_real_escape_string ($val);
 }
 
+// Embed html link for javascript alert
 function alert ($msg, $linktext)
 {
 	return "<a href=\"javascript:alert ('$msg')\">$linktext</a>";

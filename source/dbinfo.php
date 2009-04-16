@@ -23,6 +23,7 @@ class dbinfo_t
 		$this->debug = true;
 	}
 
+	// Is debug enabled
 	function debug ()
 	{
 		return $this->debug;
@@ -69,6 +70,7 @@ class dbinfo_t
 		return $this->dblink;
 	}
 
+	// Call all update functions
 	function update_all ()
 	{
 		$this->update_time ();
@@ -116,6 +118,7 @@ where username = '$username' and password = '$password'");
 		}
 	}
 
+	// Used by admin and also when registering - can login as a user without password
 	function login_as ($username)
 	{
 		$result = $this->query ("select username, realname, is_admin from user
@@ -140,6 +143,7 @@ where username = '$username'");
 		}
 	}
 
+	// Logout and save activity
 	function logout ($is_delete = false)
 	{
 		if (!$is_delete)
@@ -275,6 +279,7 @@ order by day desc, hour desc, minute desc limit 1");
 		return $_SESSION['Minute'];
 	}
 
+	// Save activity for the current user.
 	function save_activity ($activity_description)
 	{
 		$this->update_time ();
@@ -322,6 +327,7 @@ order by day desc, hour desc, minute desc limit 1");
 		return true;
 	}
 
+	// Update all other bidder's notification status that they've been outbid, and also current_price for auction
 	function update_auction_before_bid ($title, $seller, $category, $end_day, $end_hour, $end_minute, $bid_amount)
 	{
 		$this->query ("update bids_on set 
@@ -411,6 +417,7 @@ AND	end_minute = $endmin");
 		}
 	}
 
+	// See if a user exists in the system
 	function user_exists ($username)
 	{
 		$result = $this->query ("select username from user where username = '$username'");
@@ -426,6 +433,7 @@ AND	end_minute = $endmin");
 		}
 	}
 
+	// Get a realname for a username
 	function get_realname ($username)
 	{
 		$result = $this->query ("select realname from user where username = '$username'");
@@ -438,6 +446,7 @@ AND	end_minute = $endmin");
 		}
 	}
 
+	// Get the last logout time of a user
 	function get_lastlogout ($username)
 	{
 		$result = $this->query ("select day, hour, minute from user_activity
@@ -454,6 +463,7 @@ limit 1");
 		}
 	}
 
+	// Get the registration date of a user
 	function get_registration_date ($username)
 	{
 		$result = $this->query ("select day, hour, minute from user_activity
@@ -470,6 +480,7 @@ limit 1");
 		}
 	}
 
+	// Test if an auction already exists
 	function auction_exists ($title, $seller, $category, $end_day, $end_hour, $end_minute)
 	{
 		$result = $this->query ("select seller from item_listing
@@ -491,6 +502,34 @@ AND	end_minute = $end_minute");
 		}
 	}
 
+	// Test if a bid already exists
+	function bid_exists ($user, $title, $seller, $category, $end_day, $end_hour, $end_minute,
+			     $bid_day, $bid_hour, $bid_minute)
+	{
+		$result = $this->query ("select username from bids_on
+where 	username = '$user'
+AND	item_title = '$title'
+AND	item_seller = '$seller'
+AND	item_category = '$category'
+AND	item_end_day = $end_day
+AND	item_end_hour = $end_hour
+AND	item_end_minute = $end_minute
+AND	bid_day = $bid_day
+AND	bid_hour = $bid_hour
+AND	bid_minute = $bid_minute");
+		if (mysql_num_rows ($result) == 0)
+		{
+			mysql_free_result ($result);
+			return false;
+		}
+		else
+		{
+			mysql_free_result ($result);
+			return true;
+		}
+	}
+
+	// Get the winner of an auction
 	function get_winner ($title, $seller, $category, $end_day, $end_hour, $end_minute)
 	{
 		$result = $this->query ("select buyer, realname, current_price from item_listing, user
@@ -511,6 +550,7 @@ AND	buyer = username");
 		}
 	}
 
+	// Find the current highest bidder for an auction
 	function get_highest_bidder ($title, $seller, $category, $end_day, $end_hour, $end_minute)
 	{
 		$result = $this->query ("select username, bid_amount from bids_on
@@ -530,6 +570,7 @@ order by bid_amount desc");
 		}
 	}
 
+	// Get the number of bids for an auction
 	function get_num_bids ($title, $seller, $category, $end_day, $end_hour, $end_minute)
 	{
 		$result = $this->query ("select count(*) from bids_on

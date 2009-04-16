@@ -3,10 +3,33 @@ include_once ("common.php");
 
 $dbinfo = new dbinfo_t();
 echo_header($dbinfo);
+
+echo <<<HEREDOC
+<script type="text/javascript">
+
+function local_img (file)
+{
+	return "images/" + file;
+}
+
+function image_swap ()
+{
+	var image = document.getElementById ("dynimg");
+	var pic = document.getElementById ("dynpicture");
+	image.src = local_img (pic.value);
+}
+
+</script>
+HEREDOC;
+
 $current_script = current_script ();
 // If the user is not logged in, redirect him to the index page.
 if (!$dbinfo->logged_in())
 	redirect("index.php");
+
+
+
+
 // Checking the mode
 $mode = get("mode");
 
@@ -18,7 +41,7 @@ function verify_data ()
 	global $dbinfo, $errors, $post_picture, $post_description;
 	$errors = "";
 	$post_picture = post("picture");
-	$post_description = post ("Description");
+	$post_description = fix_quotes (post ("Description"));
 	if(empty($post_description))
 		$errors = $errors.li ("Description can't be empty");
 
@@ -228,13 +251,12 @@ else if ($mode == "edit")
 		}
 
 		$table = new table_common_t ();
-		$table->init ("tbl_std");
+		$table->init ("profile_edit");
 
 		echo $table->table_begin ();
 		echo $table->table_head_begin ();
 		if ($dbinfo->logged_in ())
 			echo $table->tr ($table->td_span ("Update your iBay profile", "", 2));
-		echo $table->tr_end ();
 		echo $table->table_head_end ();
 		echo $table->table_body_begin ();
 		if ($dbinfo->logged_in ())
@@ -270,8 +292,9 @@ else if ($mode == "edit")
 			}
 		}
 		echo $table->tr ($table->td ("Profile Picture").
-				 $table->td (select ("picture", $options).
-					     href ("profile_pictures.php", "?")));
+				 $table->td (select_dyn ("picture", $options, "image_swap()").
+					     hreft ("profile_pictures.php", "?", "_blank")."<br/>".
+					     local_img ($picture)));
 
 		if($description=="N/A") // Users has no description
 		{
@@ -303,7 +326,7 @@ else if ($mode == "save")
 	else
 	{
 		$post_picture = post("picture");
-		$post_description = post ("Description");
+		$post_description = fix_quotes (post ("Description"));
 		// Update the database
 		$dbinfo->query ("update user set picture = '$post_picture', description = '$post_description' where username = '$user_name'");
 

@@ -434,18 +434,18 @@ function verify_data ()
 		$post_card_type, $post_card_number, $post_card_expire,
 		$post_picture, $post_description;
 	$errors = "";
-	$post_username = post ("username");
-	$passwd1 = post ("password");
-	$passwd2 = post ("password2");
+	$post_username = fix_quotes (post ("username"));
+	$passwd1 = fix_quotes (post ("password"));
+	$passwd2 = fix_quotes (post ("password2"));
 	$is_admin = post ("is_admin");
-	$post_realname = post ("realname");
-	$post_birth_date = post ("birth_date");
-	$post_street = post ("shipping_street");
-	$post_city = post ("shipping_city");
+	$post_realname = fix_quotes (post ("realname"));
+	$post_birth_date = fix_quotes (post ("birth_date"));
+	$post_street = fix_quotes (post ("shipping_street"));
+	$post_city = fix_quotes (post ("shipping_city"));
 	$post_state = post ("shipping_state");
 	$post_zip = post ("shipping_zip");
-	$post_phone = post ("phone");
-	$post_email = post ("email");
+	$post_phone = fix_quotes (post ("phone"));
+	$post_email = fix_quotes (post ("email"));
 	$post_card_type = post ("card_type");
 	$post_card_number = post ("card_number");
 	$post_card_expire = post ("card_expire");

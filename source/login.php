@@ -36,8 +36,8 @@ if (empty ($mode))
 // process login
 else
 {
-	$user = post ("username");
-	$pass = post ("password");
+	$user = fix_quotes (post ("username"));
+	$pass = fix_quotes (post ("password"));
 	if ($dbinfo->login ($user, $pass))
 	{
 		$dbinfo->close ();

@@ -81,8 +81,22 @@ function validate_form (thisform)
 	}
 }
 
+function local_img (file)
+{
+	return "images/" + file;
+}
+
+function image_swap ()
+{
+	var image = document.getElementById ("dynimg");
+	var cat = document.getElementById ("dyncategory");
+	var pic = document.getElementById ("dynpicture");
+	image.src = local_img (cat.value.toLowerCase ().replace (" ", "_") + pic.value);
+}
+
 /* onload = function() */
 /* { */
+/* 	image_swap (); */
 /* } */
 
 </script>
@@ -177,7 +191,7 @@ AND	end_minute = $m");
 		else
 			echo hidden_input ("seller", $s);
 		echo $table->tr ($table->td ("Category").
-				 $table->td (text_input_sr ("category", $c, 20, 50).
+				 $table->td (input ("category", $c, 20, "dyncategory", "text", 50, "readonly").
 					     alert ("An auction can only belong to one category.", "?")));
 		echo $table->tr ($table->td ("Description").
 				 $table->td (text_input_s ("description", $description, 50, 250).
@@ -207,12 +221,13 @@ AND	end_minute = $m");
 		$options = "";
 		for ($i = 1; $i <= 3; $i++)
 		{
-			$cat = str_replace (strtolower ($category), "", $picture);
+			$cat = str_replace (str_replace (" ", "_", strtolower ($category)), "", $picture);
 			$options = $options.option ("$i.jpg", "Picture $i", $cat);
 		}
 		echo $table->tr ($table->td ("Picture").
-				 $table->td (select ("picture", $options).
-					     href ("category_pictures.php", "?")));
+				 $table->td (select_dyn ("picture", $options, "image_swap()").
+					     hreft ("category_pictures.php", "?", "_blank")."<br/>".
+					     local_img ($picture)));
 		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2, "center"));
 	}
 	else
@@ -232,7 +247,7 @@ AND	end_minute = $m");
 		$options = $options.option ("Sporting Goods", "Sporting Goods");
 		$options = $options.option ("Toys", "Toys");
 		echo $table->tr ($table->td ("Category").
-				 $table->td (select ("category", $options).
+				 $table->td (select_dyn ("category", $options, "image_swap()").
 					     alert ("An auction can only belong to one category.", "?")));
 		echo $table->tr ($table->td ("Description").
 				 $table->td (text_input_s ("description", "", 50, 250).
@@ -277,8 +292,9 @@ AND	end_minute = $m");
 			$options = $options.option ("$i.jpg", "Picture $i");
 		}
 		echo $table->tr ($table->td ("Picture").
-				 $table->td (select ("picture", $options).
-					     href ("category_pictures.php", "?")));
+				 $table->td (select_dyn ("picture", $options, "image_swap()").
+					     hreft ("category_pictures.php", "?", "_blank")."<br/>".
+					     local_img ("art1.jpg")));
 		echo $table->tr ($table->td_span (submit_input ("Create"), "", 2, "center"));
 	}
 	echo form_end ();
@@ -297,14 +313,14 @@ function verify_data ()
 		$post_shipping_cost, $post_starting_price,
 		$post_picture;
 	$errors = "";
-	$post_title = post ("title");
+	$post_title = fix_quotes (post ("title"));
 	$post_seller = post ("seller");
 	$post_category = post ("category");
 	$post_closing_time = post ("closing_time");
 	$post_end_day = strtok ($post_closing_time, " ");
 	$post_end_hour = strtok (" ");
 	$post_end_minute = strtok (" ");
-	$post_description = post ("description");
+	$post_description = fix_quotes (post ("description"));
 	$post_shipping_method = post ("shipping_method");
 	$post_shipping_cost = post ("shipping_cost");
 	$post_starting_price = post ("starting_price");
@@ -331,12 +347,24 @@ if ($mode == "bid")
 	$bid_end_minute = post ("end_minute");
 	$bid_amount = post ("bid_amount");
 
-	$dbinfo->update_auction_before_bid (
-		$bid_title, $bid_seller, $bid_category,
-		$bid_end_day, $bid_end_hour, $bid_end_minute,
-		$bid_amount);
-	$dbinfo->query ("insert into bids_on values ('$username', '$bid_title', '$bid_seller', '$bid_category', $bid_end_day, $bid_end_hour, $bid_end_minute, $curr_day, $curr_hour, $curr_minute, $bid_amount, 'n')");
-	$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$bid_title&seller=$bid_seller&category=$bid_category&end_day=$bid_end_day&end_hour=$bid_end_hour&end_minute=$bid_end_minute", $bid_title)."\".");
+	list ($highest_bidder, $amt) = $dbinfo->get_highest_bidder ($bid_title, $bid_seller, $bid_category,
+								    $bid_end_day, $bid_end_hour, $bid_end_minute);
+	if ($highest_bidder != $username)
+	{
+		$dbinfo->update_auction_before_bid (
+			$bid_title, $bid_seller, $bid_category,
+			$bid_end_day, $bid_end_hour, $bid_end_minute,
+			$bid_amount);
+		$dbinfo->query ("insert into bids_on values ('$username', '$bid_title', '$bid_seller', '$bid_category', $bid_end_day, $bid_end_hour, $bid_end_minute, $curr_day, $curr_hour, $curr_minute, $bid_amount, 'n')");
+		$dbinfo->save_activity ("Bid \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$bid_title&seller=$bid_seller&category=$bid_category&end_day=$bid_end_day&end_hour=$bid_end_hour&end_minute=$bid_end_minute", $bid_title)."\".");
+	}
+	else
+	{
+		echo "Errors were detected. Please correct before continuing:<br/>";
+		echo ul (li ("Don't double bid!"));
+		$dbinfo->save_activity ("You tried to game the system by double bidding \$$bid_amount on the auction: \"".href ("itemlisting.php?mode=view&title=$bid_title&seller=$bid_seller&category=$bid_category&end_day=$bid_end_day&end_hour=$bid_end_hour&end_minute=$bid_end_minute", $bid_title)."\".");
+	}
+
 	$mode = "view";
 }
 
