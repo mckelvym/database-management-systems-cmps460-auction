@@ -34,7 +34,7 @@ if (!$dbinfo->logged_in())
 $mode = get("mode");
 
 $user_name = $dbinfo->username();
-$home_user = $user_name;
+$home_user = $user_name; //Saving the real user in home_user.
 
 function verify_data ()
 {
@@ -54,11 +54,13 @@ if ($mode == "")
 	$user_name = $dbinfo->username ();
 }
 
-// Viewing someother's profile
-else if ($mode == "view" || $mode == "edit")
+// Reading username from the get request
+else if ($mode == "view" || $mode == "edit"|| $mode == "delete")
 {
-	$user_name = get("username");
+	$user_name = get("username"); 
 }
+
+
 
 // Default view
 if ($mode == "" || $mode == "view" )
@@ -66,8 +68,11 @@ if ($mode == "" || $mode == "view" )
 	echo_div ("scriptstatus");
 	if($user_name != $home_user)
 		echo href ("$current_script?", "View My Profile");
-	else
+	else{ 
 		echo href ("$current_script?mode=edit&username=$user_name", "Edit Profile");
+		echo (" | ");
+		echo href ("$current_script?mode=delete&username=$user_name", "Delete Profile");
+	}
 	end_div ();
 
 	$table = new table_common_t();
@@ -272,8 +277,7 @@ else if ($mode == "edit")
 			}
 		}
 		else
-		{//Display the picture details in database first
-//			$options = $options.option ($picture, $picture, $usrpicture);
+		{	//Display the picture details in database first
 
 			for ($k = 1; $k <= 7; $k++)
 			{
@@ -281,12 +285,12 @@ else if ($mode == "edit")
 					break;
 
 			}
-			$options = $options.option ("profile$k.jpg", "Picture $k", $usrpicture);
-			$options = $options.option ("default_profile.jpg", "Default", $usrpicture);
-
+			$options = $options.option ("profile$k.jpg", "Picture $k", $usrpicture); //Showing the existing picture from database
+			$options = $options.option ("default_profile.jpg", "Default", $usrpicture);//Including the default picture
+			//Displaying other picture information, except the already exisisting picture
 			for ($i = 1; $i <= 7; $i++)
 			{
-				if("Picture $k" != "Picture $i")
+				if("Picture $k" != "Picture $i") //Everything except the previous selected picture
 					$options = $options.option ("profile$i.jpg", "Picture $i", $usrpicture);
 
 			}
@@ -298,13 +302,13 @@ else if ($mode == "edit")
 
 		if($description=="N/A") // Users has no description
 		{
-
-			echo $table->tr ($table->td ("About Me").
-					 $table->td (text_input_s ("Description", $usrDesc, 70, 100)));
+					//If the Desc is N/A show a blank text box for input
+					echo $table->tr ($table->td ("About Me").
+					$table->td (text_input_s ("Description", $usrDesc, 70, 100)));
 		}
 		else
 		{
-
+			//Display already existing description
 			echo $table->tr ($table->td ("About Me").
 					 $table->td (text_input_s ("Description", $description, 70, 100)));
 		}
@@ -314,27 +318,46 @@ else if ($mode == "edit")
 		echo $table->table_end ();
 	}
 }
-else if ($mode == "save")
+else if ($mode == "save") //If the mode is save
 {
-	verify_data();
+	verify_data();// Verifying the data
+	//If errors are detected
 	if (!empty ($errors))
 	{
 		echo "Errors were detected. Please correct before continuing:<br/>";
-		echo ul ($errors);
-		echo href ("$current_script?mode=edit&username=$user_name", "Back to Edit Profile.");
+		echo ul ($errors); // Displaying errors
+		echo href ("$current_script?mode=edit&username=$user_name", "Back to Edit Profile."); //Linking back to edit page
 	}
 	else
-	{
-		$post_picture = post("picture");
-		$post_description = fix_quotes (post ("Description"));
+	{	//If no errors are found, proceed saving data
+		$post_picture = post("picture"); //Getting picture information
+		$post_description = fix_quotes (post ("Description")); //Getting the description
 		// Update the database
 		$dbinfo->query ("update user set picture = '$post_picture', description = '$post_description' where username = '$user_name'");
-
+		//Saving the acitivity
 		$dbinfo->save_activity ("You updated your profile information.");
 		cout ("Update successful.");
-		echo href ("$current_script?mode=view&username=$user_name", "Click to refresh");
+		echo href ("$current_script?mode=view&username=$user_name", "Click to refresh");//linking to profile page
 	}
 
+}
+//If the mode is delete, clear profile information
+else if($mode = "delete")
+{		
+		//check to see if the user is trying to delete someone else profile
+		if($user_name != $home_user) // If the users are different, Deny access
+		{
+			cout ("Access denied");
+		}
+		else{ 
+			//Users are same.
+			//Clearing the user from database.
+			$result = $dbinfo->query (" update user set Description = 'N/A',picture = 'default_profile.jpg' where username = '$user_name'");
+			$dbinfo->save_activity ("You deleted your profile information."); //Saving activity
+			cout ("You have cleared your profile information.");
+			echo href ("$current_script?mode=view&username=$user_name", "Click to refresh"); //Proceed to view profile page
+		}
+	
 }
 
 echo_footer($dbinfo);
