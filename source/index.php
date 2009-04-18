@@ -48,7 +48,7 @@ if ($dbinfo->logged_in () && $mode == "feedback")
 	$end_day = post ("end_day");
 	$end_hour = post ("end_hour");
 	$end_min = post ("end_min");
-	$description = post ("feedback");
+	$description = fix_quotes (post ("feedback"));
 	$rating = post ("rating");
 	$for = post ("for");
 	$real_title = href ("itemlisting.php?mode=view&title=$title&seller=$seller&category=$category&end_day=$end_day&end_hour=$end_hour&end_minute=$end_min", $title);
