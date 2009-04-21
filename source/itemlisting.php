@@ -1,9 +1,33 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Handles item / auction listing related things such as display, bidding,
+// editing, deleting
+
+
+
+
+
+
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
 
+// Javascript functions for validation/etc..
 echo <<<HEREDOC
 <script type="text/javascript">
 function reset_inputs (thisform)
@@ -100,7 +124,7 @@ function image_swap ()
 /* } */
 
 </script>
-HEREDOC;
+HEREDOC; // end javascript functions
 
 
 $mode = get ("mode");
@@ -116,16 +140,18 @@ $end_day = get ("end_day");
 $end_hour = get ("end_hour");
 $end_minute = get ("end_minute");
 
+// Redirect if not logged in
 if (!$dbinfo->logged_in ())
 	redirect ("index.php");
 
+// Kind of a catch-all form for editing & creating auctions
 function item_listing_form ($mode = "new", $t = "", $s = "", $c = "", $d = -1, $h = -1, $m = -1)
 {
 	global $dbinfo;
 	global $current_script;
 	global $curr_day, $curr_hour, $curr_minute;
 
-	// If editing registration, fetch the current information from the database
+	// If editing auction, fetch the current information from the database
 	if ($mode == "edit" && $m != -1 && $dbinfo->auction_exists ($t, $s, $c, $d, $h, $m))
 	{
 		$result = $dbinfo->query ("select * from item_listing
@@ -230,7 +256,7 @@ AND	end_minute = $m");
 					     local_img ($picture)));
 		echo $table->tr ($table->td_span (submit_input ("Save"), "", 2, "center"));
 	}
-	else
+	else // making new listing
 	{
 		echo form_begin_n ("$current_script?mode=savenew", "post", "item_listing_form", "return validate_form (this)");
 		echo $table->tr ($table->td ("Title").
@@ -337,6 +363,7 @@ function verify_data ()
 	return $errors;
 }
 
+// Handle bid
 if ($mode == "bid")
 {
 	$bid_title = (post ("title"));
@@ -430,6 +457,7 @@ AND	end_minute = $end_minute");
 						$t->td (format_time ($end_day, $end_hour, $end_min)));
 			$curr_price_message = $t->tr ($t->td ("End Price:").
 						      $t->td ("\$$current_price"));
+			// feedback
 			if ($buyer_fdbk_rating != -1)
 			{
 				if ($dbinfo->is_admin ())
@@ -453,6 +481,7 @@ AND	end_minute = $end_minute");
 				$fdbk = $t->tr ($t->td ("Feedback from buyer:").
 						$t->td ("None."));
 			}
+			// feedback
 			if (!empty ($seller_fdbk))
 			{
 				if ($dbinfo->is_admin ())
@@ -486,6 +515,7 @@ AND	end_minute = $end_minute");
 			if ($highest_bidder == "None")
 				$highest_bid = $current_price;
 
+			// bid form
 			if ($username != $seller &&
 			    $username != $highest_bidder)
 			{
@@ -529,6 +559,7 @@ AND	end_minute = $end_minute");
 			end_div ();
 		}
 
+		// output auction info
 		echo $t->table_begin ().$t->table_head_begin ().
 			$t->tr ($t->td_span ("Auction Listing: \"".$title."\"", "", 2)).
 			$t->table_head_end ().$t->table_body_begin ().
@@ -589,15 +620,15 @@ order by bid_amount desc");
 		}
 	}
 }
-else if ($mode == "new")
+else if ($mode == "new") // make a new auction listing
 {
 	item_listing_form ($mode);
 }
-else if ($mode == "edit")
+else if ($mode == "edit") // edit an auction listing
 {
 	item_listing_form ($mode, $title, $seller, $category, $end_day, $end_hour, $end_minute);
 }
-else if ($mode == "savenew")
+else if ($mode == "savenew") // save a new auction listing
 {
 		verify_data ();
 		if ($dbinfo->auction_exists ($post_title, $username, $post_category,
@@ -649,7 +680,7 @@ $post_starting_price,
 			}
 		}
 }
-else if ($mode == "save")
+else if ($mode == "save") // save an editing (current) auction listing
 {
 		verify_data ();
 		if (!empty ($errors))
@@ -686,7 +717,7 @@ AND	end_minute = $post_end_minute");
 			cout ("Would you like to ".href ("itemlisting.php?mode=view&title=$post_title&seller=$post_seller&category=$post_category&end_day=$post_end_day&end_hour=$post_end_hour&end_minute=$post_end_minute", "view")." it?");
 		}
 }
-else if ($mode == "delete")
+else if ($mode == "delete") // delete an exiting auction listing
 {
 	$title = get ("title");
 	$seller = get ("seller");
@@ -731,5 +762,4 @@ AND	end_minute = $end_minute");
 }
 
 echo_footer ($dbinfo);
-
 ?>

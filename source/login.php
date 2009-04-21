@@ -1,4 +1,26 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// User login form page
+
+
+
+
+
+
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
@@ -51,5 +73,4 @@ else
 }
 
 echo_footer ($dbinfo);
-
 ?>

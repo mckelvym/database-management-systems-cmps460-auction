@@ -1,4 +1,24 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Handles category views, showing listings in a specific category and sorting.
+
+
+
+
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
@@ -6,11 +26,13 @@ echo_header ($dbinfo);
 $view = get ("view");
 $sortby = get ("sortby");
 
+// Redirect if user not logged in
 if (!$dbinfo->logged_in ())
 	redirect ("index.php");
 
 if ($dbinfo->logged_in ())
 {
+	// Default view shows user a dropdown
 	if (empty ($view))
 	{
 		echo h3 ("All Categories");
@@ -34,7 +56,7 @@ if ($dbinfo->logged_in ())
 		echo submit_input ("Select");
 
 	}
-	else
+	else // show category specific listings
 	{
 
 		echo h3 ("$view");

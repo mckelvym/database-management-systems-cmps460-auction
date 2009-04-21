@@ -1,9 +1,33 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Profile page for editing & viewing user (and your own) profile.
+
+
+
+
+
+
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t();
 echo_header($dbinfo);
 
+
+// Javascript functions for image loading
 echo <<<HEREDOC
 <script type="text/javascript">
 
@@ -22,12 +46,11 @@ function image_swap ()
 </script>
 HEREDOC;
 
+
 $current_script = current_script ();
 // If the user is not logged in, redirect him to the index page.
 if (!$dbinfo->logged_in())
 	redirect("index.php");
-
-
 
 
 // Checking the mode
@@ -36,6 +59,7 @@ $mode = get("mode");
 $user_name = $dbinfo->username();
 $home_user = $user_name; //Saving the real user in home_user.
 
+// simple validation
 function verify_data ()
 {
 	global $dbinfo, $errors, $post_picture, $post_description;
@@ -57,9 +81,8 @@ if ($mode == "")
 // Reading username from the get request
 else if ($mode == "view" || $mode == "edit"|| $mode == "delete")
 {
-	$user_name = get("username"); 
+	$user_name = get("username");
 }
-
 
 
 // Default view
@@ -68,7 +91,7 @@ if ($mode == "" || $mode == "view" )
 	echo_div ("scriptstatus");
 	if($user_name != $home_user)
 		echo href ("$current_script?", "View My Profile");
-	else{ 
+	else{
 		echo href ("$current_script?mode=edit&username=$user_name", "Edit Profile");
 		echo (" | ");
 		echo href ("$current_script?mode=delete&username=$user_name", "Delete Profile");
@@ -343,13 +366,13 @@ else if ($mode == "save") //If the mode is save
 }
 //If the mode is delete, clear profile information
 else if($mode = "delete")
-{		
+{
 		//check to see if the user is trying to delete someone else profile
 		if($user_name != $home_user) // If the users are different, Deny access
 		{
 			cout ("Access denied");
 		}
-		else{ 
+		else{
 			//Users are same.
 			//Clearing the user from database.
 			$result = $dbinfo->query (" update user set Description = 'N/A',picture = 'default_profile.jpg' where username = '$user_name'");
@@ -357,7 +380,7 @@ else if($mode = "delete")
 			cout ("You have cleared your profile information.");
 			echo href ("$current_script?mode=view&username=$user_name", "Click to refresh"); //Proceed to view profile page
 		}
-	
+
 }
 
 echo_footer($dbinfo);

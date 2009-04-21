@@ -1,4 +1,27 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Main page user sees whether logged in to site or not. If logged in, shows
+// activity and notifications and if admin, also shows time advance box
+
+
+
+
+
+
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
@@ -347,7 +370,7 @@ order by day desc, hour desc, minute desc");
 	mysql_free_result ($result);
 
 
-	// Actual output of all notifications
+	// Actual output of all notifications, sorted by time
 	echo h3 ("Welcome to your home page.");
 	cout ("Activity and notifications:");
 	if ($x > 1)
@@ -359,7 +382,7 @@ order by day desc, hour desc, minute desc");
 		echo substr ($output[$i], strpos ($output[$i], " "), strlen ($output[$i]));
 	}
 }
-else
+else // user is not logged in
 {
 	$loginlink = href ("login.php", "Login");
 	$reglink= href ("registration.php", "Register");
@@ -372,5 +395,4 @@ HEREDOC;
 }
 
 echo_footer ($dbinfo);
-
 ?>

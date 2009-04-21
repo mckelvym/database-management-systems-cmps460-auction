@@ -1,10 +1,33 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Common include script which includes other utility scripts. Also has other
+// common functions such as echoing the html headers and footers, html
+// wrapping functions, and some formatting functions.
+
+
+
+
 include_once ("dbinfo.php");
 include_once ("form_common.php");
 include_once ("table_common.php");
 include_once ("list_common.php");
 
-// Call at the beginning of a script to output html header information including navbar
+// Call at the beginning of a script to output html header information including
+// navbar
 function echo_header ($dbinfo)
 {
 	$dbinfo->init ();

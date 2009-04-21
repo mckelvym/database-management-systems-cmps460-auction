@@ -1,14 +1,34 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Database information class, with useful utility functions for getting info
+// out of the database
+
+
+
+
 
 class dbinfo_t
 {
-	var $host;
-	var $user;
-	var $pass;
-	var $dbname;
-	var $dblink;
-	var $admin;
-	var $debug;
+	var $host; // database host
+	var $user; // database user
+	var $pass; // database password
+	var $dbname; // database name
+	var $dblink; // connection link
+	var $debug; // debug mode enabled
 
 	// Call this function to start the session
 	// and initialize the variables
@@ -330,7 +350,7 @@ order by day desc, hour desc, minute desc limit 1");
 	// Update all other bidder's notification status that they've been outbid, and also current_price for auction
 	function update_auction_before_bid ($title, $seller, $category, $end_day, $end_hour, $end_minute, $bid_amount)
 	{
-		$this->query ("update bids_on set 
+		$this->query ("update bids_on set
 display_notification = 'y'
 where	display_notification = 'n'
 AND 	item_title = '$title'
@@ -593,7 +613,7 @@ AND	item_end_minute = $end_minute");
 		return $row['description'];
 	}
 	//End - Changes made by Sayooj Valsan > # User Profile
-	//Begin - Changes made by Sayooj Valsan <04-10-2009>   
+	//Begin - Changes made by Sayooj Valsan <04-10-2009>
 	function get_picture ($username)
 	{
 		$result = $this->query ("select picture from user where username = '$username'");

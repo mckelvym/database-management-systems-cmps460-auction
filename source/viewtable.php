@@ -1,4 +1,26 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Helpful page for admin to see the data in the db.
+
+
+
+
+
+
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
@@ -17,16 +39,15 @@ function display_message ()
 	echo ul (li ($message));
 }
 
-
 if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 {
-	if ($name == "reload")
+	if ($name == "reload") // reload the database - kind of hacked but oh well
 	{
 		passthru ("/pkgs2/mysql/bin/mysql -h calvados.ucs.louisiana.edu -u cs4601i -pfoursixty cs4601_i < ../data/db.dump.sql");
 		cout ("Done.");
 		echo href ("index.php", "Refresh");
 	}
-	else if ($name == "user")
+	else if ($name == "user") // view user table
 	{
 		echo h3 ("User Data");
 		echo_div ("scriptstatus");
@@ -125,7 +146,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		}
 	}
 
-	else if ($name == "user_activity")
+	else if ($name == "user_activity") // view the activity table
 	{
 		echo h3 ("User Activity Data");
 		echo_div ("scriptstatus");
@@ -178,7 +199,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		}
 	}
 
-	else if ($name == "item_listing")
+	else if ($name == "item_listing") // view the item listing table
 	{
 		echo h3 ("Item Listing Data");
 		echo_div ("scriptstatus");
@@ -291,7 +312,7 @@ if ($dbinfo->logged_in () && $dbinfo->is_admin ())
 		}
 	}
 
-	else if ($name == "bids_on")
+	else if ($name == "bids_on") // view the bids on table
 	{
 		if ($mode == "delete")
 		{
@@ -414,13 +435,11 @@ AND	bid_minute = $bid_minute");
 		cout ("Back to your ".href ("index.php", "home").".");
 	}
 }
-
 else
 {
 	redirect ("index.php");
 }
 
 echo_footer ($dbinfo);
-
 ?>
 

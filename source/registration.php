@@ -1,9 +1,33 @@
 <?php
+/*
+CMPS460 Database Project
+Group I
+April 20, 2009
+
+Authors:
+ - Trey Alexander 	(txa4895)
+ - Dallas Griffith 	(dlg5367)
+ - Mark McKelvy 	(jmm0468)
+ - Sayooj Valsan 	(sxv6633)
+
+~~~ CERTIFICATION OF AUTHENTICITY ~~~
+The code contained within this script is the combined work of the above mentioned authors.
+*/
+
+// Handles registration related things such as new users and editing your
+// current registration, as well view registered users (admin).
+
+
+
+
+
+
 include_once ("common.php");
 
 $dbinfo = new dbinfo_t ();
 echo_header ($dbinfo);
 
+// Javascript functions for validation/etc..
 echo <<<HEREDOC
 <script type="text/javascript">
 function reset_inputs (thisform)
@@ -204,7 +228,7 @@ function validate_form (thisform)
 /* } */
 
 </script>
-HEREDOC;
+HEREDOC; // end javascript functions
 
 
 $mode = get ("mode");
@@ -216,7 +240,7 @@ $get_msg = get ("msg");
 if (!empty ($get_msg))
 	echo "$msg";
 
-// Main registration form
+// Main registration form - kind of catch-all for editing and creating registrations
 function registration_form ($user = "")
 {
 	global $dbinfo;
@@ -312,6 +336,7 @@ function registration_form ($user = "")
 	echo $table->tr ($table->td ("Shipping City").
 			 $table->td (text_input_s ("shipping_city", $city, 30, 50).
 				     alert ("50 characters or less. e.g. Eunice", "?")));
+	// Gosh this is a lot - some aren't even states! Ha!
 	$options = "";
 	$options = $options.option ("Alabama", "Alabama", $state);
 	$options = $options.option ("Alaska", "Alaska", $state);
@@ -730,5 +755,4 @@ else // User is not logged in, display new registration page or save registratio
 }
 
 echo_footer ($dbinfo);
-
 ?>
