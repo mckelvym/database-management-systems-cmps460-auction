@@ -28,23 +28,7 @@ echo_header($dbinfo);
 
 
 // Javascript functions for image loading
-echo <<<HEREDOC
-<script type="text/javascript">
-
-function local_img (file)
-{
-	return "images/" + file;
-}
-
-function image_swap ()
-{
-	var image = document.getElementById ("dynimg");
-	var pic = document.getElementById ("dynpicture");
-	image.src = local_img (pic.value);
-}
-
-</script>
-HEREDOC;
+echo "<script type=\"text/javascript\" src=\"profile.js\"></script>";	
 
 
 $current_script = current_script ();
